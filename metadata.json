@@ -1,0 +1,8 @@
+{
+  "name": "PRIMKOPPOL NGAWI POS",
+  "description": "Sistem POS & Ekosistem Manajemen Koperasi Waserda PRIMKOPPOL NGAWI dengan proteksi kredit anggota, restock dual-state, rekonsiliasi kasir, audit operasional AI, dan ekspor spreadsheet laporan ke Google Drive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,2614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIMKOPPOL NGAWI POS</title>
+  <meta name="description" content="Sistem POS & Ekosistem Manajemen Koperasi Waserda PRIMKOPPOL NGAWI dengan proteksi kredit anggota, restock dual-state, rekonsiliasi kasir, audit operasional AI, dan ekspor spreadsheet laporan ke Google Drive.">
+  <meta property="og:title" content="PRIMKOPPOL NGAWI POS">
+  <meta property="og:description" content="Sistem POS & Ekosistem Manajemen Koperasi Waserda PRIMKOPPOL NGAWI dengan proteksi kredit anggota, restock dual-state, rekonsiliasi kasir, audit operasional AI, dan ekspor spreadsheet laporan ke Google Drive.">
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="/tailwind-theme.js"></script>
+  <style>
+    body {
+      font-family: 'Hanken Grotesk', sans-serif;
+      background-color: #f8f9ff;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #bccac0;
+      border-radius: 4px;
+    }
+
+    /* Google Sign-In (GSI) Material Button Specification */
+    .gsi-material-button {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -webkit-appearance: none;
+      background-color: WHITE;
+      background-image: none;
+      border: 1px solid #747775;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      color: #1f1f1f;
+      cursor: pointer;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 13px;
+      height: 36px;
+      letter-spacing: 0.25px;
+      outline: none;
+      overflow: hidden;
+      padding: 0 14px;
+      position: relative;
+      text-align: center;
+      -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+      transition: background-color .218s, border-color .218s, box-shadow .218s;
+      vertical-align: middle;
+      white-space: nowrap;
+      width: auto;
+      max-width: 400px;
+      min-width: min-content;
+    }
+    .gsi-material-button .gsi-material-button-icon {
+      height: 18px;
+      margin-right: 8px;
+      min-width: 18px;
+      width: 18px;
+    }
+    .gsi-material-button .gsi-material-button-content-wrapper {
+      -webkit-align-items: center;
+      align-items: center;
+      display: flex;
+      -webkit-flex-direction: row;
+      flex-direction: row;
+      -webkit-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+      height: 100%;
+      justify-content: space-between;
+      position: relative;
+      width: 100%;
+    }
+    .gsi-material-button .gsi-material-button-contents {
+      -webkit-flex-grow: 1;
+      flex-grow: 1;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: top;
+    }
+    .gsi-material-button:hover {
+      -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-on-surface bg-surface antialiased select-none">
+
+  <!-- TOP EXECUTIVE APP BAR -->
+  <header id="app-header" class="bg-surface-container-lowest border-b border-gray-200/80 px-4 py-2 shrink-0 flex items-center justify-between shadow-xs z-30">
+    <!-- Brand Info -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm shrink-0">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-display font-bold text-base tracking-tight text-on-surface">PRIMKOPPOL NGAWI</h1>
+          <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-primary border border-emerald-200">Waserda & POS v2.4</span>
+        </div>
+        <p class="text-xs text-secondary flex items-center gap-2 font-medium">
+          <span>Kasir: <strong class="text-on-surface font-semibold">Sari Wulandari</strong> (#01 - Shift Pagi)</span>
+          <span>•</span>
+          <span class="text-emerald-700 flex items-center gap-1 font-semibold">
+            <span class="w-2 h-2 rounded-full bg-primary inline-block animate-pulse"></span>
+            Server Terhubung (Ngawi)
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Stat & Actions -->
+    <div class="flex items-center gap-2">
+      <div class="hidden xl:flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-gray-200/70 text-xs text-secondary">
+        <span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+        <span>Auto-Block Plafon Kredit: <strong class="text-on-surface">Aktif</strong></span>
+      </div>
+
+      <!-- GOOGLE DRIVE SPREADSHEET EXPORT HUB BUTTON -->
+      <button id="btn-google-drive-hub" onclick="openDriveExportModal()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-300 text-emerald-950 text-xs font-semibold flex items-center gap-2 shadow-xs transition group" title="Simpan Laporan Inventaris & Keuangan sebagai Spreadsheet di Google Drive">
+        <svg class="w-4 h-4 shrink-0" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+          <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+          <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+          <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+          <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+          <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+          <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+        </svg>
+        <span id="drive-header-status-label" class="flex items-center gap-1.5">
+          <span>Google Drive</span>
+          <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full border border-emerald-200">Spreadsheet</span>
+        </span>
+      </button>
+
+      <!-- JADWAL OTOMATIS QUICK BUTTON -->
+      <button id="btn-header-scheduled-export" onclick="openDriveExportModal(null, 'scheduled')" class="hidden md:flex px-2.5 py-1.5 rounded-xl bg-white hover:bg-emerald-50/80 border border-gray-200 hover:border-emerald-300 text-secondary hover:text-on-surface text-xs font-semibold items-center gap-1.5 shadow-2xs transition" title="Kelola Jadwal Ekspor Otomatis">
+        <span class="material-symbols-outlined text-[16px] text-primary">schedule_send</span>
+        <span>Jadwal Otomatis</span>
+        <span id="header-scheduled-pill" class="text-[10px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+      </button>
+
+      <button id="btn-fullscreen" onclick="toggleFullScreen()" title="Layar Penuh" class="p-2 rounded-xl bg-surface-container-low hover:bg-surface-container border border-gray-200/70 text-secondary hover:text-on-surface text-xs font-semibold flex items-center gap-1 transition">
+        <span class="material-symbols-outlined text-[18px]">fullscreen</span>
+      </button>
+
+      <button id="btn-open-tab" onclick="openCurrentInNewTab()" title="Buka Halaman Aktif di Tab Baru" class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container border border-gray-200/70 text-secondary hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 transition">
+        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+        <span class="hidden sm:inline">Buka Tab Baru</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- SECONDARY WORKSPACE NAVIGATION BAR -->
+  <nav id="module-nav" class="bg-surface-container-low border-b border-gray-200/80 px-4 py-1.5 shrink-0 flex items-center gap-2 overflow-x-auto custom-scroll z-20">
+    <div class="flex items-center gap-1.5 shrink-0" id="nav-buttons">
+      <!-- POS Terminal -->
+      <button onclick="switchView('/pos', this)" class="nav-btn active px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-primary text-white shadow-xs transition">
+        <span class="material-symbols-outlined text-[16px]">point_of_sale</span>
+        <span>Terminal POS</span>
+      </button>
+
+      <!-- Pelunasan Piutang -->
+      <button onclick="switchView('/pelunasan', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">payments</span>
+        <span>Pelunasan Piutang</span>
+      </button>
+
+      <!-- Restock Dropdown / Group -->
+      <div class="relative inline-block group">
+        <button class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+          <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+          <span>Dual-State Restock</span>
+          <span class="material-symbols-outlined text-[14px]">expand_more</span>
+        </button>
+        <div class="hidden group-hover:flex flex-col absolute left-0 top-full pt-1 w-64 z-50">
+          <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-1.5 text-xs">
+            <a href="javascript:void(0)" onclick="switchView('/restock-tahap-1', this)" class="px-3 py-2 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-primary flex items-center justify-center font-bold text-[10px]">1</span>
+              <span>Tahap 1: Pre-Input Faktur</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/restock-tahap-2', this)" class="px-3 py-2 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[10px]">2</span>
+              <span>Tahap 2: Input SKU Gudang</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/restock-tahap-3', this)" class="px-3 py-2 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-[10px]">3</span>
+              <span>Tahap 3: Validasi & Merge Stok</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retur Barang -->
+      <button onclick="switchView('/retur-barang', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">assignment_return</span>
+        <span>Retur & Klaim</span>
+      </button>
+
+      <!-- Tutup Shift -->
+      <button onclick="switchView('/tutup-shift', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">lock_clock</span>
+        <span>Tutup Shift</span>
+      </button>
+
+      <!-- Matriks Tunggakan -->
+      <button onclick="switchView('/matriks-tunggakan', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">group</span>
+        <span>Matriks Anggota</span>
+      </button>
+
+      <!-- Master Barang -->
+      <button onclick="switchView('/master-barang', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">category</span>
+        <span>Master Barang & HPP</span>
+      </button>
+
+      <!-- Laporan & Analitik Dropdown -->
+      <div class="relative inline-block group">
+        <button class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+          <span class="material-symbols-outlined text-[16px]">query_stats</span>
+          <span>Laporan & Analitik</span>
+          <span class="material-symbols-outlined text-[14px]">expand_more</span>
+        </button>
+        <div class="hidden group-hover:flex flex-col absolute left-0 top-full pt-1 w-60 z-50">
+          <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-1.5 text-xs">
+            <a href="javascript:void(0)" onclick="switchView('/laporan-penjualan', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-primary">receipt</span>
+              <span>Laporan Penjualan</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/laporan-keuangan', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-blue-600">account_balance_wallet</span>
+              <span>Laporan Keuangan & Piutang</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/laporan-fast-moving', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-amber-600">trending_up</span>
+              <span>Top 20 Fast-Moving</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/laporan-mutasi', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-purple-600">swap_horiz</span>
+              <span>Mutasi Kartu Stok</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/laporan-pembelian', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">shopping_bag</span>
+              <span>Pembelian Restock</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/laporan-retur', this)" class="px-3 py-1.5 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-rose-600">assignment_late</span>
+              <span>Retur & Klaim Supplier</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cetak Struk Dropdown -->
+      <div class="relative inline-block group">
+        <button class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+          <span class="material-symbols-outlined text-[16px]">print</span>
+          <span>Cetak Struk</span>
+          <span class="material-symbols-outlined text-[14px]">expand_more</span>
+        </button>
+        <div class="hidden group-hover:flex flex-col absolute left-0 top-full pt-1 w-52 z-50">
+          <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-1.5 text-xs">
+            <a href="javascript:void(0)" onclick="switchView('/struk-80mm', this)" class="px-3 py-2 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-primary">receipt_long</span>
+              <span>Struk Termal 80mm</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('/struk-58mm', this)" class="px-3 py-2 rounded-lg hover:bg-surface-container-low flex items-center gap-2 text-on-surface">
+              <span class="material-symbols-outlined text-[16px] text-secondary">receipt</span>
+              <span>Struk Ringkas 58mm</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PWA & AI Audit -->
+      <button onclick="switchView('/ai-audit', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px] text-emerald-700">smart_toy</span>
+        <span>AI Audit Operasional</span>
+      </button>
+
+      <button onclick="switchView('/sync-health', this)" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition">
+        <span class="material-symbols-outlined text-[16px]">sync_alt</span>
+        <span>Sync Health PWA</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN ACTIVE VIEWPORT CONTAINER -->
+  <main id="viewport-container" class="flex-1 w-full relative overflow-hidden bg-surface">
+    <iframe id="app-frame" src="/pos" class="w-full h-full border-0 block" title="PRIMKOPPOL NGAWI POS Frame"></iframe>
+  </main>
+
+  <!-- GOOGLE DRIVE SPREADSHEET EXPORT MODAL -->
+  <div id="drive-export-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-5 z-50 transition-opacity">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150">
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 bg-surface-container-low border-b border-gray-200 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 shadow-xs flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+              <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+              <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+              <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+              <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+              <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+              <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+              <span>Simpan ke Google Drive</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200">Google Spreadsheet</span>
+            </h3>
+            <p class="text-xs text-secondary">Ekspor instan laporan inventaris, mutasi gudang & keuangan langsung ke Google Drive Anda.</p>
+          </div>
+        </div>
+        <button onclick="closeDriveExportModal()" class="w-8 h-8 rounded-full hover:bg-gray-200/80 text-gray-500 hover:text-gray-800 flex items-center justify-center transition">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Mode Navigation Tabs -->
+      <div class="px-5 pt-2.5 pb-0 bg-surface-container-low border-b border-gray-200 flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="modal-tab-instant" onclick="switchModalTab('instant')" class="px-3.5 py-2 text-xs font-bold rounded-t-xl border-b-2 border-primary text-primary bg-white flex items-center gap-1.5 shadow-2xs transition">
+            <span class="material-symbols-outlined text-[16px]">upload_file</span>
+            <span>Ekspor Sekarang (Manual)</span>
+          </button>
+          <button type="button" id="modal-tab-scheduled" onclick="switchModalTab('scheduled')" class="px-3.5 py-2 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-secondary hover:text-on-surface hover:bg-white/60 flex items-center gap-1.5 transition">
+            <span class="material-symbols-outlined text-[16px] text-amber-600">schedule</span>
+            <span>Jadwal Otomatis (Scheduled)</span>
+            <span id="tab-scheduled-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span id="tab-active-sched-count">2 Aktif</span>
+            </span>
+          </button>
+        </div>
+        <div id="worker-header-pill" class="hidden sm:flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="worker-header-status-text">Background Worker Aktif</span>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <!-- Account Status Section -->
+        <div id="drive-auth-card" class="p-3.5 rounded-xl border border-gray-200 bg-surface-container-lowest flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div id="drive-user-avatar" class="w-9 h-9 rounded-full bg-emerald-100 text-primary font-bold flex items-center justify-center text-sm border border-emerald-200 shrink-0">
+              <span class="material-symbols-outlined text-base">cloud_sync</span>
+            </div>
+            <div>
+              <div id="drive-user-name" class="font-semibold text-on-surface">Akun Google Belum Terhubung</div>
+              <div id="drive-user-email" class="text-secondary text-[11px]">Masuk dengan akun Google untuk mengaktifkan sinkronisasi ke Google Drive.</div>
+            </div>
+          </div>
+          <div id="drive-auth-action">
+            <!-- Official GSI Button -->
+            <button id="btn-gsi-signin" onclick="handleGoogleSignIn()" class="gsi-material-button">
+              <div class="gsi-material-button-state"></div>
+              <div class="gsi-material-button-content-wrapper">
+                <div class="gsi-material-button-icon">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                    <path fill="none" d="M0 0h48v48H0z"></path>
+                  </svg>
+                </div>
+                <span class="gsi-material-button-contents">Sign in with Google</span>
+              </div>
+            </button>
+            <button id="btn-drive-signout" onclick="handleGoogleSignOut()" class="hidden px-2.5 py-1.5 rounded-lg text-secondary hover:text-rose-600 hover:bg-rose-50 font-semibold transition">
+              Putuskan
+            </button>
+          </div>
+        </div>
+
+        <!-- PANEL: INSTANT EXPORT (Manual) -->
+        <div id="panel-instant-export" class="space-y-4">
+
+        <!-- Step 1: Select Report (Multi-select enabled) -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <label class="block font-bold text-on-surface">1. Pilih Laporan yang Ingin Disimpan:</label>
+              <span id="selected-reports-counter-badge" class="text-[11px] font-bold text-primary bg-primary-fixed/40 px-2.5 py-0.5 rounded-full border border-primary/20">
+                1 Laporan Dipilih
+              </span>
+            </div>
+            <div class="flex items-center gap-1 text-xs">
+              <button type="button" onclick="selectAllReportTypes(true)" class="px-2 py-0.5 rounded text-[11px] font-semibold text-primary hover:bg-primary/10 transition" title="Pilih semua 5 laporan sekaligus">
+                Pilih Semua
+              </button>
+              <span class="text-gray-300">|</span>
+              <button type="button" onclick="selectAllReportTypes(false)" class="px-2 py-0.5 rounded text-[11px] font-semibold text-secondary hover:text-on-surface hover:bg-gray-100 transition" title="Kosongkan pilihan laporan">
+                Batal Semua
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Inventory -->
+            <label id="report-card-inventory" onclick="onReportCardClicked('inventory', event)" class="report-option-card flex items-start gap-2.5 p-3 rounded-xl border border-primary bg-primary/5 cursor-pointer hover:border-primary transition shadow-2xs">
+              <input type="checkbox" name="report_type_check" value="inventory" checked onchange="onReportCheckboxChanged()" class="mt-0.5 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                  <div class="font-bold text-on-surface flex items-center gap-1.5 text-xs">
+                    <span class="material-symbols-outlined text-sm text-primary">inventory_2</span>
+                    <span>Inventaris & Sisa Stok</span>
+                  </div>
+                  <span id="last-export-badge-inventory" class="text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200">
+                    <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+                    <span>Last Exported: Belum pernah</span>
+                  </span>
+                </div>
+                <p class="text-[11px] text-secondary mt-1">Sisa fisik semua SKU, HPP, Harga Jual, Nilai Total Aset Waserda.</p>
+              </div>
+            </label>
+
+            <!-- Finance & Debt -->
+            <label id="report-card-finance" onclick="onReportCardClicked('finance', event)" class="report-option-card flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 bg-white hover:border-primary/50 cursor-pointer transition">
+              <input type="checkbox" name="report_type_check" value="finance" onchange="onReportCheckboxChanged()" class="mt-0.5 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                  <div class="font-bold text-on-surface flex items-center gap-1.5 text-xs">
+                    <span class="material-symbols-outlined text-sm text-blue-600">account_balance_wallet</span>
+                    <span>Keuangan & Piutang Anggota</span>
+                  </div>
+                  <span id="last-export-badge-finance" class="text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200">
+                    <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+                    <span>Last Exported: Belum pernah</span>
+                  </span>
+                </div>
+                <p class="text-[11px] text-secondary mt-1">Daftar plafon, piutang berjalan, sisa kredit, & status Auto-Block.</p>
+              </div>
+            </label>
+
+            <!-- Sales Transactions -->
+            <label id="report-card-sales" onclick="onReportCardClicked('sales', event)" class="report-option-card flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 bg-white hover:border-primary/50 cursor-pointer transition">
+              <input type="checkbox" name="report_type_check" value="sales" onchange="onReportCheckboxChanged()" class="mt-0.5 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                  <div class="font-bold text-on-surface flex items-center gap-1.5 text-xs">
+                    <span class="material-symbols-outlined text-sm text-emerald-600">receipt_long</span>
+                    <span>Penjualan & Transaksi Kasir</span>
+                  </div>
+                  <span id="last-export-badge-sales" class="text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200">
+                    <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+                    <span>Last Exported: Belum pernah</span>
+                  </span>
+                </div>
+                <p class="text-[11px] text-secondary mt-1">Rekapitulasi nota kasir, omzet penjualan tunai & tempo, margin laba.</p>
+              </div>
+            </label>
+
+            <!-- Warehouse Stock Card -->
+            <label id="report-card-mutasi" onclick="onReportCardClicked('mutasi', event)" class="report-option-card flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 bg-white hover:border-primary/50 cursor-pointer transition">
+              <input type="checkbox" name="report_type_check" value="mutasi" onchange="onReportCheckboxChanged()" class="mt-0.5 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                  <div class="font-bold text-on-surface flex items-center gap-1.5 text-xs">
+                    <span class="material-symbols-outlined text-sm text-purple-600">swap_horiz</span>
+                    <span>Mutasi Kartu Stok Gudang</span>
+                  </div>
+                  <span id="last-export-badge-mutasi" class="text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200">
+                    <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+                    <span>Last Exported: Belum pernah</span>
+                  </span>
+                </div>
+                <p class="text-[11px] text-secondary mt-1">Histori stok masuk faktur supplier, retur barang, & mutasi kasir.</p>
+              </div>
+            </label>
+
+            <!-- Shift Reconciliation -->
+            <label id="report-card-shift" onclick="onReportCardClicked('shift', event)" class="report-option-card flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 bg-white hover:border-primary/50 cursor-pointer transition sm:col-span-2">
+              <input type="checkbox" name="report_type_check" value="shift" onchange="onReportCheckboxChanged()" class="mt-0.5 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                  <div class="font-bold text-on-surface flex items-center gap-1.5 text-xs">
+                    <span class="material-symbols-outlined text-sm text-amber-600">lock_clock</span>
+                    <span>Berita Acara Rekonsiliasi Tutup Shift Kasir</span>
+                  </div>
+                  <span id="last-export-badge-shift" class="text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200">
+                    <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+                    <span>Last Exported: Belum pernah</span>
+                  </span>
+                </div>
+                <p class="text-[11px] text-secondary mt-1">Kalkulasi kas sistem, hitung fisik laci, variansi selisih kas, & catatan kasir.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Step 2: Spreadsheet Title & Batch Preview -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label id="spreadsheet-title-label" for="spreadsheet-title-input" class="block font-bold text-on-surface">
+              2. Nama File Spreadsheet di Google Drive:
+            </label>
+            <span id="batch-naming-mode-badge" class="hidden text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full border border-primary/20">
+              Mode Batch (Multi-File)
+            </span>
+          </div>
+          <div class="relative">
+            <input type="text" id="spreadsheet-title-input" oninput="onTitleOrPrefixInputChanged(this.value)" class="w-full bg-surface-container-lowest border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" value="PRIMKOPPOL_Laporan_Inventaris_Stok">
+            <span id="gsheet-ext-tag" class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] bg-gray-100 text-gray-600 font-bold px-1.5 py-0.5 rounded border border-gray-200">.gsheet</span>
+          </div>
+          <p id="spreadsheet-title-hint" class="text-[11px] text-secondary mt-1">Nama file spreadsheet yang akan disimpan di Google Drive.</p>
+
+          <!-- Batch Files Preview Box -->
+          <div id="batch-files-preview-container" class="hidden mt-2.5 p-3 rounded-xl bg-surface-container-low border border-gray-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-on-surface text-[11px] flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-primary">dynamic_feed</span>
+                <span id="batch-files-preview-count">Daftar File yang Akan Dibuat:</span>
+              </span>
+              <span class="text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
+                1x Klik Simpan Semua
+              </span>
+            </div>
+            <div id="batch-files-preview-list" class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll pr-1">
+              <!-- Rendered batch files -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Target Folder Selection -->
+        <div class="p-3.5 bg-surface-container-lowest rounded-xl border border-gray-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label for="drive-folder-select" class="block font-bold text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base text-amber-600">folder_open</span>
+              <span>3. Pilih Folder Tujuan di Google Drive:</span>
+            </label>
+            <span id="folder-loading-indicator" class="hidden text-[11px] text-primary flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs animate-spin">progress_activity</span>
+              <span>Memuat folder...</span>
+            </span>
+          </div>
+
+          <p class="text-[11px] text-secondary">Pilih folder target di Google Drive Anda untuk mengorganisir spreadsheet laporan agar tidak tercampur di root folder.</p>
+
+          <!-- Current Selected Folder Pill -->
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-lg border border-gray-200 text-xs">
+            <span class="text-secondary shrink-0">Lokasi Simpan:</span>
+            <span id="selected-folder-display-name" class="font-bold text-primary flex items-center gap-1 truncate">
+              <span class="material-symbols-outlined text-sm text-amber-600">folder</span>
+              <span class="truncate">Root (Folder Utama Google Drive)</span>
+            </span>
+          </div>
+
+          <!-- Folder Select & Action Buttons -->
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <select id="drive-folder-select" onchange="onTargetFolderSelected(this.value)" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary truncate">
+                  <option value="root">📁 [Root] Folder Utama Google Drive</option>
+                </select>
+              </div>
+              <button type="button" onclick="loadDriveFolders(true)" title="Muat Ulang Folder dari Google Drive" class="px-2.5 py-2 bg-white border border-gray-300 hover:bg-gray-100 rounded-lg text-secondary hover:text-on-surface font-semibold text-xs flex items-center gap-1 shrink-0 transition shadow-xs">
+                <span class="material-symbols-outlined text-sm">refresh</span>
+                <span>Segarkan</span>
+              </button>
+              <button type="button" onclick="toggleNewFolderInput(true)" title="Buat Folder Baru di Google Drive" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-lg font-bold text-xs flex items-center gap-1.5 shrink-0 transition shadow-xs">
+                <span class="material-symbols-outlined text-sm">create_new_folder</span>
+                <span>+ Folder Baru</span>
+              </button>
+            </div>
+
+            <!-- Optional quick filter if user has many folders -->
+            <div id="folder-filter-box" class="hidden flex items-center gap-2">
+              <div class="relative flex-1">
+                <span class="material-symbols-outlined text-xs absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input type="text" id="folder-search-input" placeholder="Ketik untuk memfilter nama folder..." oninput="filterDriveFolderOptions(this.value)" class="w-full pl-7 pr-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs text-on-surface placeholder:text-gray-400 focus:outline-none focus:border-primary">
+              </div>
+            </div>
+
+            <!-- Inline New Folder Creator -->
+            <div id="new-folder-form-container" class="hidden p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 space-y-2 transition">
+              <div class="font-bold text-emerald-950 text-xs flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm text-emerald-700">create_new_folder</span>
+                <span>Buat Folder Baru di Google Drive:</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="text" id="new-folder-name-input" placeholder="Contoh: Laporan POS PRIMKOPPOL 2026" class="flex-1 bg-white border border-emerald-300 rounded-lg px-3 py-1.5 text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium">
+                <button type="button" id="btn-save-new-folder" onclick="handleCreateFolderSubmit()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs flex items-center gap-1 shrink-0 transition">
+                  <span class="material-symbols-outlined text-sm">check</span>
+                  <span>Buat & Pilih</span>
+                </button>
+                <button type="button" onclick="toggleNewFolderInput(false)" class="px-2 py-1.5 text-secondary hover:text-gray-800 text-xs font-semibold">
+                  Batal
+                </button>
+              </div>
+              <p class="text-[10px] text-emerald-800">Folder akan langsung dibuat di akun Google Drive Anda dan otomatis dipilih sebagai tujuan penyimpanan.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Data Preview Summary -->
+        <div class="p-3 bg-surface-container-low rounded-xl border border-gray-200/80">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="font-bold text-on-surface flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-primary">table_view</span>
+              <span>4. Ringkasan Data Tabel</span>
+            </span>
+            <span id="preview-row-count-badge" class="font-semibold text-primary bg-primary-fixed/40 px-2 py-0.5 rounded-full text-[10px]">6 SKU Terpilih</span>
+          </div>
+          <div id="preview-columns-list" class="text-[11px] text-secondary leading-relaxed font-mono">
+            Kolom: SKU, Barcode, Nama Produk, Kategori, Stok Fisik, Satuan, HPP, Harga Jual, Margin Laba, Margin %, Total Aset Stok, Status Stok
+          </div>
+        </div>
+
+        <!-- User Confirmation Box (Required by Workspace Integration Guidelines) -->
+        <div id="drive-confirmation-box" class="p-3.5 bg-amber-50/90 border border-amber-200 rounded-xl flex items-start gap-2.5">
+          <span class="material-symbols-outlined text-amber-700 text-base shrink-0 mt-0.5">info</span>
+          <div class="text-[11px] text-amber-950">
+            <strong class="font-semibold">Konfirmasi Penyimpanan:</strong>
+            Laporan ini akan disimpan sebagai file <strong>Google Spreadsheet</strong> resmi di dalam folder <span id="confirm-folder-name" class="font-bold text-emerald-900 bg-emerald-100/80 px-1 py-0.5 rounded border border-emerald-300">Root (Folder Utama)</span> pada akun Google Drive Anda. Anda dapat langsung membuka, mengedit, dan membagikan spreadsheet tersebut di Google Sheets.
+          </div>
+        </div>
+
+        <!-- Upload Status / Alert Area -->
+        <div id="drive-status-banner" class="hidden p-3.5 rounded-xl border transition"></div>
+
+        <!-- Session Exports History -->
+        <div id="drive-history-container" class="border-t border-gray-200 pt-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-bold text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-primary">history</span>
+              <span>Spreadsheet Tersimpan di Google Drive Sesi Ini:</span>
+            </span>
+            <span id="drive-history-count" class="text-[10px] text-secondary">0 File</span>
+          </div>
+          <div id="drive-history-list" class="space-y-1.5 max-h-32 overflow-y-auto custom-scroll">
+            <p class="text-[11px] text-secondary italic">Belum ada file yang diekspor pada sesi ini.</p>
+          </div>
+        </div>
+
+        </div>
+        <!-- END PANEL: INSTANT EXPORT -->
+
+        <!-- PANEL: SCHEDULED EXPORT (Background Worker) -->
+        <div id="panel-scheduled-export" class="hidden space-y-4">
+          
+          <!-- Background Worker Status Banner -->
+          <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="material-symbols-outlined text-lg">smart_toy</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-bold text-on-surface text-xs">Background Worker Engine</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse"></span>
+                    <span id="worker-active-badge">Aktif & Berjalan</span>
+                  </span>
+                  <span class="text-[10px] text-secondary bg-white px-2 py-0.5 rounded border border-gray-200">Web Worker (Multi-thread)</span>
+                </div>
+                <p class="text-secondary text-[11px] mt-0.5 leading-snug">
+                  Mengecek interval ekspor harian dan mingguan secara independen di background tanpa membebani browser atau mengganggu transaksi kasir.
+                </p>
+                <div id="worker-next-run-banner" class="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-900 bg-white/80 px-2.5 py-1 rounded-lg border border-emerald-200">
+                  <span class="material-symbols-outlined text-sm text-emerald-700">alarm</span>
+                  <span>Jadwal Terdekat:</span>
+                  <span id="worker-next-run-text" class="text-emerald-950 font-bold">Memuat jadwal...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="handleCheckWorkerSchedulesNow()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-[11px] flex items-center gap-1.5 shadow-2xs transition">
+                <span class="material-symbols-outlined text-sm text-emerald-700">sync</span>
+                <span>Cek Sekarang</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Schedules List Header & Create Button -->
+          <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-on-surface text-xs">Daftar Jadwal Ekspor Terkonfigurasi</span>
+              <span id="scheduled-count-badge" class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.2 rounded-full border border-emerald-300">
+                0 Jadwal
+              </span>
+            </div>
+            <button type="button" onclick="toggleNewScheduleForm()" id="btn-toggle-new-sched" class="px-2.5 py-1 rounded-lg bg-primary text-white hover:bg-primary-container text-[11px] font-bold flex items-center gap-1 shadow-2xs transition">
+              <span class="material-symbols-outlined text-sm">add</span>
+              <span>Tambah Jadwal</span>
+            </button>
+          </div>
+
+          <!-- COLLAPSIBLE FORM: Tambah / Edit Jadwal Ekspor -->
+          <div id="form-new-schedule-container" class="hidden p-3.5 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 space-y-3 transition-all animate-in fade-in duration-150">
+            <div class="flex items-center justify-between border-b border-primary/20 pb-2">
+              <div class="flex items-center gap-1.5 font-bold text-primary text-xs">
+                <span class="material-symbols-outlined text-sm">more_time</span>
+                <span id="form-sched-title">Buat Konfigurasi Jadwal Ekspor Baru</span>
+              </div>
+              <button type="button" onclick="toggleNewScheduleForm(false)" class="text-gray-400 hover:text-gray-700">
+                <span class="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+
+            <!-- Form fields -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Schedule Name -->
+              <div>
+                <label class="block font-bold text-on-surface text-[11px] mb-1">Nama Jadwal Ekspor:</label>
+                <input type="text" id="sched-input-name" placeholder="contoh: Rekap Tutup Shift & Stok Kasir" value="Ekspor Tutup Kasir & Inventaris" class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-primary focus:border-primary bg-white">
+              </div>
+
+              <!-- Prefix -->
+              <div>
+                <label class="block font-bold text-on-surface text-[11px] mb-1">Awalan Nama File (Prefix):</label>
+                <input type="text" id="sched-input-prefix" placeholder="contoh: PRIMKOPPOL_HARIAN" value="PRIMKOPPOL_AUTO" class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-primary focus:border-primary bg-white">
+              </div>
+            </div>
+
+            <!-- Specific Report Types Multi-Select -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block font-bold text-on-surface text-[11px]">Pilih Jenis Laporan yang Disertakan:</label>
+                <div class="flex items-center gap-1 text-[10px]">
+                  <button type="button" onclick="selectAllScheduleReportTypes(true)" class="font-bold text-primary hover:underline">Pilih Semua</button>
+                  <span class="text-gray-300">|</span>
+                  <button type="button" onclick="selectAllScheduleReportTypes(false)" class="font-bold text-secondary hover:underline">Batal</button>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="checkbox" name="sched_report_check" value="inventory" checked class="w-3.5 h-3.5 text-primary rounded border-gray-300">
+                  <span class="material-symbols-outlined text-sm text-primary">inventory_2</span>
+                  <span class="font-semibold text-[11px]">Inventaris & Sisa Stok</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="checkbox" name="sched_report_check" value="sales" checked class="w-3.5 h-3.5 text-primary rounded border-gray-300">
+                  <span class="material-symbols-outlined text-sm text-emerald-600">receipt_long</span>
+                  <span class="font-semibold text-[11px]">Penjualan & Transaksi Kasir</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="checkbox" name="sched_report_check" value="shift" checked class="w-3.5 h-3.5 text-primary rounded border-gray-300">
+                  <span class="material-symbols-outlined text-sm text-rose-600">lock_clock</span>
+                  <span class="font-semibold text-[11px]">Rekonsiliasi Tutup Shift</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="checkbox" name="sched_report_check" value="finance" class="w-3.5 h-3.5 text-primary rounded border-gray-300">
+                  <span class="material-symbols-outlined text-sm text-blue-600">account_balance_wallet</span>
+                  <span class="font-semibold text-[11px]">Keuangan & Piutang Anggota</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition sm:col-span-2">
+                  <input type="checkbox" name="sched_report_check" value="mutasi" class="w-3.5 h-3.5 text-primary rounded border-gray-300">
+                  <span class="material-symbols-outlined text-sm text-purple-600">swap_horiz</span>
+                  <span class="font-semibold text-[11px]">Mutasi Kartu Stok Gudang</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Interval Selection (Daily vs Weekly vs Test Interval) -->
+            <div>
+              <label class="block font-bold text-on-surface text-[11px] mb-1.5">Frekuensi / Interval Ekspor:</label>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="radio" name="sched_interval_radio" value="daily" checked onchange="onScheduleIntervalTypeChanged('daily')" class="w-3.5 h-3.5 text-primary">
+                  <div>
+                    <div class="font-bold text-[11px]">Harian (Daily)</div>
+                    <div class="text-[9px] text-secondary">Setiap hari kerja</div>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="radio" name="sched_interval_radio" value="weekly" onchange="onScheduleIntervalTypeChanged('weekly')" class="w-3.5 h-3.5 text-primary">
+                  <div>
+                    <div class="font-bold text-[11px]">Mingguan (Weekly)</div>
+                    <div class="text-[9px] text-secondary">Pilih hari tetap</div>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-gray-200 cursor-pointer hover:border-primary transition">
+                  <input type="radio" name="sched_interval_radio" value="test_interval" onchange="onScheduleIntervalTypeChanged('test_interval')" class="w-3.5 h-3.5 text-primary">
+                  <div>
+                    <div class="font-bold text-[11px]">Demo (5 Menit)</div>
+                    <div class="text-[9px] text-amber-700 font-semibold">Uji coba instan</div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Frequency Details Input (Time / Day) -->
+              <div class="mt-2.5 p-2.5 rounded-lg bg-surface-container-low border border-gray-200 flex items-center gap-3 flex-wrap">
+                <!-- Daily Time Picker -->
+                <div id="sched-time-container" class="flex items-center gap-2">
+                  <label class="text-[11px] font-bold text-on-surface">Waktu Ekspor (WIB):</label>
+                  <input type="time" id="sched-input-time" value="18:00" class="px-2.5 py-1 rounded border border-gray-300 text-xs bg-white font-bold text-primary">
+                  <span class="text-[10px] text-secondary">(contoh: 18:00 tutup shift kasir, 21:00 tutup toko)</span>
+                </div>
+
+                <!-- Weekly Day Selector (Hidden by default) -->
+                <div id="sched-day-container" class="hidden items-center gap-2">
+                  <label class="text-[11px] font-bold text-on-surface">Pilih Hari:</label>
+                  <select id="sched-input-day" class="px-2.5 py-1 rounded border border-gray-300 text-xs bg-white font-semibold">
+                    <option value="1" selected>Senin</option>
+                    <option value="2">Selasa</option>
+                    <option value="3">Rabu</option>
+                    <option value="4">Kamis</option>
+                    <option value="5">Jumat</option>
+                    <option value="6">Sabtu</option>
+                    <option value="0">Minggu</option>
+                  </select>
+                </div>
+
+                <!-- Test Interval Details (Hidden by default) -->
+                <div id="sched-interval-details" class="hidden items-center gap-2 text-[11px] text-amber-800 font-medium">
+                  <span class="material-symbols-outlined text-sm text-amber-600">bolt</span>
+                  <span>Worker akan memicu ekspor otomatis setiap <strong>5 Menit</strong> untuk evaluasi live background worker.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Target Folder Selection in Drive -->
+            <div>
+              <label class="block font-bold text-on-surface text-[11px] mb-1">Folder Tujuan di Google Drive:</label>
+              <select id="sched-input-folder" class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:ring-1 focus:ring-primary focus:border-primary bg-white">
+                <option value="root">📁 Root (Folder Utama Google Drive)</option>
+              </select>
+            </div>
+
+            <!-- Form Action Buttons -->
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-primary/20">
+              <button type="button" onclick="toggleNewScheduleForm(false)" class="px-3 py-1.5 rounded-lg text-secondary hover:bg-gray-100 text-xs font-semibold">
+                Batal
+              </button>
+              <button type="button" onclick="handleSaveScheduleSubmit()" class="px-4 py-1.5 rounded-lg bg-primary hover:bg-primary-container text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs">
+                <span class="material-symbols-outlined text-sm">save</span>
+                <span>Simpan Jadwal Ekspor</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cards List of Schedules -->
+          <div id="scheduled-cards-container" class="space-y-2.5">
+            <!-- Rendered by renderScheduledExportsListUI() -->
+          </div>
+
+          <!-- Automated Execution Logs -->
+          <div class="border-t border-gray-200 pt-3">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5 font-bold text-on-surface">
+                <span class="material-symbols-outlined text-sm text-emerald-600">terminal</span>
+                <span>Riwayat Ekspor Otomatis (Background Worker Logs)</span>
+              </div>
+              <button type="button" onclick="handleClearScheduledLogs()" class="text-[10px] text-secondary hover:text-rose-600 hover:underline">
+                Bersihkan Log
+              </button>
+            </div>
+            <div id="scheduled-logs-list" class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll">
+              <p class="text-[11px] text-secondary italic">Belum ada aktivitas ekspor otomatis yang tercatat.</p>
+            </div>
+          </div>
+
+        </div>
+        <!-- END PANEL: SCHEDULED EXPORT -->
+
+      </div>
+
+      <!-- Modal Footer Action Buttons -->
+      <div class="px-5 py-3.5 bg-surface-container-low border-t border-gray-200 flex items-center justify-between">
+        <button onclick="closeDriveExportModal()" class="px-4 py-2 rounded-xl text-secondary hover:bg-surface-container hover:text-on-surface font-semibold transition">
+          Tutup
+        </button>
+
+        <!-- Footer Actions: Instant Tab -->
+        <div id="footer-actions-instant" class="flex items-center gap-2">
+          <button id="btn-execute-drive-upload" onclick="confirmAndUploadSpreadsheet()" class="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold flex items-center gap-2 shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+              <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+              <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+              <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+              <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+              <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+              <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+            </svg>
+            <span id="upload-btn-text">Simpan ke Google Drive</span>
+          </button>
+        </div>
+
+        <!-- Footer Actions: Scheduled Tab -->
+        <div id="footer-actions-scheduled" class="hidden items-center gap-2">
+          <button type="button" onclick="handleCheckWorkerSchedulesNow()" class="px-3.5 py-2 rounded-xl bg-white border border-gray-300 hover:bg-gray-50 text-on-surface font-semibold flex items-center gap-1.5 shadow-2xs transition">
+            <span class="material-symbols-outlined text-[16px] text-primary">sync</span>
+            <span>Cek Jadwal Sekarang</span>
+          </button>
+          <button type="button" onclick="toggleNewScheduleForm(true)" class="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold flex items-center gap-2 shadow-sm transition">
+            <span class="material-symbols-outlined text-[16px]">add_circle</span>
+            <span>+ Buat Jadwal Baru</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUPLICATE FILE CONFLICT MODAL -->
+  <div id="drive-duplicate-modal" class="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 transition duration-200">
+    <div class="bg-surface rounded-2xl max-w-lg w-full border border-amber-300 shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Header with Warning Accent -->
+      <div class="px-5 py-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 shrink-0">
+            <span class="material-symbols-outlined text-2xl">content_copy</span>
+          </div>
+          <div>
+            <h3 id="dup-modal-header-title" class="font-black text-amber-950 text-base leading-tight">File dengan Nama Sama Ditemukan</h3>
+            <p id="dup-modal-header-desc" class="text-xs text-amber-800">File spreadsheet sudah ada di folder tujuan Google Drive.</p>
+          </div>
+        </div>
+        <button onclick="resolveDuplicatePrompt('cancel')" class="p-1 rounded-lg text-amber-800 hover:bg-amber-100 transition" title="Batal">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="p-5 space-y-4 text-xs">
+        <!-- Conflict Summary Card Container (Dynamic Single or Batch) -->
+        <div id="dup-conflict-container" class="space-y-2">
+          <!-- Populated dynamically -->
+        </div>
+
+        <p id="dup-modal-prompt-text" class="text-secondary leading-relaxed">
+          File dengan nama ini sudah ada di folder tujuan. Tentukan tindakan yang ingin Anda lakukan:
+        </p>
+
+        <!-- 3 Action Choice Buttons/Cards -->
+        <div class="space-y-2.5">
+          <!-- Option 1: Overwrite -->
+          <button type="button" onclick="resolveDuplicatePrompt('overwrite')" class="w-full text-left p-3 rounded-xl border border-amber-300 bg-amber-50/60 hover:bg-amber-100 hover:border-amber-400 transition group flex items-start gap-3 cursor-pointer">
+            <div class="w-8 h-8 rounded-lg bg-amber-200 text-amber-900 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+              <span class="material-symbols-outlined text-lg">published_with_changes</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-amber-950 text-xs flex items-center justify-between">
+                <span id="dup-action-overwrite-title">Overwrite (Timpa File Lama)</span>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.2 bg-amber-200 text-amber-900 rounded font-semibold">Ganti Isi</span>
+              </div>
+              <p id="dup-action-overwrite-desc" class="text-[11px] text-amber-800 mt-0.5 leading-snug">
+                Perbarui seluruh isi spreadsheet lama dengan data terbaru. Tautan dan ID file di Google Drive tetap sama. File lain yang belum ada akan tetap dibuat baru.
+              </p>
+            </div>
+          </button>
+
+          <!-- Option 2: Create New (Rename) -->
+          <button type="button" onclick="resolveDuplicatePrompt('rename')" class="w-full text-left p-3 rounded-xl border border-emerald-300 bg-emerald-50/60 hover:bg-emerald-100 hover:border-emerald-400 transition group flex items-start gap-3 cursor-pointer">
+            <div class="w-8 h-8 rounded-lg bg-emerald-200 text-emerald-900 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+              <span class="material-symbols-outlined text-lg">post_add</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-emerald-950 text-xs flex items-center justify-between">
+                <span id="dup-action-rename-title">Create New (Ganti Nama Baru Otomatis)</span>
+                <span id="dup-suggested-badge" class="text-[10px] font-mono px-1.5 py-0.2 bg-emerald-200 text-emerald-900 rounded font-semibold truncate max-w-[160px]">... (1)</span>
+              </div>
+              <p id="dup-action-rename-desc" class="text-[11px] text-emerald-800 mt-0.5 leading-snug">
+                Simpan semua sebagai file baru terpisah tanpa menimpa file lama. Sistem otomatis menambahkan nomor urut versi pada file yang duplikat.
+              </p>
+            </div>
+          </button>
+
+          <!-- Option 3: Cancel -->
+          <button type="button" onclick="resolveDuplicatePrompt('cancel')" class="w-full text-left p-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-100 transition flex items-start gap-3 cursor-pointer">
+            <div class="w-8 h-8 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-lg">close</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-on-surface text-xs">
+                <span>Cancel (Batal)</span>
+              </div>
+              <p class="text-[11px] text-secondary mt-0.5 leading-snug">
+                Batalkan proses ekspor ini agar Anda dapat mengubah nama/awalan file atau memilih folder lain secara manual.
+              </p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-5 py-3 bg-surface-container-low border-t border-gray-200 flex items-center justify-end">
+        <button onclick="resolveDuplicatePrompt('cancel')" class="px-4 py-1.5 text-xs text-secondary hover:text-on-surface font-semibold rounded-lg hover:bg-gray-200/60 transition">
+          Batal & Kembali
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script type="module" src="/kopos-db.js"></script>
+  <script type="module" src="/google-drive-service.js"></script>
+  <script type="module" src="/scheduled-export-manager.js"></script>
+
+  <script>
+    let currentPath = '/pos';
+    let currentModalTab = 'instant';
+    let selectedReportType = 'inventory';
+    let selectedReportTypes = ['inventory'];
+    let cachedDriveFolders = [];
+    let selectedFolderId = 'root';
+    let selectedFolderName = 'Root (Folder Utama Google Drive)';
+
+    const REPORT_METADATA = {
+      inventory: {
+        id: 'inventory',
+        name: 'Inventaris & Sisa Stok',
+        defaultSuffix: 'Laporan_Inventaris_Stok',
+        icon: 'inventory_2',
+        colorClass: 'text-primary'
+      },
+      finance: {
+        id: 'finance',
+        name: 'Keuangan & Piutang Anggota',
+        defaultSuffix: 'Laporan_Keuangan_Piutang',
+        icon: 'account_balance_wallet',
+        colorClass: 'text-blue-600'
+      },
+      sales: {
+        id: 'sales',
+        name: 'Penjualan & Transaksi Kasir',
+        defaultSuffix: 'Laporan_Penjualan_Kasir',
+        icon: 'receipt_long',
+        colorClass: 'text-emerald-600'
+      },
+      mutasi: {
+        id: 'mutasi',
+        name: 'Mutasi Kartu Stok Gudang',
+        defaultSuffix: 'Laporan_Mutasi_Stok',
+        icon: 'swap_horiz',
+        colorClass: 'text-purple-600'
+      },
+      shift: {
+        id: 'shift',
+        name: 'Berita Acara Rekonsiliasi Tutup Shift Kasir',
+        defaultSuffix: 'Laporan_Rekonsiliasi_Shift',
+        icon: 'lock_clock',
+        colorClass: 'text-amber-600'
+      }
+    };
+
+    function switchView(path, buttonElement) {
+      currentPath = path;
+      const frame = document.getElementById('app-frame');
+      frame.src = path;
+
+      // Update active styling
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-xs');
+        btn.classList.add('text-secondary');
+      });
+
+      if (buttonElement && buttonElement.classList.contains('nav-btn')) {
+        buttonElement.classList.add('active', 'bg-primary', 'text-white', 'shadow-xs');
+        buttonElement.classList.remove('text-secondary');
+      }
+    }
+
+    function openCurrentInNewTab() {
+      window.open(currentPath, '_blank');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn('Fullscreen request declined:', err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Google Drive Modal Functions
+    function openDriveExportModal(reportType, initialTab = 'instant') {
+      let targetType = reportType;
+      if (!targetType) {
+        // Auto-detect based on current path
+        if (currentPath.includes('keuangan') || currentPath.includes('pelunasan') || currentPath.includes('anggota')) {
+          targetType = 'finance';
+        } else if (currentPath.includes('penjualan') || currentPath.includes('pos')) {
+          targetType = 'sales';
+        } else if (currentPath.includes('mutasi') || currentPath.includes('gudang')) {
+          targetType = 'mutasi';
+        } else if (currentPath.includes('shift')) {
+          targetType = 'shift';
+        } else {
+          targetType = 'inventory';
+        }
+      }
+
+      selectedReportTypes = [targetType];
+      selectedReportType = targetType;
+
+      // Update checkboxes state
+      document.querySelectorAll('input[name="report_type_check"]').forEach(cb => {
+        cb.checked = (cb.value === targetType);
+      });
+
+      updateReportSelectionUI();
+      refreshDriveHistoryUI();
+      updateFolderDisplayUI();
+      updateLastExportedBadges();
+
+      if (window.GoogleDriveService && window.GoogleDriveService.isConnected() && cachedDriveFolders.length === 0) {
+        loadDriveFolders();
+      }
+
+      const modal = document.getElementById('drive-export-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      // Switch to the requested tab ('instant' or 'scheduled')
+      switchModalTab(initialTab);
+    }
+
+    function closeDriveExportModal() {
+      const modal = document.getElementById('drive-export-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      hideStatusBanner();
+    }
+
+    function onReportCardClicked(type, evt) {
+      // If user clicked directly on the checkbox or its label child that triggers it, avoid double toggle
+      if (evt.target && evt.target.tagName === 'INPUT') {
+        return;
+      }
+      const cb = document.querySelector(`input[name="report_type_check"][value="${type}"]`);
+      if (cb) {
+        cb.checked = !cb.checked;
+        onReportCheckboxChanged();
+      }
+    }
+
+    function onReportCheckboxChanged() {
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="report_type_check"]:checked'));
+      selectedReportTypes = checkedBoxes.map(cb => cb.value);
+      if (selectedReportTypes.length > 0) {
+        selectedReportType = selectedReportTypes[0];
+      }
+      updateReportSelectionUI();
+    }
+
+    function selectAllReportTypes(selectAll) {
+      document.querySelectorAll('input[name="report_type_check"]').forEach(cb => {
+        cb.checked = !!selectAll;
+      });
+      onReportCheckboxChanged();
+    }
+
+    function getFileTitleForReport(type, baseInput, isSingleMode) {
+      if (isSingleMode) {
+        return (baseInput || '').trim();
+      }
+      const prefix = (baseInput || 'PRIMKOPPOL').trim();
+      const meta = REPORT_METADATA[type];
+      const today = new Date().toISOString().slice(0, 10);
+      if (type === 'inventory') {
+        return `${prefix}_${meta.defaultSuffix}`;
+      }
+      return `${prefix}_${meta.defaultSuffix}_${today}`;
+    }
+
+    function onTitleOrPrefixInputChanged(val) {
+      if (selectedReportTypes.length > 1) {
+        renderBatchFilesPreview();
+      }
+    }
+
+    function renderBatchFilesPreview() {
+      const previewList = document.getElementById('batch-files-preview-list');
+      if (!previewList) return;
+      const prefixVal = document.getElementById('spreadsheet-title-input').value.trim() || 'PRIMKOPPOL';
+      
+      let html = '';
+      selectedReportTypes.forEach((type, idx) => {
+        const meta = REPORT_METADATA[type] || { name: type, icon: 'table_chart', colorClass: 'text-primary' };
+        const fileName = getFileTitleForReport(type, prefixVal, false);
+        html += `
+          <div class="p-2 rounded-lg bg-white border border-gray-200 flex items-center justify-between gap-2 shadow-2xs">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center shrink-0">
+                ${idx + 1}
+              </span>
+              <div class="min-w-0">
+                <div class="font-bold text-on-surface truncate text-xs flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px] ${meta.colorClass}">${meta.icon}</span>
+                  <span class="font-mono text-[11px] truncate">${fileName}.gsheet</span>
+                </div>
+                <div class="text-[10px] text-secondary truncate">${meta.name}</div>
+              </div>
+            </div>
+            <span class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-medium shrink-0">
+              Siap Ekspor
+            </span>
+          </div>
+        `;
+      });
+      previewList.innerHTML = html;
+    }
+
+    function updateReportSelectionUI() {
+      const allTypes = ['inventory', 'finance', 'sales', 'mutasi', 'shift'];
+      const count = selectedReportTypes.length;
+
+      // Update card visual styles
+      allTypes.forEach(type => {
+        const card = document.getElementById(`report-card-${type}`);
+        const isChecked = selectedReportTypes.includes(type);
+        if (card) {
+          if (isChecked) {
+            card.classList.add('border-primary', 'bg-primary/5', 'shadow-2xs');
+            card.classList.remove('border-gray-200', 'bg-white');
+          } else {
+            card.classList.remove('border-primary', 'bg-primary/5', 'shadow-2xs');
+            card.classList.add('border-gray-200', 'bg-white');
+          }
+        }
+      });
+
+      // Update counter badge
+      const counterBadge = document.getElementById('selected-reports-counter-badge');
+      if (counterBadge) {
+        if (count === 0) {
+          counterBadge.textContent = '0 Laporan (Pilih Minimal 1)';
+          counterBadge.className = 'text-[11px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full';
+        } else if (count === 1) {
+          counterBadge.textContent = '1 Laporan Dipilih';
+          counterBadge.className = 'text-[11px] font-bold text-primary bg-primary-fixed/40 border border-primary/20 px-2.5 py-0.5 rounded-full';
+        } else {
+          counterBadge.textContent = `${count} Laporan Dipilih (Mode Batch)`;
+          counterBadge.className = 'text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full';
+        }
+      }
+
+      // Step 2 & 4 adaptations
+      const titleLabel = document.getElementById('spreadsheet-title-label');
+      const titleInput = document.getElementById('spreadsheet-title-input');
+      const extTag = document.getElementById('gsheet-ext-tag');
+      const batchBadge = document.getElementById('batch-naming-mode-badge');
+      const batchPreviewContainer = document.getElementById('batch-files-preview-container');
+      const batchPreviewCount = document.getElementById('batch-files-preview-count');
+      const titleHint = document.getElementById('spreadsheet-title-hint');
+      const rowCountBadge = document.getElementById('preview-row-count-badge');
+      const columnsList = document.getElementById('preview-columns-list');
+      const uploadBtn = document.getElementById('btn-execute-drive-upload');
+      const uploadBtnText = document.getElementById('upload-btn-text');
+
+      if (count === 0) {
+        titleLabel.textContent = '2. Nama File Spreadsheet di Google Drive:';
+        batchBadge.classList.add('hidden');
+        extTag.classList.remove('hidden');
+        batchPreviewContainer.classList.add('hidden');
+        titleHint.textContent = 'Pilih minimal satu laporan di atas untuk mengatur penamaan file.';
+        rowCountBadge.textContent = '0 Data';
+        columnsList.textContent = 'Silakan pilih minimal satu laporan di Langkah 1 untuk melihat ringkasan kolom data.';
+        uploadBtn.disabled = true;
+        uploadBtnText.textContent = 'Pilih Minimal 1 Laporan';
+      } else if (count === 1) {
+        const singleType = selectedReportTypes[0];
+        titleLabel.textContent = '2. Nama File Spreadsheet di Google Drive:';
+        batchBadge.classList.add('hidden');
+        extTag.classList.remove('hidden');
+        batchPreviewContainer.classList.add('hidden');
+        titleHint.textContent = 'Nama file spreadsheet yang akan disimpan di Google Drive.';
+        uploadBtn.disabled = false;
+        uploadBtnText.textContent = 'Simpan ke Google Drive';
+
+        if (window.GoogleDriveService) {
+          const dataObj = window.GoogleDriveService.generateReportData(singleType);
+          if (!titleInput.value || titleInput.value === 'PRIMKOPPOL' || titleInput.value.startsWith('PRIMKOPPOL_Laporan_')) {
+            titleInput.value = dataObj.title;
+          }
+          rowCountBadge.textContent = `${dataObj.rows.length} Baris Data`;
+          columnsList.textContent = `Kolom (${dataObj.headers.length}): ` + dataObj.headers.join(', ');
+        }
+      } else {
+        // Multi-select / Batch mode
+        titleLabel.textContent = '2. Awalan (Prefix) Penamaan File Batch:';
+        batchBadge.classList.remove('hidden');
+        extTag.classList.add('hidden');
+        batchPreviewContainer.classList.remove('hidden');
+        batchPreviewCount.textContent = `Daftar File yang Akan Dibuat (${count} File):`;
+        titleHint.textContent = 'Awalan nama untuk semua file laporan yang dicentang. Setiap jenis laporan akan otomatis diberi format terstandarisasi.';
+
+        if (titleInput.value.startsWith('PRIMKOPPOL_Laporan_')) {
+          titleInput.value = 'PRIMKOPPOL';
+        } else if (!titleInput.value.trim()) {
+          titleInput.value = 'PRIMKOPPOL';
+        }
+
+        renderBatchFilesPreview();
+
+        let totalEstimatedRows = 0;
+        const reportNames = [];
+        if (window.GoogleDriveService) {
+          selectedReportTypes.forEach(t => {
+            const dataObj = window.GoogleDriveService.generateReportData(t);
+            totalEstimatedRows += (dataObj.rows ? dataObj.rows.length : 0);
+            const meta = REPORT_METADATA[t];
+            reportNames.push(meta ? meta.name : t);
+          });
+        }
+
+        rowCountBadge.textContent = `${count} Laporan (~${totalEstimatedRows} Total Baris)`;
+        columnsList.textContent = `Laporan Terpilih: ` + reportNames.join(' • ');
+
+        uploadBtn.disabled = false;
+        uploadBtnText.textContent = `Ekspor Batch (${count} Laporan) ke Drive`;
+      }
+    }
+
+    function onReportTypeChanged(type) {
+      selectedReportTypes = [type];
+      selectedReportType = type;
+      document.querySelectorAll('input[name="report_type_check"]').forEach(cb => {
+        cb.checked = (cb.value === type);
+      });
+      updateReportSelectionUI();
+    }
+
+    // Google Drive Folder Selection Functions
+    async function loadDriveFolders(forceRefresh = false) {
+      if (!window.GoogleDriveService || !window.GoogleDriveService.isConnected()) {
+        return;
+      }
+
+      const indicator = document.getElementById('folder-loading-indicator');
+      if (indicator) indicator.classList.remove('hidden');
+
+      try {
+        cachedDriveFolders = await window.GoogleDriveService.listDriveFolders();
+        populateFolderSelect(cachedDriveFolders);
+        
+        const filterBox = document.getElementById('folder-filter-box');
+        if (filterBox) {
+          if (cachedDriveFolders.length > 5) {
+            filterBox.classList.remove('hidden');
+          } else {
+            filterBox.classList.add('hidden');
+          }
+        }
+      } catch (err) {
+        console.warn('[GoogleDrive] Gagal memuat folder:', err);
+      } finally {
+        if (indicator) indicator.classList.add('hidden');
+      }
+    }
+
+    function populateFolderSelect(folders, filterTerm = '') {
+      const select = document.getElementById('drive-folder-select');
+      const schedSelect = document.getElementById('sched-input-folder');
+      if (!select && !schedSelect) return;
+
+      const currentVal = selectedFolderId;
+      let html = `<option value="root">📁 [Root] Folder Utama Google Drive</option>`;
+
+      let filtered = folders || [];
+      if (filterTerm && filterTerm.trim()) {
+        const q = filterTerm.trim().toLowerCase();
+        filtered = filtered.filter(f => (f.name || '').toLowerCase().includes(q));
+      }
+
+      if (filtered.length > 0) {
+        html += `<optgroup label="Folder di Google Drive Anda (${filtered.length})">`;
+        filtered.forEach(f => {
+          html += `<option value="${f.id}">📁 ${f.name}</option>`;
+        });
+        html += `</optgroup>`;
+      } else if (filterTerm) {
+        html += `<option disabled>Tidak ditemukan folder dengan nama "${filterTerm}"</option>`;
+      }
+
+      if (select) {
+        select.innerHTML = html;
+        // Restore selection if valid
+        if (currentVal && (currentVal === 'root' || (folders && folders.some(f => f.id === currentVal)))) {
+          select.value = currentVal;
+        } else {
+          select.value = 'root';
+          selectedFolderId = 'root';
+          selectedFolderName = 'Root (Folder Utama Google Drive)';
+        }
+      }
+
+      if (schedSelect) {
+        let schedHtml = `<option value="root">📁 Root (Folder Utama Google Drive)</option>`;
+        if (folders && folders.length > 0) {
+          schedHtml += `<optgroup label="Folder di Google Drive Anda (${folders.length})">`;
+          folders.forEach(f => {
+            schedHtml += `<option value="${f.id}">📁 ${f.name}</option>`;
+          });
+          schedHtml += `</optgroup>`;
+        }
+        schedSelect.innerHTML = schedHtml;
+      }
+
+      updateFolderDisplayUI();
+    }
+
+    function filterDriveFolderOptions(val) {
+      populateFolderSelect(cachedDriveFolders, val);
+    }
+
+    function onTargetFolderSelected(val) {
+      selectedFolderId = val;
+      if (val === 'root') {
+        selectedFolderName = 'Root (Folder Utama Google Drive)';
+      } else {
+        const found = cachedDriveFolders.find(f => f.id === val);
+        selectedFolderName = found ? found.name : 'Folder Terpilih';
+      }
+      updateFolderDisplayUI();
+    }
+
+    function updateFolderDisplayUI() {
+      const displayName = document.getElementById('selected-folder-display-name');
+      const confirmFolder = document.getElementById('confirm-folder-name');
+      if (displayName) {
+        displayName.innerHTML = `
+          <span class="material-symbols-outlined text-sm text-amber-600">folder</span>
+          <span class="truncate">${selectedFolderName}</span>
+        `;
+      }
+      if (confirmFolder) {
+        confirmFolder.textContent = selectedFolderName;
+      }
+    }
+
+    function toggleNewFolderInput(show) {
+      const container = document.getElementById('new-folder-form-container');
+      const input = document.getElementById('new-folder-name-input');
+      if (!container) return;
+
+      const isHidden = container.classList.contains('hidden');
+      const shouldShow = show !== undefined ? show : isHidden;
+
+      if (shouldShow) {
+        container.classList.remove('hidden');
+        if (input) {
+          input.value = `Laporan POS PRIMKOPPOL ${new Date().getFullYear()}`;
+          input.focus();
+          input.select();
+        }
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    async function handleCreateFolderSubmit() {
+      const input = document.getElementById('new-folder-name-input');
+      const saveBtn = document.getElementById('btn-save-new-folder');
+      const folderName = input ? input.value.trim() : '';
+
+      if (!folderName) {
+        alert('Silakan ketikkan nama folder baru.');
+        return;
+      }
+
+      if (!window.GoogleDriveService || !window.GoogleDriveService.isConnected()) {
+        alert('Silakan masuk dengan akun Google Drive terlebih dahulu.');
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span><span>Membuat...</span>`;
+
+      try {
+        const newFolder = await window.GoogleDriveService.createDriveFolder(folderName);
+        cachedDriveFolders.unshift(newFolder);
+        selectedFolderId = newFolder.id;
+        selectedFolderName = newFolder.name;
+        populateFolderSelect(cachedDriveFolders);
+        toggleNewFolderInput(false);
+        showStatusBanner('success', `
+          <div class="flex items-center gap-2 font-semibold">
+            <span class="material-symbols-outlined text-base text-emerald-700">folder_special</span>
+            <span>Folder "<strong>${newFolder.name}</strong>" berhasil dibuat di Google Drive dan dipilih!</span>
+          </div>
+        `);
+      } catch (err) {
+        console.error('Create folder error:', err);
+        showStatusBanner('error', 'Gagal membuat folder di Google Drive: ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<span class="material-symbols-outlined text-sm">check</span><span>Buat & Pilih</span>`;
+      }
+    }
+
+    async function handleGoogleSignIn() {
+      if (!window.GoogleDriveService) return;
+      try {
+        const btn = document.getElementById('btn-gsi-signin');
+        btn.disabled = true;
+        await window.GoogleDriveService.signInWithGoogle();
+        loadDriveFolders();
+      } catch (err) {
+        console.error('Google sign in error:', err);
+        showStatusBanner('error', 'Gagal login Google: ' + err.message + ' (Pastikan popup diizinkan atau buka di Tab Baru).');
+      } finally {
+        const btn = document.getElementById('btn-gsi-signin');
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    let pendingDuplicateContext = null;
+
+    async function handleGoogleSignOut() {
+      if (!window.GoogleDriveService) return;
+      try {
+        await window.GoogleDriveService.signOutGoogle();
+        cachedDriveFolders = [];
+        selectedFolderId = 'root';
+        selectedFolderName = 'Root (Folder Utama Google Drive)';
+        populateFolderSelect([]);
+        updateFolderDisplayUI();
+        showStatusBanner('info', 'Anda telah keluar dari akun Google.');
+      } catch (err) {
+        console.error('Sign out error:', err);
+      }
+    }
+
+    // Check duplicate and initiate export (supports Single and Multi-file Batch)
+    async function confirmAndUploadSpreadsheet() {
+      const isConn = window.GoogleDriveService && window.GoogleDriveService.isConnected();
+      if (!isConn) {
+        showStatusBanner('warning', 'Silakan klik tombol "Sign in with Google" terlebih dahulu untuk menghubungkan akun Google Drive Anda.');
+        return;
+      }
+
+      if (selectedReportTypes.length === 0) {
+        showStatusBanner('warning', 'Silakan pilih minimal satu laporan untuk diekspor.');
+        return;
+      }
+
+      const inputVal = document.getElementById('spreadsheet-title-input').value.trim();
+      if (!inputVal) {
+        showStatusBanner('warning', selectedReportTypes.length === 1 ? 'Nama file spreadsheet tidak boleh kosong.' : 'Awalan (prefix) nama file tidak boleh kosong.');
+        return;
+      }
+
+      const isSingle = selectedReportTypes.length === 1;
+      const filesToExport = selectedReportTypes.map(type => {
+        const title = isSingle ? inputVal : getFileTitleForReport(type, inputVal, false);
+        const meta = REPORT_METADATA[type];
+        return {
+          reportType: type,
+          reportName: meta ? meta.name : type,
+          title: title,
+          mode: 'create',
+          existingFileId: null
+        };
+      });
+
+      const uploadBtn = document.getElementById('btn-execute-drive-upload');
+      const uploadText = document.getElementById('upload-btn-text');
+      uploadBtn.disabled = true;
+      uploadText.textContent = 'Mengecek Duplikasi...';
+      showStatusBanner('loading', isSingle
+        ? `Memeriksa apakah file "${filesToExport[0].title}" sudah ada di folder "${selectedFolderName}"...`
+        : `Memeriksa duplikasi nama ${filesToExport.length} file di folder "${selectedFolderName}" Google Drive...`);
+
+      try {
+        const duplicates = [];
+        for (const item of filesToExport) {
+          const existing = await window.GoogleDriveService.checkFileExistsInFolder(item.title, selectedFolderId);
+          if (existing) {
+            const suggested = await window.GoogleDriveService.findAvailableNewFileName(item.title, selectedFolderId);
+            duplicates.push({
+              ...item,
+              existingFile: existing,
+              suggestedNewName: suggested
+            });
+          }
+        }
+
+        if (duplicates.length > 0) {
+          uploadBtn.disabled = false;
+          uploadText.textContent = isSingle ? 'Simpan ke Google Drive' : `Ekspor Batch (${filesToExport.length} Laporan) ke Drive`;
+          hideStatusBanner();
+
+          pendingDuplicateContext = {
+            duplicates,
+            allFiles: filesToExport,
+            folderId: selectedFolderId,
+            folderName: selectedFolderName,
+            isSingle
+          };
+
+          openDuplicateModal(pendingDuplicateContext);
+          return;
+        }
+
+        // No duplicates found, execute batch upload directly!
+        await executeBatchUpload(filesToExport);
+      } catch (err) {
+        console.error('Check duplicate error:', err);
+        showStatusBanner('error', 'Gagal memeriksa folder di Google Drive: ' + err.message);
+        uploadBtn.disabled = false;
+        uploadText.textContent = isSingle ? 'Simpan ke Google Drive' : `Ekspor Batch (${filesToExport.length} Laporan) ke Drive`;
+      }
+    }
+
+    // Modal control for duplicate prompt
+    function openDuplicateModal(ctx) {
+      const container = document.getElementById('dup-conflict-container');
+      const headerTitle = document.getElementById('dup-modal-header-title');
+      const headerDesc = document.getElementById('dup-modal-header-desc');
+      const promptText = document.getElementById('dup-modal-prompt-text');
+      const overwriteTitle = document.getElementById('dup-action-overwrite-title');
+      const overwriteDesc = document.getElementById('dup-action-overwrite-desc');
+      const renameTitle = document.getElementById('dup-action-rename-title');
+      const renameDesc = document.getElementById('dup-action-rename-desc');
+      const suggestedBadge = document.getElementById('dup-suggested-badge');
+
+      if (ctx.isSingle) {
+        const d = ctx.duplicates[0];
+        headerTitle.textContent = 'File dengan Nama Sama Ditemukan';
+        headerDesc.textContent = 'File spreadsheet sudah ada di folder tujuan Google Drive.';
+        promptText.textContent = `File dengan nama ini sudah ada di folder "${ctx.folderName}". Tentukan tindakan yang ingin Anda lakukan:`;
+        overwriteTitle.textContent = 'Overwrite (Timpa File Lama)';
+        overwriteDesc.textContent = 'Perbarui seluruh isi spreadsheet lama dengan data terbaru. Tautan dan ID file di Google Drive tetap sama.';
+        renameTitle.textContent = 'Create New (Ganti Nama Baru Otomatis)';
+        renameDesc.textContent = 'Simpan sebagai file baru terpisah tanpa menimpa file lama. Sistem otomatis menambahkan nomor urut versi.';
+        suggestedBadge.textContent = d.suggestedNewName;
+
+        const modTime = d.existingFile.modifiedTime
+          ? new Date(d.existingFile.modifiedTime).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+          : 'Waktu tidak tersedia';
+
+        container.innerHTML = `
+          <div class="p-3.5 bg-surface-container-low rounded-xl border border-gray-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-secondary font-medium">Nama File yang Dituju:</span>
+              <span class="font-bold text-on-surface font-mono bg-white px-2 py-0.5 rounded border border-gray-300 truncate max-w-[220px]">
+                ${d.title}.gsheet
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-secondary font-medium">Folder Tujuan:</span>
+              <span class="font-semibold text-primary flex items-center gap-1 truncate max-w-[220px]">
+                <span class="material-symbols-outlined text-sm text-amber-600">folder</span>
+                <span class="truncate">${ctx.folderName}</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-gray-200 text-[11px]">
+              <span class="text-secondary">Terakhir Diubah di Drive:</span>
+              <span class="font-medium text-gray-700">${modTime}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        // Multi-file batch conflict mode
+        const dupCount = ctx.duplicates.length;
+        const totalCount = ctx.allFiles.length;
+        headerTitle.textContent = `${dupCount} dari ${totalCount} File Ditemukan Sudah Ada`;
+        headerDesc.textContent = 'Terdapat konflik nama file pada batch ekspor di folder Google Drive.';
+        promptText.textContent = `Ditemukan ${dupCount} file yang namanya sudah ada di folder "${ctx.folderName}". Tentukan tindakan untuk seluruh file yang berkonflik:`;
+        overwriteTitle.textContent = `Overwrite ${dupCount} File Lama`;
+        overwriteDesc.textContent = `Timpa isi file yang berkonflik dengan data terbaru. File lain yang belum ada akan tetap dibuat sebagai file baru.`;
+        renameTitle.textContent = `Create New Semua (${dupCount} Diberi Nama Baru)`;
+        renameDesc.textContent = `Simpan seluruh file sebagai file baru terpisah tanpa menimpa. File yang duplikat otomatis diberi nomor versi (1), (2), dst.`;
+        suggestedBadge.textContent = `${dupCount} file otomatis dinamai baru`;
+
+        let listHtml = `
+          <div class="p-3 bg-surface-container-low rounded-xl border border-gray-200 space-y-2 max-h-48 overflow-y-auto custom-scroll">
+            <div class="text-[11px] font-bold text-on-surface flex items-center justify-between">
+              <span>Daftar File yang Duplikat di Folder:</span>
+              <span class="text-amber-800 bg-amber-100 px-2 py-0.5 rounded text-[10px] font-semibold border border-amber-300">
+                ${dupCount} Duplikasi
+              </span>
+            </div>
+            <div class="space-y-1.5">
+        `;
+
+        ctx.duplicates.forEach(d => {
+          const modTime = d.existingFile.modifiedTime
+            ? new Date(d.existingFile.modifiedTime).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+            : '-';
+          listHtml += `
+            <div class="p-2 bg-white rounded-lg border border-amber-200 flex items-start justify-between gap-2 shadow-2xs">
+              <div class="min-w-0">
+                <div class="font-bold text-amber-950 font-mono text-[11px] truncate">
+                  ${d.title}.gsheet
+                </div>
+                <div class="text-[10px] text-secondary flex items-center gap-1.5 mt-0.5">
+                  <span>${d.reportName}</span>
+                  <span>•</span>
+                  <span>Diubah: ${modTime}</span>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="text-[10px] text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 font-mono">
+                  ➜ ${d.suggestedNewName}
+                </span>
+              </div>
+            </div>
+          `;
+        });
+
+        listHtml += `
+            </div>
+          </div>
+        `;
+        container.innerHTML = listHtml;
+      }
+
+      const modal = document.getElementById('drive-duplicate-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDuplicateModal() {
+      const modal = document.getElementById('drive-duplicate-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Handler for user's decision on duplicate prompt: 'overwrite' | 'rename' | 'cancel'
+    async function resolveDuplicatePrompt(choice) {
+      closeDuplicateModal();
+      if (!pendingDuplicateContext) return;
+
+      const ctx = pendingDuplicateContext;
+      pendingDuplicateContext = null;
+
+      if (choice === 'cancel') {
+        showStatusBanner('info', 'Ekspor dibatalkan. Anda dapat menyesuaikan nama atau memilih folder lain.');
+        return;
+      }
+
+      if (choice === 'overwrite') {
+        // Build map of duplicate file IDs
+        const dupMap = new Map();
+        ctx.duplicates.forEach(d => {
+          dupMap.set(d.reportType, d.existingFile.id);
+        });
+
+        const configuredFiles = ctx.allFiles.map(f => {
+          if (dupMap.has(f.reportType)) {
+            return {
+              ...f,
+              mode: 'overwrite',
+              existingFileId: dupMap.get(f.reportType)
+            };
+          }
+          return f;
+        });
+
+        await executeBatchUpload(configuredFiles);
+        return;
+      }
+
+      if (choice === 'rename') {
+        // Build map of suggested new names
+        const renameMap = new Map();
+        ctx.duplicates.forEach(d => {
+          renameMap.set(d.reportType, d.suggestedNewName);
+        });
+
+        const configuredFiles = ctx.allFiles.map(f => {
+          if (renameMap.has(f.reportType)) {
+            return {
+              ...f,
+              title: renameMap.get(f.reportType),
+              mode: 'create'
+            };
+          }
+          return f;
+        });
+
+        if (ctx.isSingle && configuredFiles.length === 1) {
+          document.getElementById('spreadsheet-title-input').value = configuredFiles[0].title;
+        }
+
+        await executeBatchUpload(configuredFiles);
+        return;
+      }
+    }
+
+    // Unified Batch and Single Upload Executor
+    async function executeBatchUpload(files) {
+      const uploadBtn = document.getElementById('btn-execute-drive-upload');
+      const uploadText = document.getElementById('upload-btn-text');
+      uploadBtn.disabled = true;
+
+      const total = files.length;
+      const results = [];
+      const errors = [];
+
+      for (let i = 0; i < total; i++) {
+        const f = files[i];
+        const progressLabel = `(${i + 1} dari ${total})`;
+        uploadText.textContent = `Menyimpan ${progressLabel}...`;
+        showStatusBanner('loading', `
+          <div class="space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-xs text-blue-900">
+              <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+              <span>Menyimpan ${progressLabel}: <strong>${f.reportName}</strong></span>
+            </div>
+            <p class="text-[11px] text-blue-800">Menulis file "${f.title}" ke folder "${selectedFolderName}" di Google Drive...</p>
+          </div>
+        `);
+
+        try {
+          let res;
+          if (f.mode === 'overwrite' && f.existingFileId) {
+            res = await window.GoogleDriveService.overwriteSpreadsheetInGoogleDrive(
+              f.existingFileId,
+              f.reportType,
+              f.title,
+              selectedFolderName
+            );
+            results.push({ ...res, reportType: f.reportType, isOverwrite: true });
+          } else {
+            res = await window.GoogleDriveService.uploadSpreadsheetToGoogleDrive(
+              f.reportType,
+              f.title,
+              selectedFolderId,
+              selectedFolderName
+            );
+            results.push({ ...res, reportType: f.reportType, isOverwrite: false });
+          }
+        } catch (err) {
+          console.error(`Gagal mengekspor ${f.reportName}:`, err);
+          errors.push({ report: f, error: err.message });
+        }
+      }
+
+      uploadBtn.disabled = false;
+      uploadText.textContent = total === 1 ? 'Simpan ke Google Drive' : `Ekspor Batch (${total} Laporan) ke Drive`;
+
+      refreshDriveHistoryUI();
+      updateLastExportedBadges();
+
+      if (results.length > 0 && errors.length === 0) {
+        showStatusBanner('success', `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="font-bold text-emerald-900 flex items-center gap-1.5 text-xs">
+                <span class="material-symbols-outlined text-base text-emerald-700">task_alt</span>
+                <span>${total === 1 ? 'Spreadsheet Berhasil Dibuat di Google Drive!' : `Batch Ekspor Berhasil! (${results.length} File Tersimpan di Drive)`}</span>
+              </div>
+              <span class="text-[10px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 font-semibold">
+                Folder: ${selectedFolderName}
+              </span>
+            </div>
+            <div class="space-y-1.5 max-h-48 overflow-y-auto custom-scroll pr-1">
+              ${results.map(r => `
+                <div class="p-2 bg-emerald-50/90 border border-emerald-200 rounded-lg flex items-center justify-between gap-2 text-xs">
+                  <div class="min-w-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-700 text-base shrink-0">${r.isOverwrite ? 'published_with_changes' : 'table_chart'}</span>
+                    <div class="truncate">
+                      <div class="font-bold text-emerald-950 truncate">${r.name}</div>
+                      <div class="text-[10px] text-emerald-800 flex items-center gap-1">
+                        <span>${r.rowCount} baris</span>
+                        <span>•</span>
+                        <span class="font-semibold">${r.isOverwrite ? 'Diperbarui (Overwritten)' : 'File Baru'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="${r.webViewLink}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[11px] flex items-center gap-1 shrink-0 transition shadow-xs">
+                    <span>Buka</span>
+                    <span class="material-symbols-outlined text-xs">open_in_new</span>
+                  </a>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `);
+      } else if (results.length > 0 && errors.length > 0) {
+        showStatusBanner('warning', `
+          <div class="space-y-1.5">
+            <div class="font-bold text-amber-950 text-xs flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base text-amber-700">warning</span>
+              <span>Sebagian Ekspor Berhasil (${results.length} tersimpan, ${errors.length} gagal).</span>
+            </div>
+            <div class="text-[11px] text-amber-900">
+              Beberapa file berhasil disimpan. Silakan coba kembali untuk file yang gagal.
+            </div>
+          </div>
+        `);
+      } else {
+        showStatusBanner('error', `Gagal mengekspor file: ${errors.map(e => e.report.reportName + ' (' + e.error + ')').join(', ')}`);
+      }
+    }
+
+    function showStatusBanner(type, message) {
+      const banner = document.getElementById('drive-status-banner');
+      banner.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'text-emerald-900', 'bg-rose-50', 'border-rose-300', 'text-rose-900', 'bg-amber-50', 'border-amber-300', 'text-amber-900', 'bg-blue-50', 'border-blue-300', 'text-blue-900');
+
+      if (type === 'success') {
+        banner.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
+        banner.innerHTML = message;
+      } else if (type === 'error') {
+        banner.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-900');
+        banner.innerHTML = `<div class="flex items-center gap-2 font-semibold"><span class="material-symbols-outlined text-base">error</span><span>${message}</span></div>`;
+      } else if (type === 'warning') {
+        banner.classList.add('bg-amber-50', 'border-amber-300', 'text-amber-900');
+        banner.innerHTML = `<div class="flex items-center gap-2 font-semibold"><span class="material-symbols-outlined text-base">warning</span><span>${message}</span></div>`;
+      } else if (type === 'loading') {
+        banner.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-900');
+        banner.innerHTML = `<div class="flex items-center gap-2 font-semibold"><span class="material-symbols-outlined text-base animate-spin">progress_activity</span><span>${message}</span></div>`;
+      } else {
+        banner.classList.add('bg-surface-container-low', 'border-gray-300', 'text-secondary');
+        banner.textContent = message;
+      }
+    }
+
+    function hideStatusBanner() {
+      const banner = document.getElementById('drive-status-banner');
+      banner.classList.add('hidden');
+      banner.innerHTML = '';
+    }
+
+    function formatLastExportedTimestamp(isoString) {
+      if (!isoString) return null;
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return null;
+
+      const dateStr = d.toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+      const timeStr = d.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      return `${dateStr}, ${timeStr}`;
+    }
+
+    function updateLastExportedBadges() {
+      if (!window.GoogleDriveService || !window.GoogleDriveService.getLastExportedTimestamps) return;
+      const map = window.GoogleDriveService.getLastExportedTimestamps();
+      const reportTypes = ['inventory', 'finance', 'sales', 'mutasi', 'shift'];
+
+      reportTypes.forEach(type => {
+        const badge = document.getElementById(`last-export-badge-${type}`);
+        if (!badge) return;
+
+        const ts = map[type];
+        if (ts) {
+          const formatted = formatLastExportedTimestamp(ts);
+          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-emerald-50 text-emerald-800 border-emerald-200 shadow-2xs';
+          badge.title = `Terakhir diekspor ke Google Drive: ${new Date(ts).toLocaleString('id-ID')}`;
+          badge.innerHTML = `
+            <span class="material-symbols-outlined text-[12px] text-emerald-600">cloud_done</span>
+            <span>Last Exported: <strong class="font-bold text-emerald-950">${formatted}</strong></span>
+          `;
+        } else {
+          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md border flex items-center gap-1 shrink-0 bg-surface-container-low text-secondary border-gray-200';
+          badge.title = 'Belum pernah diekspor ke Google Drive';
+          badge.innerHTML = `
+            <span class="material-symbols-outlined text-[12px] text-gray-400">schedule</span>
+            <span>Last Exported: Belum pernah</span>
+          `;
+        }
+      });
+    }
+
+    function refreshDriveHistoryUI() {
+      updateLastExportedBadges();
+      const list = window.GoogleDriveService ? window.GoogleDriveService.getRecentExports() : [];
+      const container = document.getElementById('drive-history-list');
+      const countLabel = document.getElementById('drive-history-count');
+      countLabel.textContent = `${list.length} File`;
+
+      if (list.length === 0) {
+        container.innerHTML = '<p class="text-[11px] text-secondary italic">Belum ada file yang diekspor pada sesi ini.</p>';
+        return;
+      }
+
+      container.innerHTML = list.map(item => {
+        const time = new Date(item.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const folderLabel = item.targetFolderName || 'Root Drive';
+        return `
+          <div class="p-2 bg-surface-container-lowest border border-gray-200 rounded-lg flex items-center justify-between gap-2 hover:bg-gray-50 transition">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">table_chart</span>
+              <div class="truncate">
+                <div class="font-semibold text-on-surface text-[11px] truncate">${item.name}</div>
+                <div class="text-[10px] text-secondary flex items-center gap-1.5 flex-wrap">
+                  <span>${item.reportName}</span>
+                  <span>•</span>
+                  <span>${item.rowCount} baris</span>
+                  <span>•</span>
+                  <span class="inline-flex items-center gap-0.5 bg-amber-50 text-amber-900 border border-amber-200 px-1.5 py-0.2 rounded font-semibold text-[9px] truncate max-w-[130px]">
+                    <span class="material-symbols-outlined text-[10px]">folder</span>
+                    <span class="truncate">${folderLabel}</span>
+                  </span>
+                  <span>•</span>
+                  <span>${time}</span>
+                </div>
+              </div>
+            </div>
+            <a href="${item.webViewLink}" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-[10px] flex items-center gap-1 shrink-0 transition">
+              <span>Buka</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Subscribe to Google Drive Service changes
+    window.addEventListener('DOMContentLoaded', () => {
+      const checkAuthInterval = setInterval(() => {
+        if (window.GoogleDriveService) {
+          clearInterval(checkAuthInterval);
+          updateLastExportedBadges();
+
+          window.GoogleDriveService.onAuthChange((state) => {
+            const user = state.user;
+            const isConn = state.isConnected;
+
+            const headerLabel = document.getElementById('drive-header-status-label');
+            const userNameEl = document.getElementById('drive-user-name');
+            const userEmailEl = document.getElementById('drive-user-email');
+            const userAvatarEl = document.getElementById('drive-user-avatar');
+            const gsiBtn = document.getElementById('btn-gsi-signin');
+            const signoutBtn = document.getElementById('btn-drive-signout');
+
+            if (isConn && user) {
+              if (headerLabel) {
+                headerLabel.innerHTML = `
+                  <span class="truncate max-w-[120px] font-semibold text-emerald-950">${user.displayName || user.email.split('@')[0]}</span>
+                  <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full border border-emerald-300">Drive Online</span>
+                `;
+              }
+              if (userNameEl) userNameEl.textContent = user.displayName || 'Akun Google Terverifikasi';
+              if (userEmailEl) userEmailEl.textContent = user.email;
+              if (userAvatarEl) {
+                if (user.photoURL) {
+                  userAvatarEl.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full object-cover">`;
+                } else {
+                  userAvatarEl.textContent = (user.displayName || user.email)[0].toUpperCase();
+                }
+              }
+              if (gsiBtn) gsiBtn.classList.add('hidden');
+              if (signoutBtn) signoutBtn.classList.remove('hidden');
+
+              // Pre-load folders when connected
+              loadDriveFolders();
+            } else {
+              if (headerLabel) {
+                headerLabel.innerHTML = `
+                  <span>Google Drive</span>
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full border border-emerald-200">Spreadsheet</span>
+                `;
+              }
+              if (userNameEl) userNameEl.textContent = 'Akun Google Belum Terhubung';
+              if (userEmailEl) userEmailEl.textContent = 'Masuk dengan akun Google untuk mengaktifkan sinkronisasi ke Google Drive.';
+              if (userAvatarEl) {
+                userAvatarEl.innerHTML = `<span class="material-symbols-outlined text-base">cloud_sync</span>`;
+              }
+              if (gsiBtn) gsiBtn.classList.remove('hidden');
+              if (signoutBtn) signoutBtn.classList.add('hidden');
+            }
+          });
+        }
+      }, 200);
+    });
+
+    // ==========================================
+    // MODAL TAB SWITCHING (INSTANT vs SCHEDULED)
+    // ==========================================
+    function switchModalTab(tab) {
+      currentModalTab = tab;
+      const tabInstant = document.getElementById('modal-tab-instant');
+      const tabScheduled = document.getElementById('modal-tab-scheduled');
+      const panelInstant = document.getElementById('panel-instant-export');
+      const panelScheduled = document.getElementById('panel-scheduled-export');
+      const footerInstant = document.getElementById('footer-actions-instant');
+      const footerScheduled = document.getElementById('footer-actions-scheduled');
+
+      if (tab === 'scheduled') {
+        // Tab styling
+        if (tabScheduled) {
+          tabScheduled.className = 'px-3.5 py-2 text-xs font-bold rounded-t-xl border-b-2 border-primary text-primary bg-white flex items-center gap-1.5 shadow-2xs transition';
+        }
+        if (tabInstant) {
+          tabInstant.className = 'px-3.5 py-2 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-secondary hover:text-on-surface hover:bg-white/60 flex items-center gap-1.5 transition';
+        }
+        // Panels
+        if (panelInstant) panelInstant.classList.add('hidden');
+        if (panelScheduled) panelScheduled.classList.remove('hidden');
+        // Footers
+        if (footerInstant) footerInstant.classList.add('hidden');
+        if (footerScheduled) {
+          footerScheduled.classList.remove('hidden');
+          footerScheduled.classList.add('flex');
+        }
+
+        // Render Scheduled UI
+        renderScheduledExportsListUI();
+        renderScheduledLogsUI();
+        updateWorkerStatusUI();
+      } else {
+        // Tab styling
+        if (tabInstant) {
+          tabInstant.className = 'px-3.5 py-2 text-xs font-bold rounded-t-xl border-b-2 border-primary text-primary bg-white flex items-center gap-1.5 shadow-2xs transition';
+        }
+        if (tabScheduled) {
+          tabScheduled.className = 'px-3.5 py-2 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-secondary hover:text-on-surface hover:bg-white/60 flex items-center gap-1.5 transition';
+        }
+        // Panels
+        if (panelInstant) panelInstant.classList.remove('hidden');
+        if (panelScheduled) panelScheduled.classList.add('hidden');
+        // Footers
+        if (footerInstant) footerInstant.classList.remove('hidden');
+        if (footerScheduled) {
+          footerScheduled.classList.add('hidden');
+          footerScheduled.classList.remove('flex');
+        }
+      }
+    }
+
+    // ==========================================
+    // SCHEDULED EXPORT UI LOGIC & CONTROLLER
+    // ==========================================
+    const DAY_NAMES_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+    function toggleNewScheduleForm(forceState) {
+      const container = document.getElementById('form-new-schedule-container');
+      const btnToggle = document.getElementById('btn-toggle-new-sched');
+      if (!container) return;
+
+      const isHidden = container.classList.contains('hidden');
+      const show = typeof forceState === 'boolean' ? forceState : isHidden;
+
+      if (show) {
+        container.classList.remove('hidden');
+        if (btnToggle) btnToggle.innerHTML = `<span class="material-symbols-outlined text-sm">close</span><span>Tutup Form</span>`;
+        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        container.classList.add('hidden');
+        if (btnToggle) btnToggle.innerHTML = `<span class="material-symbols-outlined text-sm">add</span><span>Tambah Jadwal</span>`;
+      }
+    }
+
+    function onScheduleIntervalTypeChanged(type) {
+      const timeContainer = document.getElementById('sched-time-container');
+      const dayContainer = document.getElementById('sched-day-container');
+      const intervalDetails = document.getElementById('sched-interval-details');
+
+      if (type === 'weekly') {
+        if (timeContainer) timeContainer.classList.remove('hidden');
+        if (dayContainer) {
+          dayContainer.classList.remove('hidden');
+          dayContainer.classList.add('flex');
+        }
+        if (intervalDetails) intervalDetails.classList.add('hidden');
+      } else if (type === 'test_interval') {
+        if (timeContainer) timeContainer.classList.add('hidden');
+        if (dayContainer) {
+          dayContainer.classList.add('hidden');
+          dayContainer.classList.remove('flex');
+        }
+        if (intervalDetails) intervalDetails.classList.remove('hidden');
+      } else {
+        // Daily default
+        if (timeContainer) timeContainer.classList.remove('hidden');
+        if (dayContainer) {
+          dayContainer.classList.add('hidden');
+          dayContainer.classList.remove('flex');
+        }
+        if (intervalDetails) intervalDetails.classList.add('hidden');
+      }
+    }
+
+    function selectAllScheduleReportTypes(selectAll) {
+      document.querySelectorAll('input[name="sched_report_check"]').forEach(cb => {
+        cb.checked = Boolean(selectAll);
+      });
+    }
+
+    function handleSaveScheduleSubmit() {
+      const nameInput = document.getElementById('sched-input-name');
+      const prefixInput = document.getElementById('sched-input-prefix');
+      const radioChecked = document.querySelector('input[name="sched_interval_radio"]:checked');
+      const timeInput = document.getElementById('sched-input-time');
+      const dayInput = document.getElementById('sched-input-day');
+      const folderSelect = document.getElementById('sched-input-folder');
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) {
+        alert('Mohon masukkan nama jadwal ekspor.');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+
+      const reportChecks = Array.from(document.querySelectorAll('input[name="sched_report_check"]:checked'));
+      const selectedReports = reportChecks.map(cb => cb.value);
+      if (selectedReports.length === 0) {
+        alert('Pilih minimal 1 jenis laporan untuk disertakan dalam jadwal ekspor ini.');
+        return;
+      }
+
+      const interval = radioChecked ? radioChecked.value : 'daily';
+      const time = timeInput ? timeInput.value : '18:00';
+      const dayOfWeek = dayInput ? parseInt(dayInput.value, 10) : 1;
+      const titlePrefix = prefixInput && prefixInput.value.trim() ? prefixInput.value.trim().toUpperCase() : 'PRIMKOPPOL_AUTO';
+      const folderId = folderSelect ? folderSelect.value : 'root';
+      const folderName = folderSelect && folderSelect.options[folderSelect.selectedIndex] ? folderSelect.options[folderSelect.selectedIndex].text.replace(/^📁\s*/, '') : 'Root (Folder Utama Google Drive)';
+
+      if (!window.ScheduledExportManager) {
+        alert('Sistem Scheduled Export sedang dimuat. Mohon tunggu 1-2 detik.');
+        return;
+      }
+
+      window.ScheduledExportManager.saveOrUpdateSchedule({
+        name,
+        interval,
+        time,
+        dayOfWeek,
+        intervalMinutes: 5,
+        reportTypes: selectedReports,
+        folderId,
+        folderName,
+        titlePrefix,
+        enabled: true
+      });
+
+      toggleNewScheduleForm(false);
+      renderScheduledExportsListUI();
+      updateWorkerStatusUI();
+
+      if (window.ScheduledExportManager.showScheduledExportToast) {
+        window.ScheduledExportManager.showScheduledExportToast(
+          'Jadwal Disimpan',
+          `Jadwal "${name}" (${interval === 'daily' ? 'Harian ' + time + ' WIB' : (interval === 'weekly' ? 'Mingguan ' + DAY_NAMES_ID[dayOfWeek] + ' ' + time + ' WIB' : 'Demo 5 Menit')}) aktif di background worker.`,
+          'success'
+        );
+      }
+    }
+
+    function handleToggleSchedule(scheduleId, enabled) {
+      if (!window.ScheduledExportManager) return;
+      window.ScheduledExportManager.toggleScheduleEnabled(scheduleId, enabled);
+      renderScheduledExportsListUI();
+      updateWorkerStatusUI();
+    }
+
+    async function handleTriggerScheduleNow(scheduleId) {
+      if (!window.ScheduledExportManager) return;
+      
+      const btn = document.getElementById(`btn-trigger-${scheduleId}`);
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined text-xs animate-spin">progress_activity</span><span>Mengekspor...</span>`;
+      }
+
+      try {
+        await window.ScheduledExportManager.triggerScheduleNow(scheduleId);
+      } catch (err) {
+        alert('Gagal mengekspor: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span class="material-symbols-outlined text-xs text-emerald-700">bolt</span><span>Jalankan</span>`;
+        }
+        renderScheduledExportsListUI();
+        renderScheduledLogsUI();
+        updateWorkerStatusUI();
+      }
+    }
+
+    function handleDeleteSchedule(scheduleId) {
+      if (!window.ScheduledExportManager) return;
+      const sched = window.ScheduledExportManager.getScheduleById(scheduleId);
+      const name = sched ? sched.name : 'jadwal ini';
+      if (!confirm(`Apakah Anda yakin ingin menghapus jadwal "${name}"?`)) {
+        return;
+      }
+
+      window.ScheduledExportManager.deleteSchedule(scheduleId);
+      renderScheduledExportsListUI();
+      updateWorkerStatusUI();
+    }
+
+    function handleCheckWorkerSchedulesNow() {
+      if (!window.ScheduledExportManager) return;
+      if (window.ScheduledExportManager.initScheduledExportWorker) {
+        window.ScheduledExportManager.initScheduledExportWorker();
+      }
+      renderScheduledExportsListUI();
+      renderScheduledLogsUI();
+      updateWorkerStatusUI();
+      if (window.ScheduledExportManager.showScheduledExportToast) {
+        window.ScheduledExportManager.showScheduledExportToast(
+          'Pemeriksaan Jadwal',
+          'Background worker sedang mengevaluasi jadwal ekspor aktif...',
+          'info'
+        );
+      }
+    }
+
+    function handleClearScheduledLogs() {
+      if (!window.ScheduledExportManager) return;
+      if (confirm('Bersihkan seluruh catatan riwayat ekspor otomatis?')) {
+        window.ScheduledExportManager.clearLogs();
+        renderScheduledLogsUI();
+      }
+    }
+
+    function updateWorkerStatusUI(statusData) {
+      if (!window.ScheduledExportManager) return;
+      const status = statusData || window.ScheduledExportManager.getStatus();
+      const schedules = window.ScheduledExportManager.getSchedules();
+      const activeCount = schedules.filter(s => s.enabled).length;
+
+      const activeBadge = document.getElementById('worker-active-badge');
+      const headerPill = document.getElementById('worker-header-pill');
+      const headerText = document.getElementById('worker-header-status-text');
+      const tabBadge = document.getElementById('tab-active-sched-count');
+      const nextRunBanner = document.getElementById('worker-next-run-text');
+      const countBadge = document.getElementById('scheduled-count-badge');
+      const headerSchedPill = document.getElementById('header-scheduled-pill');
+
+      if (headerSchedPill) {
+        if (activeCount > 0) {
+          headerSchedPill.textContent = `${activeCount} Aktif`;
+          headerSchedPill.classList.remove('hidden');
+        } else {
+          headerSchedPill.classList.add('hidden');
+        }
+      }
+
+      if (countBadge) {
+        countBadge.textContent = `${schedules.length} Jadwal (${activeCount} Aktif)`;
+      }
+
+      if (tabBadge) {
+        tabBadge.textContent = `${activeCount} Aktif`;
+      }
+
+      if (headerPill && headerText) {
+        if (activeCount > 0) {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full';
+          headerText.textContent = `Worker Aktif (${activeCount} Jadwal)`;
+        } else {
+          headerPill.className = 'hidden sm:flex items-center gap-1.5 text-[11px] font-medium text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full';
+          headerText.textContent = 'Semua Jadwal Nonaktif';
+        }
+      }
+
+      if (activeBadge) {
+        activeBadge.textContent = activeCount > 0 ? `Aktif (${activeCount} Berjalan)` : 'Siaga (Standby)';
+      }
+
+      if (nextRunBanner) {
+        if (activeCount === 0) {
+          nextRunBanner.textContent = 'Tidak ada jadwal yang sedang aktif.';
+        } else {
+          const activeSchedules = schedules.filter(s => s.enabled);
+          const descriptions = activeSchedules.map(s => {
+            if (s.interval === 'daily') return `${s.name} (Harian ${s.time || '18:00'} WIB)`;
+            if (s.interval === 'weekly') return `${s.name} (${DAY_NAMES_ID[s.dayOfWeek]} ${s.time || '08:00'} WIB)`;
+            return `${s.name} (Demo ${s.intervalMinutes || 5} Menit)`;
+          });
+          nextRunBanner.textContent = descriptions.join(' • ');
+        }
+      }
+    }
+
+    function renderScheduledExportsListUI() {
+      const container = document.getElementById('scheduled-cards-container');
+      if (!container || !window.ScheduledExportManager) return;
+
+      const schedules = window.ScheduledExportManager.getSchedules();
+
+      if (schedules.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 rounded-xl border border-dashed border-gray-300 bg-surface-container-low text-center">
+            <span class="material-symbols-outlined text-3xl text-gray-400 mb-1">schedule_send</span>
+            <div class="font-bold text-on-surface text-xs">Belum Ada Jadwal Ekspor Terkonfigurasi</div>
+            <p class="text-secondary text-[11px] mt-1 max-w-sm mx-auto">
+              Buat jadwal otomatis agar laporan kasir, rekonsiliasi shift, dan stok gudang tersinkron ke Google Drive tanpa klik manual.
+            </p>
+            <button type="button" onclick="toggleNewScheduleForm(true)" class="mt-3 px-3.5 py-1.5 rounded-lg bg-primary text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs">
+              <span class="material-symbols-outlined text-sm">add</span>
+              <span>+ Buat Jadwal Sekarang</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      schedules.forEach(sched => {
+        const isEnabled = Boolean(sched.enabled);
+        const repTypes = Array.isArray(sched.reportTypes) ? sched.reportTypes : ['inventory'];
+        
+        let intervalLabel = '';
+        let intervalIcon = 'alarm';
+        if (sched.interval === 'daily') {
+          intervalLabel = `Harian: Setiap hari pukul ${sched.time || '18:00'} WIB`;
+          intervalIcon = 'today';
+        } else if (sched.interval === 'weekly') {
+          intervalLabel = `Mingguan: Setiap ${DAY_NAMES_ID[sched.dayOfWeek]} pukul ${sched.time || '08:00'} WIB`;
+          intervalIcon = 'date_range';
+        } else if (sched.interval === 'test_interval') {
+          intervalLabel = `Demo: Interval per ${sched.intervalMinutes || 5} Menit`;
+          intervalIcon = 'bolt';
+        } else {
+          intervalLabel = `Harian ${sched.time || '18:00'} WIB`;
+        }
+
+        let lastRunText = 'Belum pernah dijalankan';
+        let lastRunBadge = `<span class="text-[10px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">Belum Ada Riwayat</span>`;
+        if (sched.lastRunTimestamp) {
+          const d = new Date(sched.lastRunTimestamp);
+          const timeStr = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+          if (sched.lastResult && sched.lastResult.success) {
+            lastRunBadge = `<span class="text-[10px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded font-bold border border-emerald-300">✓ Berhasil</span>`;
+            lastRunText = `${timeStr} (${sched.lastResult.exportedCount || 0} File)`;
+          } else {
+            lastRunBadge = `<span class="text-[10px] text-rose-800 bg-rose-100 px-2 py-0.5 rounded font-bold border border-rose-300">✕ Gagal</span>`;
+            lastRunText = `${timeStr} (${sched.lastResult?.error || 'Error'})`;
+          }
+        }
+
+        html += `
+          <div class="p-3.5 rounded-xl border ${isEnabled ? 'border-gray-200 bg-white shadow-2xs' : 'border-gray-200 bg-gray-50/70 opacity-80'} transition">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-1">
+                  <span class="font-bold text-on-surface text-xs truncate">${sched.name}</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${isEnabled ? 'bg-primary-fixed/40 text-primary border border-primary/20' : 'bg-gray-200 text-gray-600'}">
+                    <span class="material-symbols-outlined text-xs">${intervalIcon}</span>
+                    <span>${intervalLabel}</span>
+                  </span>
+                  ${lastRunBadge}
+                </div>
+
+                <!-- Report chips -->
+                <div class="flex items-center gap-1.5 flex-wrap my-1.5">
+                  <span class="text-[10px] text-secondary font-semibold">Isi Laporan:</span>
+                  ${repTypes.map(rId => {
+                    const meta = REPORT_METADATA[rId] || { name: rId, icon: 'article', colorClass: 'text-primary' };
+                    return `
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-low border border-gray-200 text-[10px] font-semibold text-on-surface">
+                        <span class="material-symbols-outlined text-xs ${meta.colorClass}">${meta.icon}</span>
+                        <span>${meta.name}</span>
+                      </span>
+                    `;
+                  }).join('')}
+                </div>
+
+                <!-- Target Folder & Prefix -->
+                <div class="flex items-center gap-3 text-[11px] text-secondary flex-wrap mt-1">
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-amber-600">folder</span>
+                    <span>${sched.folderName || 'Root Google Drive'}</span>
+                  </span>
+                  <span>•</span>
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-blue-600">tag</span>
+                    <span>Prefix: <code class="bg-gray-100 px-1 rounded text-primary font-bold">${sched.titlePrefix || 'PRIMKOPPOL_AUTO'}</code></span>
+                  </span>
+                  <span>•</span>
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-emerald-600">history</span>
+                    <span>Terakhir: ${lastRunText}</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Switch & Actions -->
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <!-- Toggle switch -->
+                <label class="relative inline-flex items-center cursor-pointer" title="${isEnabled ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan'}">
+                  <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="handleToggleSchedule('${sched.id}', this.checked)" class="sr-only peer">
+                  <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+
+                <div class="flex items-center gap-1 pt-1">
+                  <button type="button" id="btn-trigger-${sched.id}" onclick="handleTriggerScheduleNow('${sched.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-[10px] flex items-center gap-1 shadow-2xs transition" title="Picu ekspor langsung saat ini">
+                    <span class="material-symbols-outlined text-xs text-emerald-700">bolt</span>
+                    <span>Jalankan</span>
+                  </button>
+                  <button type="button" onclick="handleDeleteSchedule('${sched.id}')" class="p-1 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Hapus jadwal">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderScheduledLogsUI() {
+      const list = document.getElementById('scheduled-logs-list');
+      if (!list || !window.ScheduledExportManager) return;
+
+      const logs = window.ScheduledExportManager.getLogs();
+      if (!logs || logs.length === 0) {
+        list.innerHTML = `<p class="text-[11px] text-secondary italic">Belum ada riwayat aktivitas ekspor otomatis yang tercatat.</p>`;
+        return;
+      }
+
+      let html = '';
+      logs.slice(0, 15).forEach(log => {
+        const isSuccess = log.status === 'success';
+        const d = new Date(log.timestamp);
+        const timeStr = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        html += `
+          <div class="p-2 rounded-lg border ${isSuccess ? 'border-emerald-200 bg-emerald-50/60' : 'border-rose-200 bg-rose-50/60'} text-[11px] flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="material-symbols-outlined text-sm ${isSuccess ? 'text-emerald-700' : 'text-rose-700'} shrink-0">
+                ${isSuccess ? 'check_circle' : 'error'}
+              </span>
+              <div class="truncate">
+                <div class="font-bold ${isSuccess ? 'text-emerald-950' : 'text-rose-950'} truncate">
+                  ${log.scheduleName} • ${log.message || (isSuccess ? 'Ekspor Berhasil' : 'Ekspor Gagal')}
+                </div>
+                <div class="text-[10px] text-secondary flex items-center gap-1.5 flex-wrap">
+                  <span>${timeStr}</span>
+                  <span>•</span>
+                  <span>Folder: ${log.folderName || 'Root'}</span>
+                  ${log.files && log.files.length > 0 ? `<span>• ${log.files.length} Spreadsheet</span>` : ''}
+                </div>
+              </div>
+            </div>
+
+            ${log.files && log.files.length > 0 ? `
+              <div class="flex items-center gap-1 shrink-0">
+                ${log.files.map(f => `
+                  <a href="${f.webViewLink}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[10px] flex items-center gap-1 transition" title="Buka Spreadsheet di Google Sheets">
+                    <span>${f.name.replace(/^PRIMKOPPOL_/, '').slice(0, 14)}...</span>
+                    <span class="material-symbols-outlined text-[10px]">open_in_new</span>
+                  </a>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+    }
+
+    // Connect to ScheduledExportManager when ready
+    window.addEventListener('DOMContentLoaded', () => {
+      const checkSchedInterval = setInterval(() => {
+        if (window.ScheduledExportManager) {
+          clearInterval(checkSchedInterval);
+          
+          window.ScheduledExportManager.onStatusChange((status) => {
+            updateWorkerStatusUI(status);
+            renderScheduledExportsListUI();
+          });
+
+          window.ScheduledExportManager.onExportExecuted((result) => {
+            renderScheduledExportsListUI();
+            renderScheduledLogsUI();
+            refreshDriveHistoryUI();
+            updateLastExportedBadges();
+            updateWorkerStatusUI();
+          });
+
+          updateWorkerStatusUI();
+          renderScheduledExportsListUI();
+          renderScheduledLogsUI();
+        }
+      }, 200);
+    });
+
+    // Cross-frame messaging from reports (support both instant and scheduled)
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'OPEN_DRIVE_EXPORT') {
+        openDriveExportModal(event.data.reportType, 'instant');
+      } else if (event.data && event.data.type === 'OPEN_SCHEDULED_EXPORT') {
+        openDriveExportModal(event.data.reportType, 'scheduled');
+      }
+    });
+
+    // Hotkey listener for POS terminal shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'F1') {
+        e.preventDefault();
+        switchView('/pos');
+      } else if (e.key === 'F4') {
+        e.preventDefault();
+        switchView('/pelunasan');
+      }
+    });
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

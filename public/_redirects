@@ -1,0 +1,4 @@
+# _redirects file
+# Redirect rules go here
+
+# Note: The catch-all rule /* /index.html 200 has been removed to fix Cloudflare loop.

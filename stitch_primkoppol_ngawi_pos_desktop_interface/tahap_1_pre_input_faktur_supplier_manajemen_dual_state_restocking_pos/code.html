@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script src="/tailwind-theme.js"></script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-margin flex items-center gap-space-sm bg-surface-container-lowest"><img alt="Brand logo PRIMKOPPOL NGAWI. Primary color: #059669, Font: system-ui/Space Grotesk, Subtitle: KOPERASI POLRES NGAWI" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W5pVa4ne1bIrNVi6aLFIFisMnhsPIZJP6ZKIUo1ljc_dJfEGaf3BKAaeUv4RTgl8pLe0rD6gG5eS-TYnqucBNm3ewuITQgXyY1zUmOHSytqfXva6uWFq7-_1GQ5U9mB-GswMCwpb2FNhqurhIg6RiyHAVDXkaEOWOrjFdDoC5pWHAOGO8uDX7EU1fBzGv0-bdmEbRHCIGXzcxfmoxHmj3qiSpzEMnvzQbnlGeHiuLM2k_0KFQ1OaTXBIKc"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface leading-tight">PRIMKOPPOL</span><span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Polres Ngawi</span></div></div><div class="px-margin py-space-sm"><div class="px-space-sm py-space-xs rounded bg-surface-container-low text-on-surface-variant flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase font-semibold">Divisi</span><span class="font-label-sm text-label-sm font-bold text-primary">Waserda &amp; Logistik</span></div></div><nav class="flex flex-col gap-space-xs px-margin" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-sm rounded transition-colors bg-primary-container text-on-primary-container font-semibold shadow-[0_1px_8px_rgba(0,0,0,0.04)]" data-path="pre-input-manajemen" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span>Tahap 1: Pre-Input</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="input-fisik-gudang" href="#"><span class="material-symbols-outlined text-[20px]">warehouse</span>Tahap 2: Fisik Gudang</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="validasi-update-stok" href="#"><span class="material-symbols-outlined text-[20px]">fact_check</span>Tahap 3: Validasi Stok</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="master-barang-hpp" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span>Master Barang &amp; HPP</a><div class="h-[1px] bg-surface-container-high my-space-xs"></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="riwayat-restock" href="#"><span class="material-symbols-outlined text-[20px]">history</span>Riwayat Faktur</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="audit-selisih-opname" href="#"><span class="material-symbols-outlined text-[20px]">difference</span>Audit Selisih Opname</a></nav></div><div class="p-margin bg-surface-container-low"><div class="flex items-center justify-between py-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Sistem POS Core</span><span class="font-label-sm text-label-sm font-semibold text-primary">v2.4-STOK</span></div><div class="flex items-center justify-between py-space-xs text-on-surface-variant"><span class="font-label-sm text-label-sm">Shortcut Mode</span><span class="font-label-sm text-label-sm bg-surface-container-lowest px-space-xs rounded font-mono text-on-surface">F1-F12</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="hover:text-on-surface transition-colors cursor-pointer">Waserda POS</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="hover:text-on-surface transition-colors cursor-pointer">Manajemen Stok &amp; Restock</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="font-label-sm text-label-sm text-on-surface font-semibold">Dual-State Restocking POS</span></div><div class="h-4 w-[1px] bg-surface-container-high"></div><span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-on-surface font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-primary">store</span>Gudang Pusat &amp; Waserda Ngawi</span></div><div class="flex items-center gap-space-md"><span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-primary font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-primary animate-pulse">cloud_done</span>Cloud Sync Ready</span><div class="hidden xl:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px]">keyboard</span><span class="font-mono">[F1] Pre</span><span class="font-mono">[F2] Fisik</span><span class="font-mono">[F3] Valid</span><span class="font-mono">[F4] Save</span></div><div class="h-6 w-[1px] bg-surface-container-high"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right hidden md:flex"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Hendra Kusuma</span><span class="font-label-sm text-label-sm text-on-surface-variant">Staff Gudang &amp; Logistik</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_8px_rgba(0,0,0,0.04)]" src="https://lh3.googleusercontent.com/aida/AEtjO1V209IjDq0_-dRfgKap51v4N7VB58jkmwCXc0T4SuPC3wu23tav4svnGpJdRbWC-A_qxDvrG12zWukQfv_JOqObNaSspBvTaaE9oMPi3vm636B2gLrzCNtqfY850i2bsaRLl4a0vT-sVu52ZeAfdmwia_H-hI1-gUr1-_7gUnTgCaNx0tV9W1vYgSiLV_uaNZ2iC_JQ4rzTrzBJP2qXI1YMQ_KjlJieyGNXfnzh8WwQP13dQvmEJGJNp7wQ"/></div></div></header><main class="relative pt-16 w-full px-margin bg-background min-h-screen"><div class="flex flex-col w-full gap-space-lg pb-12">
+<!-- Top Workflow Stepper & Context Banner -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[24px]">sync_alt</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Alur Restocking Dual-State</span>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm px-space-xs py-0.5 rounded uppercase font-bold tracking-wider">Tahap 1 Aktif</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pre-Input Ekspektasi Faktur Supplier Sebelum Bongkar Muat &amp; Scan Fisik Gudang</span>
+</div>
+</div>
+<!-- Stepper Indicator -->
+<div class="flex items-center gap-space-xs overflow-x-auto w-full xl:w-auto pt-space-xs xl:pt-0">
+<div class="flex items-center gap-space-xs bg-primary-container text-on-primary px-space-sm py-space-xs rounded-lg shadow-sm">
+<span class="font-label-sm text-label-sm w-5 h-5 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center font-bold">1</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold leading-none">Pre-Input Faktur</span>
+<span class="font-body-sm text-[10px] opacity-80 leading-none">Admin Waserda</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[18px]">trending_flat</span>
+<div class="flex items-center gap-space-xs bg-surface-container-low text-secondary px-space-sm py-space-xs rounded-lg">
+<span class="font-label-sm text-label-sm w-5 h-5 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">2</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold leading-none text-on-surface-variant">Fisik Gudang</span>
+<span class="font-body-sm text-[10px] text-on-surface-variant leading-none">Scan Barcode POS</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[18px]">trending_flat</span>
+<div class="flex items-center gap-space-xs bg-surface-container-low text-secondary px-space-sm py-space-xs rounded-lg">
+<span class="font-label-sm text-label-sm w-5 h-5 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">3</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold leading-none text-on-surface-variant">Validasi Stok</span>
+<span class="font-body-sm text-[10px] text-on-surface-variant leading-none">Update Ledger HPP</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Metric Summary Highlights -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant">Faktur Menunggu</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-currency-display text-currency-display text-tertiary font-bold">3</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Dokumen</span>
+</div>
+</div>
+<div class="w-11 h-11 rounded-lg bg-surface-container-low text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">pending_actions</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant">Total Estimasi Muatan</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-currency-display text-currency-display text-on-surface font-bold">870</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Unit Fisik</span>
+</div>
+</div>
+<div class="w-11 h-11 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant">Status Tablet Gudang</span>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Online Ready</span>
+</div>
+</div>
+<div class="w-11 h-11 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">tablet_mac</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant">Faktur Selesai Hari Ini</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-currency-display text-currency-display text-primary font-bold">1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tervalidasi</span>
+</div>
+</div>
+<div class="w-11 h-11 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+</div>
+</div>
+<!-- Main Split Layout: Form Pre-Input (40%) vs Pending Grid (60%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Panel: 40% (lg:col-span-5) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Panel Header -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[22px]">post_add</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Form Registrasi Logistik</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-space-xs py-0.5 rounded font-mono text-on-surface-variant">POS-PRE-01</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold leading-tight">Pre-Input Faktur Supplier</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Masukkan rincian ekspektasi faktur barang datang dari distributor sebelum disortir fisik oleh staf gudang.
+        </p>
+</div>
+<!-- Form Container -->
+<form class="flex flex-col gap-space-md mt-space-xs" id="preInputForm" onsubmit="event.preventDefault(); triggerSubmitFeedback();">
+<!-- Field 1: Invoice Number -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface flex items-center justify-between" for="nomorFaktur">
+<span>Nomor Faktur Supplier <span class="text-tertiary">*</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">[F2] Focus</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">receipt_long</span>
+<input class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-3 py-2.5 rounded-lg bg-surface-container-low shadow-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all font-mono" id="nomorFaktur" name="nomorFaktur" placeholder="Contoh: INV-2026-001" required="" type="text" value="INV-2024/IND-8849"/>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Pastikan nomor faktur tercetak sama persis pada invoice supplier fisik.</span>
+</div>
+<!-- Field 2: Supplier Dropdown -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface flex items-center justify-between" for="namaSupplier">
+<span>Nama Supplier / Distributor <span class="text-tertiary">*</span></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Terdaftar Resmi</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">domain</span>
+<select class="w-full appearance-none bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-10 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all cursor-pointer font-medium" id="namaSupplier" name="namaSupplier" required="">
+<option selected="" value="indomarco">PT Indomarco Adi Prima (Indofood)</option>
+<option value="bulog">Perum BULOG Sub Divre Ngawi</option>
+<option value="wings">Wings Surya Distribution</option>
+<option value="fastfood">PT Fast Food Retail / Sembako Ngawi</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Field 3: Expected Quantity -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface flex items-center justify-between" for="totalQty">
+<span>Total Kuantitas Item Keseluruhan <span class="text-tertiary">*</span></span>
+<span class="font-label-sm text-label-sm text-tertiary font-medium">Validasi Muatan</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">pin</span>
+<input class="w-full bg-surface-container-low text-on-surface font-currency-display text-headline-sm pl-10 pr-12 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary font-bold transition-all" id="totalQty" name="totalQty" placeholder="Masukkan jumlah gabungan pcs" required="" type="text" value="450 pcs"/>
+<span class="absolute right-3 font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Unit</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant">
+            Total seluruh unit/kemasan fisik yang tertera pada lembar nota surat jalan supplier.
+          </p>
+</div>
+<!-- Field 4: Meta & Operational Data -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Tanggal &amp; Estimasi Bongkar
+            </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">24 Oktober 2024, 14:00 WIB</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">badge</span> Petugas Admin Pencatat
+            </span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Bripka Dian Anggraeni</span>
+</div>
+<span class="font-body-sm text-[11px] text-on-surface-variant text-right">Bendahara / Admin Waserda PRIMKOPPOL</span>
+</div>
+<!-- Submit Button CTA -->
+<button class="w-full py-3 px-space-md bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-bold rounded-lg shadow-md transition-all flex items-center justify-center gap-space-sm active:scale-[0.99]" id="btnSubmitDraft" type="submit">
+<span>Kirim Draft ke Gudang</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<!-- Informational Helper Bottom Card -->
+<div class="flex items-start gap-space-xs p-space-sm rounded-lg bg-secondary-container/50 text-on-secondary-container">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm leading-tight text-on-surface-variant">
+            Data faktur akan langsung terkirim ke terminal tablet gudang untuk pencocokan fisik barcode secara real-time.
+          </p>
+</div>
+</form>
+</div>
+<!-- Right Panel: 60% (lg:col-span-7) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Panel Header & Status Counter -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-lg text-headline-md text-on-surface font-bold">Daftar Faktur Pending</h2>
+<span class="px-space-xs py-0.5 rounded-full bg-tertiary/10 text-tertiary font-label-sm text-label-sm font-bold animate-pulse">Live</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Faktur menunggu verifikasi bongkar muat oleh staf logistik</span>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1.5 rounded-lg bg-surface-container text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-[18px]">hourglass_top</span>
+<span class="font-label-md text-label-md font-bold">3 Faktur Menunggu Scan Gudang</span>
+</div>
+</div>
+<!-- Search & Filters Toolbar -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm">
+<div class="relative w-full sm:flex-1">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-10 pr-space-md py-2 rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" placeholder="Cari faktur, supplier, atau kata kunci..." type="text"/>
+</div>
+<div class="flex items-center gap-space-xs w-full sm:w-auto">
+<button class="flex items-center gap-1 px-space-sm py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>24 Okt 2024</span>
+</button>
+<button class="flex items-center gap-1 px-space-sm py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+<span>Semua Status</span>
+</button>
+</div>
+</div>
+<!-- Data Grid / Ledger Table -->
+<div class="overflow-x-auto rounded-lg bg-surface-container-low">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase font-semibold">
+<th class="py-3 px-space-md">Nomor Faktur</th>
+<th class="py-3 px-space-md">Nama Supplier</th>
+<th class="py-3 px-space-md text-right">Ekspektasi Item</th>
+<th class="py-3 px-space-md text-center">Status</th>
+<th class="py-3 px-space-md">Waktu Input</th>
+<th class="py-3 px-space-md text-right">Aksi Manajemen</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y-0">
+<!-- Row 1 (Highlight Active Focused Draft) -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">description</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold font-mono text-on-surface">INV-2024/IND-8849</span>
+<span class="font-label-sm text-[10px] text-primary font-bold">Fokus Form Kiri</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">PT Indomarco Adi Prima</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Distributor Indofood Cbp</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">450 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">pcs</span></span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  PENDING
+                </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface">24 Okt 2024</span>
+<div class="font-label-sm text-[11px] text-on-surface-variant font-mono">10:15 WIB</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2 py-1 bg-surface-container-lowest hover:bg-surface-container text-on-surface rounded font-label-sm text-label-sm font-semibold transition-colors shadow-sm" title="Lihat Detail">
+                    Detail
+                  </button>
+<button class="px-2 py-1 bg-primary text-on-primary hover:bg-primary-container rounded font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1 shadow-sm" title="Kirim Notifikasi ke Tablet Gudang">
+<span class="material-symbols-outlined text-[14px]">send</span>
+<span>Notif</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">description</span>
+<span class="font-label-md text-label-md font-mono font-medium text-on-surface">BLG-NGW/X/0491</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Perum BULOG Sub Divre Ngawi</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Beras SPHP &amp; Komoditas</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">300 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">sak</span></span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  PENDING
+                </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface">24 Okt 2024</span>
+<div class="font-label-sm text-[11px] text-on-surface-variant font-mono">09:30 WIB</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-2.5 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface rounded font-label-sm text-label-sm font-semibold transition-colors">
+                  Detail
+                </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">description</span>
+<span class="font-label-md text-label-md font-mono font-medium text-on-surface">WNG-2024-8190</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Wings Surya Distribution</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Detergen &amp; Toiletries</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">120 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">bks</span></span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  PENDING
+                </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface">24 Okt 2024</span>
+<div class="font-label-sm text-[11px] text-on-surface-variant font-mono">08:45 WIB</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-2.5 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface rounded font-label-sm text-label-sm font-semibold transition-colors">
+                  Detail
+                </button>
+</td>
+</tr>
+<!-- Row 4 (Completed Reference) -->
+<tr class="bg-surface-container-lowest/60 hover:bg-surface-container-low transition-colors opacity-85">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">task</span>
+<span class="font-label-md text-label-md font-mono font-medium text-on-surface">SDA-2024-0012</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">PT Sinar Dairy Prima</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Susu Kental Manis &amp; Keju</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-headline-sm text-headline-sm font-medium text-on-surface">80 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">klg</span></span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/15 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  TERVERIFIKASI
+                </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface">23 Okt 2024</span>
+<div class="font-label-sm text-[11px] text-on-surface-variant font-mono">16:00 WIB</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-2.5 py-1 bg-surface-container text-on-surface rounded font-label-sm text-label-sm font-semibold transition-colors">
+                  Arsip
+                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer of Table -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-1 text-on-surface font-label-md text-label-md">
+<span class="text-on-surface-variant font-normal">Akumulasi Item Pending:</span>
+<span class="font-bold text-tertiary">870 Pcs / Kemasan Fisik</span>
+</div>
+<span class="hidden sm:inline text-outline-variant">•</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Sync Interval: Tiap 15 dtk</span>
+</div>
+<a class="inline-flex items-center gap-1 text-primary hover:text-primary-container font-label-md text-label-md font-bold transition-colors" href="#">
+<span>Pantau Terminal Gudang (Tahap 2)</span>
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</a>
+</div>
+<!-- Quick Operational Guidance Card -->
+<div class="mt-space-xs p-space-md bg-surface-container rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold font-headline-sm">
+            i
+          </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Prosedur Dual-State Waserda PRIMKOPPOL</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Setelah draft dikirim, stok master belum bertambah hingga Staf Gudang menuntaskan Tahap 2 dan admin menekan validasi final Tahap 3.</span>
+</div>
+</div>
+<button class="px-space-md py-2 bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold rounded-lg shrink-0 transition-colors shadow-sm">
+          Baca SOP Restock
+        </button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Simulation -->
+<div class="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-lg shadow-xl flex items-center gap-space-sm transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50" id="toastNotification">
+<span class="material-symbols-outlined text-primary-fixed text-[22px]">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-inverse-on-surface" id="toastTitle">Draft Berhasil Diteruskan</span>
+<span class="font-body-sm text-[11px] text-inverse-on-surface/80" id="toastDesc">Data faktur INV-2024/IND-8849 telah dialokasikan ke Tablet Terminal Gudang.</span>
+</div>
+</div>
+</div>
+<script>
+  function triggerSubmitFeedback() {
+    const invInput = document.getElementById('nomorFaktur');
+    const toast = document.getElementById('toastNotification');
+    const toastDesc = document.getElementById('toastDesc');
+    const btn = document.getElementById('btnSubmitDraft');
+    
+    // Animate button feedback
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Mengirim ke Gudang...</span>';
+    
+    setTimeout(() => {
+      btn.classList.remove('opacity-75', 'cursor-not-allowed');
+      btn.innerHTML = '<span>Kirim Draft ke Gudang</span><span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+      
+      // Update & trigger Toast
+      toastDesc.innerText = 'Data faktur ' + (invInput.value || 'Faktur') + ' telah dialokasikan ke Tablet Terminal Gudang.';
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }, 700);
+  }
+
+  // Keyboard shortcut listener [F2] to focus Invoice Number
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'F2') {
+      e.preventDefault();
+      const input = document.getElementById('nomorFaktur');
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+  });
+</script></main></div></body></html>

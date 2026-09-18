@@ -1,0 +1,876 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PRIMKOPPOL NGAWI - Kasir Koperasi &amp; Validasi Kredit Anggota</title>
+<script type="importmap">
+{
+  "imports": {
+    "rxdb": "https://esm.sh/rxdb@17.5.0",
+    "rxdb/plugins/storage-dexie": "https://esm.sh/rxdb@17.5.0/plugins/storage-dexie",
+    "rxdb/plugins/dev-mode": "https://esm.sh/rxdb@17.5.0/plugins/dev-mode",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.116.0",
+    "rxjs": "https://esm.sh/rxjs@7.8.2"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/tailwind-theme.js"></script>
+  <script src="/kopos-db.js"></script>
+</head>
+<body class="bg-surface text-on-surface font-body-md h-screen overflow-hidden flex flex-col antialiased select-none">
+
+<!-- Main POS Split-Screen Grid -->
+<main class="flex-1 flex overflow-hidden">
+<!-- LEFT COLUMN: Keranjang Belanja / Order Summary (~52% width) -->
+<section class="w-[52%] flex flex-col border-r border-outline-variant/30 bg-surface-bright h-full overflow-hidden">
+<!-- Cart Header & Barcode Search Bar -->
+<div class="p-5 border-b border-outline-variant/20 bg-surface-container-lowest shrink-0 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<h2 class="font-headline-md font-bold text-on-surface tracking-tight">Keranjang Belanja</h2>
+<span id="cart-item-count-badge" class="bg-primary/10 text-primary font-bold text-xs px-2.5 py-0.5 rounded-full border border-primary/20">2 Item</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs text-secondary font-medium mr-1">No. Nota: <strong class="text-on-surface tracking-wider">TR-20231024-0042</strong></span>
+<button class="px-2 py-1 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/40 text-xs font-semibold flex items-center gap-1 transition">
+<span class="material-symbols-outlined text-[14px]">keyboard</span>
+Hotkeys
+</button>
+<button class="px-2 py-1 rounded-lg bg-primary-container text-on-primary-container hover:opacity-90 font-semibold text-xs flex items-center gap-1 shadow-sm transition">
+<span class="material-symbols-outlined text-[14px]">point_of_sale</span>
+Hold Nota
+</button>
+</div>
+</div>
+<!-- Barcode input wrapper -->
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-secondary text-[22px] pointer-events-none">barcode_reader</span>
+<input id="barcode-input" autofocus="" class="w-full pl-11 pr-24 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary transition shadow-inner" placeholder="Scan barcode / ketik SKU (Contoh: 899100122222, 899234567890)..." type="text">
+<kbd class="absolute right-3 px-2 py-0.5 text-[11px] font-semibold text-secondary bg-surface-container rounded border border-outline-variant/40">F1 Cari</kbd>
+</div>
+
+<!-- Quick Product Catalog Shortlist -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs text-secondary">
+  <span class="font-semibold text-on-surface shrink-0">Cepat:</span>
+  <button type="button" onclick="quickAddProduct('899234567890')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Indomie (Rp 3.100)</button>
+  <button type="button" onclick="quickAddProduct('899100122222')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Gula 1kg (Rp 16.500)</button>
+  <button type="button" onclick="quickAddProduct('899886633333')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Kopi Kapal Api (Rp 14.500)</button>
+  <button type="button" onclick="quickAddProduct('899123456789')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Teh Sosro (Rp 7.500)</button>
+</div>
+</div>
+
+<!-- Scanned Items Table / List -->
+<div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+<!-- Table Column Headers -->
+<div class="grid grid-cols-12 text-xs font-semibold uppercase text-secondary px-3 py-1">
+<div class="col-span-6">Nama Produk &amp; SKU</div>
+<div class="col-span-2 text-center">Jumlah</div>
+<div class="col-span-2 text-right">Harga</div>
+<div class="col-span-2 text-right">Subtotal</div>
+</div>
+
+<!-- Dynamic Container for Cart Items -->
+<div id="cart-items-list" class="space-y-3"></div>
+
+<!-- Secondary Breakdown & Voucher Note Row -->
+<div class="pt-2">
+<div class="bg-surface-container-low/60 rounded-xl p-3 border border-outline-variant/25 text-xs space-y-1.5">
+<div class="flex justify-between text-secondary">
+<span>Subtotal Belanja Kotor</span>
+<span id="cart-gross-subtotal" class="font-currency-display font-medium text-on-surface">Rp 100.000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Diskon Anggota Koperasi</span>
+<span id="cart-discount-total" class="font-currency-display font-medium text-primary">- Rp 0</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Pajak (PPN Bebas Koperasi)</span>
+<span class="font-currency-display">Rp 0</span>
+</div>
+<div class="pt-1.5 border-t border-outline-variant/20 flex items-center justify-between text-secondary">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]">verified</span>
+<span class="font-medium">Voucher Otomatis SHU Aktif</span>
+</div>
+<span class="text-[11px] text-secondary font-mono">Diskon Langsung Waserda</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Anchored Cart Bottom Summary Container -->
+<div class="p-5 bg-surface-container-lowest border-t border-outline-variant/30 shadow-lg shrink-0">
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-xs uppercase font-bold tracking-wider text-secondary">Total Tagihan Belanja</span>
+<div id="cart-grand-total" class="text-currency-display text-primary font-currency-display font-bold text-3xl tracking-tight mt-0.5">
+Rp 100.000
+</div>
+</div>
+<button type="button" onclick="clearCart()" class="px-4 py-2 text-xs font-semibold text-error hover:bg-error-container/40 border border-error/30 rounded-xl transition flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">remove_shopping_cart</span>
+Kosongkan Keranjang
+</button>
+</div>
+<div class="flex items-center justify-between text-xs text-secondary pt-2 border-t border-outline-variant/20">
+<span id="cart-status-footer" class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+2 Item siap checkout
+</span>
+<span class="font-mono text-[11px]">RxDB Local Cache &lt; 5ms</span>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Payment & Member Validation Panel (AUTO-BLOCK STATE) (~48% width) -->
+<section class="w-[48%] flex flex-col bg-surface h-full overflow-hidden">
+<!-- Top Member Selector / Header -->
+<div class="p-5 pb-3 shrink-0 flex items-center justify-between border-b border-outline-variant/20 bg-surface-container-lowest">
+<div>
+<span class="text-xs uppercase font-bold text-secondary tracking-wider">Validasi Data Peminjam / Anggota</span>
+<h3 class="font-headline-sm text-on-surface font-bold">Profil &amp; Plafon Kredit</h3>
+</div>
+<button type="button" onclick="openMemberSelectorModal()" class="px-3 py-1 rounded-xl text-xs font-semibold bg-surface-container text-on-surface border border-outline-variant/40 hover:bg-surface-container-high transition flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">swap_horiz</span> Ganti Anggota (F2)
+</button>
+</div>
+
+<!-- Scrollable Validation Area -->
+<div class="flex-1 overflow-y-auto p-5 space-y-4">
+<!-- Member Profile Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-sm relative overflow-hidden">
+<div id="member-accent-bar" class="absolute top-0 right-0 left-0 h-1 bg-tertiary"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3.5">
+<!-- Avatar -->
+<div id="member-avatar-box" class="w-13 h-13 rounded-2xl bg-surface-container-high border-2 border-error text-error flex items-center justify-center font-currency-display font-bold text-lg shadow-sm">
+BS
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 id="member-display-name" class="font-headline-sm text-base font-bold text-on-surface">Budi Santoso</h4>
+<span id="member-display-id" class="text-xs font-mono font-bold bg-surface-container px-2 py-0.5 rounded text-on-surface-variant">ANG-0012</span>
+</div>
+<p id="member-display-unit" class="text-xs text-secondary mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">corporate_fare</span>
+Divisi Logistik Lapangan • Anggota sejak 2021
+</p>
+</div>
+</div>
+<!-- Dynamic STATUS BADGE -->
+<div id="member-status-badge" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-tertiary text-on-tertiary shadow font-headline-sm font-bold text-xs tracking-wider uppercase animate-pulse">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">block</span>
+Status: TERBLOKIR
+</div>
+</div>
+</div>
+
+<!-- Prominent Red Alert Warning Banner (Visible on AUTO-BLOCK) -->
+<div id="auto-block-alert-banner" class="rounded-2xl bg-tertiary-fixed/40 border-2 border-tertiary p-4 shadow-sm flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-tertiary text-on-tertiary flex items-center justify-center shrink-0 shadow">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="space-y-1">
+<h5 class="text-xs uppercase font-extrabold tracking-wider text-on-tertiary-fixed">
+TRANSAKSI AUTO-BLOCK: Limit kredit melampaui batas atau terdapat tunggakan simpanan.
+</h5>
+<p id="auto-block-reason-text" class="text-xs text-on-surface-variant leading-relaxed">
+Fasilitas kredit anggota dinonaktifkan otomatis oleh sistem PRIMKOPPOL NGAWI. Harap sarankan anggota melunasi piutang berjalan atau beralih ke pembayaran tunai.
+</p>
+<div class="pt-1 flex items-center gap-2">
+  <a href="/pelunasan" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+    <span class="material-symbols-outlined text-[14px]">point_of_sale</span> Buka Modul Pelunasan Piutang (F4) &rarr;
+  </a>
+</div>
+</div>
+</div>
+
+<!-- Credit Limit Visualization Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span id="limit-card-icon" class="material-symbols-outlined text-tertiary text-[20px]">credit_card_off</span>
+<h4 class="font-headline-sm text-sm font-bold text-on-surface">Plafon Kredit Anggota</h4>
+</div>
+<span id="limit-status-pill" class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-0.5 rounded-full">
+Overlimit: 105% / Terlampaui
+</span>
+</div>
+
+<!-- Progress Bar -->
+<div class="space-y-1.5">
+<div class="w-full bg-surface-container rounded-full h-3.5 overflow-hidden p-0.5 border border-outline-variant/30">
+<div id="credit-progress-bar" class="bg-tertiary h-full rounded-full w-full relative shadow-inner transition-all duration-300">
+<div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)] bg-[length:16px_16px]"></div>
+</div>
+</div>
+<div class="flex justify-between text-[11px] font-mono text-secondary">
+<span>Rp 0</span>
+<span id="credit-limit-max-label" class="font-bold text-tertiary">Maks. Plafon Rp 1.000.000</span>
+</div>
+</div>
+
+<!-- Calculation Details Ledger Table -->
+<div class="mt-2 border border-outline-variant/30 rounded-xl overflow-hidden divide-y divide-outline-variant/20 bg-surface-container-low/40 text-xs">
+<div class="flex justify-between px-3.5 py-2.5">
+<span class="text-secondary font-medium">Piutang Berjalan</span>
+<span id="ledger-current-debt" class="font-currency-display font-semibold text-on-surface">Rp 950.000</span>
+</div>
+<div class="flex justify-between px-3.5 py-2.5">
+<span class="text-secondary font-medium">Belanja Nota Baru</span>
+<span id="ledger-new-cart" class="font-currency-display font-semibold text-primary">+ Rp 100.000</span>
+</div>
+<div class="flex justify-between px-3.5 py-2.5 bg-surface-container-lowest">
+<span class="text-secondary font-medium">Batas Maksimal Plafon</span>
+<span id="ledger-max-plafon" class="font-currency-display font-bold text-on-surface">Rp 1.000.000</span>
+</div>
+<div id="ledger-total-row" class="flex justify-between px-3.5 py-2.5 bg-tertiary-fixed/30 text-tertiary font-medium">
+<span class="flex items-center gap-1 font-bold">
+<span id="ledger-total-icon" class="material-symbols-outlined text-[16px]">error</span>
+Total Akumulasi
+</span>
+<span id="ledger-total-val" class="font-currency-display font-bold text-xs text-right">
+Rp 1.050.000 <span id="ledger-overlimit-desc" class="block text-[10px] font-normal text-on-tertiary-fixed font-body-sm">(Melebihi limit sebesar Rp 50.000)</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Payment Method Selector / Action Buttons Area -->
+<div class="p-5 bg-surface-container-lowest border-t border-outline-variant/30 shadow-2xl shrink-0 space-y-3">
+<span class="text-xs uppercase font-bold tracking-wider text-secondary block">Metode Pembayaran</span>
+<div class="grid grid-cols-2 gap-3">
+<!-- Credit Button (Locked if Overlimit/Auto-Block) -->
+<div class="relative">
+<button id="btn-credit-order" type="button" onclick="handleCreditCheckout()" class="w-full py-4 px-3 rounded-2xl bg-surface-container-highest border border-outline-variant/50 text-secondary/60 font-semibold cursor-not-allowed flex flex-col items-center justify-center gap-1 transition opacity-70 shadow-none" disabled="" title="Fasilitas Kredit Anggota terkunci karena overlimit">
+<div id="btn-credit-text" class="flex items-center gap-1.5 text-error font-bold text-sm">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+Kredit Anggota (Terkunci)
+</div>
+<span id="btn-credit-subtext" class="text-[11px] text-secondary font-normal">Limit tidak mencukupi</span>
+</button>
+<div id="badge-overlimit-pill" class="absolute -top-2 right-2 bg-error text-on-error text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+Overlimit
+</div>
+</div>
+
+<!-- Active Primary Green Cash Button (ALWAYS ACTIVE) -->
+<button id="btn-cash-order" type="button" onclick="openCashPaymentModal()" class="w-full py-4 px-4 rounded-2xl bg-primary hover:bg-primary-container text-on-primary font-bold shadow-md hover:shadow-lg flex flex-col items-center justify-center gap-0.5 transition active:scale-[0.98] group">
+<div class="flex items-center gap-2 font-headline-md text-base text-on-primary">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition">payments</span>
+Bayar Tunai
+</div>
+<span id="btn-cash-nominal" class="text-xs font-currency-display font-normal text-on-primary/90">Rp 100.000</span>
+</button>
+</div>
+
+<!-- Helper Hotkey Text -->
+<div class="text-center pt-1">
+<p class="text-xs font-medium text-secondary flex items-center justify-center gap-1.5">
+<kbd class="px-1.5 py-0.5 text-[11px] font-bold bg-surface-container text-on-surface rounded border border-outline-variant/40">F9</kbd>
+<span>Tekan <strong class="text-on-surface">F9</strong> untuk langsung proses Bayar Tunai</span>
+</p>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Modal: Ganti Anggota Koperasi (F2) -->
+<div id="member-select-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full border border-outline-variant/30 shadow-2xl overflow-hidden">
+    <div class="p-4 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-low">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">manage_accounts</span>
+        <h3 class="font-headline-sm text-base font-bold text-on-surface">Pilih / Ganti Anggota Koperasi</h3>
+      </div>
+      <button onclick="closeMemberSelectorModal()" class="p-1 rounded-lg hover:bg-surface-container text-secondary hover:text-on-surface">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <div class="p-4 space-y-3 max-h-[60vh] overflow-y-auto" id="members-list-container">
+      <!-- Member buttons inserted dynamically -->
+    </div>
+    <div class="p-3 bg-surface-container-low border-t border-outline-variant/20 text-xs text-secondary text-center">
+      Tekan <kbd class="px-1.5 py-0.5 bg-surface rounded font-mono">Esc</kbd> untuk menutup
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Pembayaran Tunai & Cetak Struk (F9) -->
+<div id="cash-payment-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full border border-outline-variant/30 shadow-2xl overflow-hidden">
+    <div class="p-4 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-low">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">point_of_sale</span>
+        <h3 class="font-headline-sm text-base font-bold text-on-surface">Pembayaran Tunai Kasir</h3>
+      </div>
+      <button onclick="closeCashPaymentModal()" class="p-1 rounded-lg hover:bg-surface-container text-secondary hover:text-on-surface">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <div class="p-5 space-y-4">
+      <div class="bg-surface-container-low p-3.5 rounded-xl flex justify-between items-center">
+        <span class="text-xs font-semibold uppercase text-secondary">Total Tagihan</span>
+        <span id="modal-cash-total" class="font-currency-display font-bold text-2xl text-primary">Rp 100.000</span>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-secondary uppercase mb-1">Uang Diterima (Rp)</label>
+        <input id="tendered-cash-input" type="number" step="1000" class="w-full px-4 py-3 text-2xl font-bold font-currency-display rounded-xl bg-surface-container-lowest border-2 border-primary focus:outline-none" value="100000">
+      </div>
+
+      <!-- Quick Tender Buttons -->
+      <div class="flex gap-2">
+        <button type="button" onclick="setTenderAmount('exact')" class="flex-1 py-1.5 rounded-lg bg-surface-container text-xs font-bold hover:bg-surface-container-high transition">Uang Pas</button>
+        <button type="button" onclick="setTenderAmount(100000)" class="flex-1 py-1.5 rounded-lg bg-surface-container text-xs font-bold hover:bg-surface-container-high transition">Rp 100rb</button>
+        <button type="button" onclick="setTenderAmount(150000)" class="flex-1 py-1.5 rounded-lg bg-surface-container text-xs font-bold hover:bg-surface-container-high transition">Rp 150rb</button>
+        <button type="button" onclick="setTenderAmount(200000)" class="flex-1 py-1.5 rounded-lg bg-surface-container text-xs font-bold hover:bg-surface-container-high transition">Rp 200rb</button>
+      </div>
+
+      <div class="bg-surface-container-low/80 p-3.5 rounded-xl flex justify-between items-center">
+        <span class="text-xs font-semibold uppercase text-secondary">Kembalian</span>
+        <span id="modal-cash-change" class="font-currency-display font-bold text-xl text-on-surface">Rp 0</span>
+      </div>
+
+      <button id="btn-confirm-cash" onclick="executeCashTransaction()" class="w-full py-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-base shadow-md flex items-center justify-center gap-2 transition active:scale-[0.98]">
+        <span class="material-symbols-outlined text-[20px]">print</span>
+        Proses &amp; Cetak Struk (80mm)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Sukses & Cetak Struk Kiosk -->
+<div id="receipt-preview-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-white text-black font-mono text-xs rounded-xl max-w-sm w-full p-5 shadow-2xl space-y-3 print:m-0 print:p-0">
+    <div class="text-center border-b pb-2">
+      <h2 class="font-bold text-sm">PRIMKOPPOL NGAWI</h2>
+      <p class="text-[10px]">Waserda Koperasi Polres Ngawi</p>
+      <p class="text-[10px]">Jl. Jaksa Agung Suprapto No. 10 Ngawi</p>
+      <p id="receipt-no" class="text-[10px] font-bold mt-1">NO: TR-20231024-0042</p>
+      <p id="receipt-date" class="text-[9px]">24 Okt 2023 10:45 WIB</p>
+    </div>
+    <div class="text-[10px] space-y-0.5">
+      <div class="flex justify-between"><span>Kasir: Sari Wulandari</span><span id="receipt-member-id">ANG-0012</span></div>
+      <div class="flex justify-between"><span>Anggota:</span><span id="receipt-member-name" class="font-bold">Budi Santoso</span></div>
+      <div class="flex justify-between"><span>Metode:</span><span id="receipt-type" class="font-bold">TUNAI</span></div>
+    </div>
+    <div id="receipt-items-list" class="border-t border-b py-2 space-y-1"></div>
+    <div class="space-y-0.5 text-[10px]">
+      <div class="flex justify-between font-bold text-xs"><span>TOTAL</span><span id="receipt-total">Rp 100.000</span></div>
+      <div class="flex justify-between"><span>Bayar</span><span id="receipt-paid">Rp 100.000</span></div>
+      <div class="flex justify-between"><span>Kembali</span><span id="receipt-change">Rp 0</span></div>
+    </div>
+    <div class="border-t pt-2 text-center text-[9px] text-gray-500">
+      <p>Terima kasih atas partisipasi Anda</p>
+      <p>Sisa SHU Belanja akan dibagikan saat RAT</p>
+    </div>
+    <div class="pt-2 flex gap-2 print:hidden">
+      <button onclick="window.print()" class="flex-1 py-2 bg-black text-white rounded font-bold hover:bg-gray-800">Cetak (Silent Kiosk)</button>
+      <button onclick="closeReceiptModal()" class="flex-1 py-2 bg-gray-200 text-black rounded font-bold hover:bg-gray-300">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    let currentMemberId = 'ANG-0012'; // Default Budi Santoso (Overlimit threshold test)
+    let cart = [
+      {
+        barcode: '899999955555',
+        sku: 'BRS-PRM-5KG',
+        name: 'Beras Premium 5kg',
+        category: 'Pangan Pokok',
+        price: 65000,
+        qty: 1,
+        icon: 'inventory_2'
+      },
+      {
+        barcode: '899276111111',
+        sku: 'MYK-GRG-2LT',
+        name: 'Minyak Goreng 2L',
+        category: 'Sembako',
+        price: 35000,
+        qty: 1,
+        icon: 'liquor'
+      }
+    ];
+
+    function formatIDR(num) {
+      return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    }
+
+    function calculateCartTotals() {
+      let gross = 0;
+      let totalQty = 0;
+      cart.forEach(item => {
+        gross += (item.price * item.qty);
+        totalQty += item.qty;
+      });
+
+      const discount = gross >= 100000 ? 0 : 0;
+      const net = Math.max(0, gross - discount);
+
+      return { gross, discount, net, totalQty };
+    }
+
+    function renderCart() {
+      const listEl = document.getElementById('cart-items-list');
+      const totals = calculateCartTotals();
+
+      document.getElementById('cart-item-count-badge').textContent = `${totals.totalQty} Item`;
+      document.getElementById('cart-gross-subtotal').textContent = formatIDR(totals.gross);
+      document.getElementById('cart-discount-total').textContent = totals.discount > 0 ? `- ${formatIDR(totals.discount)}` : 'Rp 0';
+      document.getElementById('cart-grand-total').textContent = formatIDR(totals.net);
+      document.getElementById('btn-cash-nominal').textContent = formatIDR(totals.net);
+      document.getElementById('cart-status-footer').innerHTML = `
+        <span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+        ${totals.totalQty} Item siap checkout
+      `;
+
+      if (cart.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-8 text-center bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant/40 text-secondary">
+            <span class="material-symbols-outlined text-4xl mb-2 opacity-50">shopping_cart</span>
+            <p class="font-semibold text-sm">Keranjang Belanja Masih Kosong</p>
+            <p class="text-xs">Scan barcode produk atau pilih produk cepat di atas.</p>
+          </div>
+        `;
+      } else {
+        listEl.innerHTML = cart.map((item, idx) => {
+          const subtotal = item.price * item.qty;
+          return `
+            <div class="bg-surface-container-lowest rounded-xl p-3.5 border border-outline-variant/30 shadow-sm hover:border-primary/40 transition flex items-center justify-between gap-2">
+              <div class="grid grid-cols-12 w-full items-center">
+                <div class="col-span-6 flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0 border border-outline-variant/20">
+                    <span class="material-symbols-outlined text-[22px]">${item.icon || 'inventory_2'}</span>
+                  </div>
+                  <div>
+                    <p class="font-headline-sm text-sm font-semibold text-on-surface line-clamp-1">${item.name}</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="text-xs text-secondary font-mono bg-surface-container px-1.5 py-0.5 rounded">${item.sku}</span>
+                      <span class="text-xs text-secondary">${item.category}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-span-2 flex items-center justify-center">
+                  <div class="flex items-center border border-outline-variant/40 rounded-lg overflow-hidden bg-surface-container-low shadow-sm">
+                    <button type="button" onclick="adjustQty(${idx}, -1)" class="w-7 h-7 flex items-center justify-center text-secondary hover:bg-surface-container hover:text-on-surface transition active:scale-95">
+                      <span class="material-symbols-outlined text-[16px]">remove</span>
+                    </button>
+                    <span class="w-8 text-center text-xs font-bold text-on-surface font-currency-display">${item.qty}</span>
+                    <button type="button" onclick="adjustQty(${idx}, 1)" class="w-7 h-7 flex items-center justify-center text-secondary hover:bg-surface-container hover:text-on-surface transition active:scale-95">
+                      <span class="material-symbols-outlined text-[16px]">add</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-span-2 text-right text-xs font-medium text-secondary">
+                  ${formatIDR(item.price)}
+                </div>
+                <div class="col-span-2 flex items-center justify-end gap-2">
+                  <span class="font-currency-display text-sm font-bold text-on-surface">${formatIDR(subtotal)}</span>
+                  <button type="button" onclick="removeItem(${idx})" class="text-secondary/60 hover:text-error hover:bg-error-container/40 p-1 rounded-lg transition" title="Hapus Item">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateCreditValidation(totals.net);
+    }
+
+    function updateCreditValidation(cartTotal) {
+      if (!window.KoposDB) return;
+      const evaluation = window.KoposDB.checkCreditEligibility(currentMemberId, cartTotal);
+      const member = evaluation.member;
+
+      if (!member) return;
+
+      const initials = member.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('member-avatar-box').textContent = initials;
+      document.getElementById('member-display-name').textContent = member.name;
+      document.getElementById('member-display-id').textContent = member.id;
+      document.getElementById('member-display-unit').innerHTML = `
+        <span class="material-symbols-outlined text-[14px]">corporate_fare</span>
+        ${member.unit} • Anggota sejak ${member.join_date}
+      `;
+
+      document.getElementById('ledger-current-debt').textContent = formatIDR(evaluation.currentDebt);
+      document.getElementById('ledger-new-cart').textContent = `+ ${formatIDR(evaluation.cartTotal)}`;
+      document.getElementById('ledger-max-plafon').textContent = formatIDR(evaluation.creditLimit);
+      document.getElementById('credit-limit-max-label').textContent = `Maks. Plafon ${formatIDR(evaluation.creditLimit)}`;
+
+      const totalAcc = evaluation.totalAccumulated;
+      const isOverlimit = totalAcc > evaluation.creditLimit;
+      const pctUsed = Math.min(130, Math.round((totalAcc / evaluation.creditLimit) * 100));
+
+      const statusBadge = document.getElementById('member-status-badge');
+      const alertBanner = document.getElementById('auto-block-alert-banner');
+      const accentBar = document.getElementById('member-accent-bar');
+      const avatarBox = document.getElementById('member-avatar-box');
+      const creditBtn = document.getElementById('btn-credit-order');
+      const creditBtnText = document.getElementById('btn-credit-text');
+      const creditBtnSubtext = document.getElementById('btn-credit-subtext');
+      const overlimitPill = document.getElementById('badge-overlimit-pill');
+      const progressBar = document.getElementById('credit-progress-bar');
+      const limitStatusPill = document.getElementById('limit-status-pill');
+      const limitIcon = document.getElementById('limit-card-icon');
+      const ledgerTotalRow = document.getElementById('ledger-total-row');
+      const ledgerTotalVal = document.getElementById('ledger-total-val');
+      const ledgerTotalIcon = document.getElementById('ledger-total-icon');
+      const autoBlockReasonText = document.getElementById('auto-block-reason-text');
+
+      if (!evaluation.eligible) {
+        statusBadge.className = 'inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-tertiary text-on-tertiary shadow font-headline-sm font-bold text-xs tracking-wider uppercase animate-pulse';
+        statusBadge.innerHTML = '<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: \'FILL\' 1;">block</span> Status: TERBLOKIR';
+
+        alertBanner.classList.remove('hidden');
+        autoBlockReasonText.textContent = evaluation.reason;
+
+        accentBar.className = 'absolute top-0 right-0 left-0 h-1 bg-tertiary';
+        avatarBox.className = 'w-13 h-13 rounded-2xl bg-surface-container-high border-2 border-error text-error flex items-center justify-center font-currency-display font-bold text-lg shadow-sm';
+
+        limitStatusPill.className = 'text-xs font-bold text-tertiary bg-tertiary-fixed px-2 py-0.5 rounded-full';
+        limitStatusPill.textContent = isOverlimit ? `Overlimit: ${pctUsed}% / Terlampaui` : `Tunggakan: ${evaluation.unpaidMonths} Bulan`;
+        limitIcon.className = 'material-symbols-outlined text-tertiary text-[20px]';
+        limitIcon.textContent = 'credit_card_off';
+
+        progressBar.className = 'bg-tertiary h-full rounded-full w-full relative shadow-inner transition-all duration-300';
+        progressBar.style.width = '100%';
+
+        ledgerTotalRow.className = 'flex justify-between px-3.5 py-2.5 bg-tertiary-fixed/30 text-tertiary font-medium';
+        ledgerTotalIcon.className = 'material-symbols-outlined text-[16px]';
+        ledgerTotalIcon.textContent = 'error';
+        ledgerTotalVal.innerHTML = `${formatIDR(totalAcc)} <span class="block text-[10px] font-normal text-on-tertiary-fixed font-body-sm">(Melebihi limit sebesar ${formatIDR(evaluation.overlimitAmount)})</span>`;
+
+        creditBtn.disabled = true;
+        creditBtn.className = 'w-full py-4 px-3 rounded-2xl bg-surface-container-highest border border-outline-variant/50 text-secondary/60 font-semibold cursor-not-allowed flex flex-col items-center justify-center gap-1 transition opacity-70 shadow-none';
+        creditBtnText.className = 'flex items-center gap-1.5 text-error font-bold text-sm';
+        creditBtnText.innerHTML = '<span class="material-symbols-outlined text-[18px]">lock</span> Kredit Anggota (Terkunci)';
+        creditBtnSubtext.textContent = 'Limit tidak mencukupi';
+        overlimitPill.classList.remove('hidden');
+      } else {
+        statusBadge.className = 'inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed shadow font-headline-sm font-bold text-xs tracking-wider uppercase';
+        statusBadge.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Status: AKTIF';
+
+        alertBanner.classList.add('hidden');
+
+        accentBar.className = 'absolute top-0 right-0 left-0 h-1 bg-primary';
+        avatarBox.className = 'w-13 h-13 rounded-2xl bg-surface-container-high border-2 border-primary text-primary flex items-center justify-center font-currency-display font-bold text-lg shadow-sm';
+
+        limitStatusPill.className = 'text-xs font-bold text-primary bg-primary-container px-2 py-0.5 rounded-full';
+        limitStatusPill.textContent = `Tersedia: ${formatIDR(evaluation.availableLimit)} (${Math.max(0, 100 - pctUsed)}%)`;
+        limitIcon.className = 'material-symbols-outlined text-primary text-[20px]';
+        limitIcon.textContent = 'credit_score';
+
+        progressBar.className = 'bg-primary h-full rounded-full relative shadow-inner transition-all duration-300';
+        progressBar.style.width = `${Math.min(100, pctUsed)}%`;
+
+        ledgerTotalRow.className = 'flex justify-between px-3.5 py-2.5 bg-primary-container/20 text-on-surface font-medium';
+        ledgerTotalIcon.className = 'material-symbols-outlined text-[16px] text-primary';
+        ledgerTotalIcon.textContent = 'check_circle';
+        ledgerTotalVal.innerHTML = `${formatIDR(totalAcc)} <span class="block text-[10px] font-normal text-primary font-body-sm">(Limit aman: sisa ${formatIDR(evaluation.availableLimit)})</span>`;
+
+        creditBtn.disabled = false;
+        creditBtn.className = 'w-full py-4 px-3 rounded-2xl bg-secondary-container hover:bg-secondary-container/80 text-on-secondary-fixed font-semibold cursor-pointer flex flex-col items-center justify-center gap-1 transition shadow-sm active:scale-[0.98]';
+        creditBtnText.className = 'flex items-center gap-1.5 text-on-secondary-fixed font-bold text-sm';
+        creditBtnText.innerHTML = '<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span> Kredit Anggota';
+        creditBtnSubtext.textContent = 'Plafon mencukupi';
+        overlimitPill.classList.add('hidden');
+      }
+    }
+
+    window.adjustQty = function(idx, delta) {
+      if (!cart[idx]) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) {
+        cart.splice(idx, 1);
+      }
+      renderCart();
+    };
+
+    window.removeItem = function(idx) {
+      cart.splice(idx, 1);
+      renderCart();
+    };
+
+    window.clearCart = function() {
+      cart = [];
+      renderCart();
+    };
+
+    window.quickAddProduct = function(barcode) {
+      if (!window.KoposDB) return;
+      const product = window.KoposDB.data.products.find(p => p.barcode === barcode);
+      if (!product) return;
+
+      const existing = cart.find(c => c.barcode === barcode);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          barcode: product.barcode,
+          sku: product.sku,
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          qty: 1,
+          icon: 'inventory_2'
+        });
+      }
+      renderCart();
+    };
+
+    const barcodeInput = document.getElementById('barcode-input');
+    if (barcodeInput) {
+      barcodeInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const code = barcodeInput.value.trim();
+          if (!code) return;
+
+          const prod = window.KoposDB ? window.KoposDB.data.products.find(p => p.barcode === code || p.sku.toLowerCase() === code.toLowerCase()) : null;
+          if (prod) {
+            window.quickAddProduct(prod.barcode);
+            barcodeInput.value = '';
+          } else {
+            alert(`Produk dengan Barcode / SKU "${code}" tidak terdaftar di master Waserda.`);
+          }
+        }
+      });
+    }
+
+    window.openMemberSelectorModal = function() {
+      if (!window.KoposDB) return;
+      const members = window.KoposDB.getAllMembers();
+      const container = document.getElementById('members-list-container');
+      container.innerHTML = members.map(m => {
+        const isCurrent = m.id === currentMemberId;
+        return `
+          <button type="button" onclick="selectMember('${m.id}')" class="w-full text-left p-3 rounded-xl border ${isCurrent ? 'border-primary bg-primary/5' : 'border-outline-variant/30 bg-surface hover:bg-surface-container'} flex items-center justify-between transition">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center font-bold text-xs">
+                ${m.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+              </div>
+              <div>
+                <p class="font-bold text-sm text-on-surface">${m.name} <span class="font-mono text-xs text-secondary">(${m.id})</span></p>
+                <p class="text-xs text-secondary">Plafon: ${formatIDR(m.credit_limit)} • Piutang: ${formatIDR(m.current_debt)}</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold ${m.status === 'BLOCKED' ? 'bg-tertiary text-on-tertiary' : 'bg-primary-container text-on-primary-container'}">
+              ${m.status === 'BLOCKED' ? 'TERBLOKIR' : 'AKTIF'}
+            </span>
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('member-select-modal').classList.remove('hidden');
+      document.getElementById('member-select-modal').classList.add('flex');
+    };
+
+    window.closeMemberSelectorModal = function() {
+      document.getElementById('member-select-modal').classList.add('hidden');
+      document.getElementById('member-select-modal').classList.remove('flex');
+    };
+
+    window.selectMember = function(memberId) {
+      currentMemberId = memberId;
+      window.closeMemberSelectorModal();
+      renderCart();
+    };
+
+    window.openCashPaymentModal = function() {
+      const totals = calculateCartTotals();
+      if (totals.net <= 0) {
+        alert('Keranjang belanja kosong!');
+        return;
+      }
+      document.getElementById('modal-cash-total').textContent = formatIDR(totals.net);
+      const inputTender = document.getElementById('tendered-cash-input');
+      inputTender.value = totals.net;
+      updateCashChange();
+
+      document.getElementById('cash-payment-modal').classList.remove('hidden');
+      document.getElementById('cash-payment-modal').classList.add('flex');
+      inputTender.focus();
+    };
+
+    window.closeCashPaymentModal = function() {
+      document.getElementById('cash-payment-modal').classList.add('hidden');
+      document.getElementById('cash-payment-modal').classList.remove('flex');
+    };
+
+    window.setTenderAmount = function(amount) {
+      const totals = calculateCartTotals();
+      const input = document.getElementById('tendered-cash-input');
+      if (amount === 'exact') {
+        input.value = totals.net;
+      } else {
+        input.value = amount;
+      }
+      updateCashChange();
+    };
+
+    function updateCashChange() {
+      const totals = calculateCartTotals();
+      const tendered = Number(document.getElementById('tendered-cash-input').value || 0);
+      const change = Math.max(0, tendered - totals.net);
+      document.getElementById('modal-cash-change').textContent = formatIDR(change);
+    }
+
+    const tenderInput = document.getElementById('tendered-cash-input');
+    if (tenderInput) {
+      tenderInput.addEventListener('input', updateCashChange);
+    }
+
+    window.executeCashTransaction = function() {
+      const totals = calculateCartTotals();
+      const tendered = Number(document.getElementById('tendered-cash-input').value || 0);
+      if (tendered < totals.net) {
+        alert('Nominal uang tunai yang diterima kurang dari total belanja!');
+        return;
+      }
+      const change = tendered - totals.net;
+      const receiptNo = `TR-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Date.now().toString().slice(-4)}`;
+
+      if (window.KoposDB) {
+        const tx = {
+          id: receiptNo,
+          member_id: currentMemberId,
+          type: 'TUNAI',
+          total: totals.net,
+          tendered: tendered,
+          change: change,
+          items: cart,
+          timestamp: new Date().toISOString(),
+          is_synced: false
+        };
+        window.KoposDB.data.transactions.unshift(tx);
+        window.KoposDB.queueOutbox('transactions', 'INSERT', tx);
+        window.KoposDB.persist();
+      }
+
+      window.closeCashPaymentModal();
+      showReceiptModal(receiptNo, 'TUNAI', totals.net, tendered, change);
+    };
+
+    window.handleCreditCheckout = async function() {
+      const totals = calculateCartTotals();
+      
+      try {
+        const { initDatabase } = await import('/src/db/index.js');
+        const db = await initDatabase();
+        const member = await db.members.findOne(currentMemberId).exec();
+
+        if (!member) {
+          alert('Data anggota tidak ditemukan di database lokal.');
+          return;
+        }
+
+        const projectedDebt = member.current_debt + totals.net;
+
+        // Aturan Bisnis PRD: Over limit memicu penolakan otomatis[cite: 7, 10]
+        if (member.status === 'BLOCKED' || projectedDebt > member.credit_limit) {
+          alert(`Transaksi Ditolak: Total piutang (Rp ${projectedDebt.toLocaleString()}) melebihi plafon limit (Rp ${member.credit_limit.toLocaleString()}).`);
+          return;
+        }
+
+        if (confirm(`Konfirmasi pembebanan kredit sebesar ${formatIDR(totals.net)} ke akun anggota ${member.name}?`)) {
+          // Simpan transaksi secara lokal ke RxDB (sub-5ms)
+          const trxId = 'TRX-' + Date.now();
+          const receiptNo = 'INV/' + Date.now();
+          
+          await db.transactions.insert({
+            id: trxId,
+            receipt_no: receiptNo,
+            member_id: member.id,
+            total_amount: totals.net,
+            payment_method: 'CREDIT',
+            items: cart,
+            cashier_name: 'Kasir 1',
+            is_synced: false, // Ditampung di antrean offline lokal[cite: 7, 10]
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+
+          // Mutasi piutang anggota secara lokal
+          await member.patch({ current_debt: projectedDebt });
+
+          showReceiptModal(receiptNo, 'KREDIT ANGGOTA', totals.net, totals.net, 0);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Terjadi kesalahan saat memproses kredit: ' + error.message);
+      }
+    };
+
+    function showReceiptModal(receiptNo, payType, total, paid, change) {
+      const member = window.KoposDB ? window.KoposDB.getMember(currentMemberId) : { name: 'Anggota Koperasi', id: currentMemberId };
+      document.getElementById('receipt-no').textContent = `NO: ${receiptNo}`;
+      document.getElementById('receipt-date').textContent = new Date().toLocaleString('id-ID');
+      document.getElementById('receipt-member-name').textContent = member ? member.name : '-';
+      document.getElementById('receipt-member-id').textContent = member ? member.id : '-';
+      document.getElementById('receipt-type').textContent = payType;
+      document.getElementById('receipt-total').textContent = formatIDR(total);
+      document.getElementById('receipt-paid').textContent = formatIDR(paid);
+      document.getElementById('receipt-change').textContent = formatIDR(change);
+
+      const itemsEl = document.getElementById('receipt-items-list');
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="flex justify-between">
+          <span>${item.name.slice(0, 22)} x${item.qty}</span>
+          <span>${formatIDR(item.price * item.qty)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('receipt-preview-modal').classList.remove('hidden');
+      document.getElementById('receipt-preview-modal').classList.add('flex');
+    }
+
+    window.closeReceiptModal = function() {
+      document.getElementById('receipt-preview-modal').classList.add('hidden');
+      document.getElementById('receipt-preview-modal').classList.remove('flex');
+      cart = [];
+      renderCart();
+      if (barcodeInput) barcodeInput.focus();
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F1') {
+        e.preventDefault();
+        if (barcodeInput) barcodeInput.focus();
+      } else if (e.key === 'F2') {
+        e.preventDefault();
+        window.openMemberSelectorModal();
+      } else if (e.key === 'F4') {
+        e.preventDefault();
+        window.location.href = '/pelunasan';
+      } else if (e.key === 'F9') {
+        e.preventDefault();
+        window.openCashPaymentModal();
+      } else if (e.key === 'Escape') {
+        window.closeCashPaymentModal();
+        window.closeMemberSelectorModal();
+        window.closeReceiptModal();
+      }
+    });
+
+    if (window.KoposDB) {
+      window.KoposDB.onChange(() => {
+        renderCart();
+      });
+    }
+
+    renderCart();
+  })();
+</script>
+</body></html>

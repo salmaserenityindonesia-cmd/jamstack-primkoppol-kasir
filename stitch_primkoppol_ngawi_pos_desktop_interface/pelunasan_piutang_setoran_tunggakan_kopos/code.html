@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script src="/kopos-db.js"></script><script src="/tailwind-theme.js"></script></head><body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen flex flex-col justify-between select-none"><main class="w-full flex-1 bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1540px] mx-auto pb-28">
+<!-- Top Search & Member Overview Bar -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-stretch">
+<!-- Left Search Input Card -->
+<div class="xl:col-span-5 bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between gap-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">badge</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Identifikasi Anggota</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container-low px-space-xs py-0.5 rounded">F4 Anggota</span>
+</div>
+<div class="relative flex items-center mt-1">
+<span class="material-symbols-outlined absolute left-3 text-secondary text-[20px]">search</span>
+<input class="w-full bg-surface-container-low text-on-surface font-headline-sm text-headline-sm pl-10 pr-24 py-2.5 rounded-lg outline-none focus:bg-surface-container-lowest transition-colors" id="member-input" placeholder="Cari Nama / ID Anggota..." type="text" value="Budi Santoso (ANG-0012)">
+<div class="absolute right-2.5 flex items-center gap-1.5">
+<button class="p-1 text-secondary hover:text-on-surface rounded transition-colors flex items-center justify-center" title="Bersihkan Anggota">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">[Enter]</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-sm pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+<span class="text-on-surface font-label-md">Unit: Divisi Logistik Lapangan</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Bergabung: 14 Jan 2021</span>
+</div>
+</div>
+<!-- Quick Status Card Right -->
+<div class="xl:col-span-7 bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-md">
+<!-- Debt Metrics Grid -->
+<div class="grid grid-cols-2 gap-space-md w-full md:w-auto flex-1">
+<!-- Total Piutang Aktif -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Total Piutang Aktif</span>
+<span class="material-symbols-outlined text-[18px] text-tertiary">receipt_long</span>
+</div>
+<div class="mt-1">
+<div class="font-headline-lg text-headline-lg text-tertiary tracking-tight">Rp 950.000</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2 Nota belum terselesaikan</div>
+</div>
+</div>
+<!-- Limit Tersisa -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Plafon Kredit Anggota</span>
+<span class="material-symbols-outlined text-[18px] text-primary">credit_card</span>
+</div>
+<div class="mt-1">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-lg text-headline-lg text-on-surface">Rp 50.000</span>
+<span class="font-body-sm text-body-sm text-secondary">/ 1.000.000</span>
+</div>
+<!-- Progress Bar (95% used) -->
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mt-1.5 overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 95%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Warning Badge & Actions -->
+<div class="flex flex-col items-end justify-between w-full md:w-auto h-full self-stretch gap-space-xs shrink-0">
+<div class="inline-flex items-center gap-1.5 bg-error-container text-on-error-container px-space-sm py-1 rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-error">warning</span>
+<span class="">Status: Butuh Pelunasan</span>
+</div>
+<div class="text-right mt-auto">
+<span class="font-label-sm text-label-sm text-secondary block">Kredit Macet Threshold: <strong class="text-on-surface">95%</strong></span>
+<span class="font-body-sm text-body-sm text-tertiary font-medium">Auto-block pembelanjaan kredit aktif</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Two Vertically Stacked Cards -->
+<div class="flex flex-col gap-space-lg w-full">
+<!-- Card 1: Daftar Piutang Berjalan (Per-Nota) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Card Header -->
+<div class="px-space-lg py-space-md bg-surface-container-lowest flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">receipt</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Daftar Piutang Berjalan (Per-Nota)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pilih atau sesuaikan jumlah alokasi dana pelunasan nota belanja anggota.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-1 bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm rounded-lg transition-colors flex items-center gap-1" id="btn-pay-all-installment">
+<span class="material-symbols-outlined text-[14px]">checklist</span>
+              Set Sesuai Target
+            </button>
+<button class="px-space-sm py-1 bg-surface-container-low hover:bg-surface-container text-secondary rounded-lg font-label-sm text-label-sm transition-colors" id="btn-reset-installment">
+              Reset
+            </button>
+</div>
+</div>
+<!-- Table Structure -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low font-label-sm text-label-sm text-secondary uppercase tracking-wider">
+<th class="py-3 px-space-lg">No. Nota</th>
+<th class="py-3 px-space-md">Tanggal Belanja</th>
+<th class="py-3 px-space-md text-right">Sisa Tagihan</th>
+<th class="py-3 px-space-md text-right">Target Cicilan</th>
+<th class="py-3 px-space-lg text-right w-64">Jumlah Bayar (Rp)</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-body-md font-body-md">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-headline-sm text-label-md text-on-surface tracking-tight">NOTA-0082</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-tertiary-fixed text-on-tertiary-fixed">Jatuh Tempo</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary mt-0.5">Sembako &amp; Kebutuhan Pokok Toko</div>
+</td>
+<td class="py-3.5 px-space-md text-on-surface font-label-md">
+                  10 Agu 2026
+                  <span class="block font-body-sm text-body-sm text-secondary">75 hari lalu</span>
+</td>
+<td class="py-3.5 px-space-md text-right font-headline-sm text-headline-sm text-on-surface">
+                  Rp 450.000
+                </td>
+<td class="py-3.5 px-space-md text-right font-headline-sm text-headline-sm text-primary">
+                  Rp 150.000
+                </td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="inline-flex items-center justify-end w-full">
+<div class="relative w-48">
+<span class="absolute left-3 top-2.5 font-label-md text-label-md text-secondary">Rp</span>
+<input class="w-full bg-surface-container-lowest text-right font-headline-sm text-headline-sm text-on-surface py-2 pl-9 pr-3 rounded-lg ring-1 ring-outline-variant focus:ring-2 focus:ring-primary outline-none transition-all" id="input-nota-1" max="450000" min="0" step="5000" type="number" value="150000">
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-headline-sm text-label-md text-on-surface tracking-tight">NOTA-0089</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-surface-container-high text-on-surface-variant">Berjalan</span>
+</div>
+<div class="font-body-sm text-body-sm text-secondary mt-0.5">Pupuk Pertanian &amp; Alat Tani</div>
+</td>
+<td class="py-3.5 px-space-md text-on-surface font-label-md">
+                  28 Agu 2026
+                  <span class="block font-body-sm text-body-sm text-secondary">57 hari lalu</span>
+</td>
+<td class="py-3.5 px-space-md text-right font-headline-sm text-headline-sm text-on-surface">
+                  Rp 500.000
+                </td>
+<td class="py-3.5 px-space-md text-right font-headline-sm text-headline-sm text-on-surface-variant">
+                  Rp 200.000
+                </td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="inline-flex items-center justify-end w-full">
+<div class="relative w-48">
+<span class="absolute left-3 top-2.5 font-label-md text-label-md text-secondary">Rp</span>
+<input class="w-full bg-surface-container-lowest text-right font-headline-sm text-headline-sm text-on-surface py-2 pl-9 pr-3 rounded-lg ring-1 ring-outline-variant focus:ring-2 focus:ring-primary outline-none transition-all" id="input-nota-2" max="500000" min="0" step="5000" type="number" value="0">
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Summary Row -->
+<div class="px-space-lg py-space-sm bg-surface-container-low flex items-center justify-between text-on-surface font-label-md text-label-md">
+<span class="text-secondary">Subtotal Rencana Pelunasan Nota</span>
+<div class="flex items-center gap-space-xs">
+<span class="text-secondary">Terpilih:</span>
+<span class="font-headline-sm text-headline-sm text-primary" id="subtotal-nota-display">Rp 150.000</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Tunggakan Simpanan (Back-Pay Collection) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Tunggakan Simpanan (Back-Pay Collection)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pilih bulan simpanan yang ingin dilunasi:</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+            Total Kewajiban Terbuka: Rp 100.000
+          </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mt-space-md">
+<!-- Item 1: Checked -->
+<label class="relative flex items-start p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high/70 cursor-pointer transition-all">
+<input checked="" class="simpanan-checkbox mt-1 w-4 h-4 text-primary bg-surface-container-lowest rounded accent-primary cursor-pointer focus:ring-0" data-amount="25000" type="checkbox">
+<div class="ml-3 flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface truncate">Simpanan Wajib</span>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary-container shrink-0">Wajib</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Bulan Juli 2026</span>
+<div class="mt-2 font-headline-sm text-headline-sm text-on-surface">Rp 25.000</div>
+</div>
+</label>
+<!-- Item 2: Checked -->
+<label class="relative flex items-start p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high/70 cursor-pointer transition-all">
+<input checked="" class="simpanan-checkbox mt-1 w-4 h-4 text-primary bg-surface-container-lowest rounded accent-primary cursor-pointer focus:ring-0" data-amount="25000" type="checkbox">
+<div class="ml-3 flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface truncate">Simpanan Wajib</span>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary-container shrink-0">Wajib</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Bulan Agustus 2026</span>
+<div class="mt-2 font-headline-sm text-headline-sm text-on-surface">Rp 25.000</div>
+</div>
+</label>
+<!-- Item 3: Unchecked -->
+<label class="relative flex items-start p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high/70 cursor-pointer transition-all">
+<input class="simpanan-checkbox mt-1 w-4 h-4 text-primary bg-surface-container-lowest rounded accent-primary cursor-pointer focus:ring-0" data-amount="50000" type="checkbox">
+<div class="ml-3 flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-md text-label-md text-on-surface truncate">Simpanan Belanja</span>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm bg-secondary-container text-on-secondary-fixed shrink-0">Pokok/Belanja</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary mt-0.5">Bulan Agustus 2026</span>
+<div class="mt-2 font-headline-sm text-headline-sm text-on-surface">Rp 50.000</div>
+</div>
+</label>
+</div>
+<div class="mt-space-md p-space-sm bg-surface-container rounded-lg flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">info</span>
+<span class="">Setoran simpanan wajib otomatis memperbaharui hak partisipasi SHU tahun berjalan.</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface">
+            Subtotal Simpanan: <span class="font-headline-sm text-headline-sm text-primary" id="subtotal-simpanan-display">Rp 50.000</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Sticky Action & Summary Bar -->
+<div class="fixed bottom-9 left-0 right-0 z-40 bg-surface-container-lowest shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+<div class="max-w-[1540px] mx-auto px-space-lg py-3 flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Left side: Calculation Preview & Projection Callout -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-md w-full lg:w-auto">
+<!-- Breakdown text -->
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-on-surface font-label-md text-label-md">
+<span class="">Pelunasan Cicilan: <strong class="text-on-surface" id="lbl-cicilan">Rp 150.000</strong></span>
+<span class="text-outline-variant">|</span>
+<span class="">Pelunasan Simpanan: <strong class="text-on-surface" id="lbl-simpanan">Rp 50.000</strong></span>
+</div>
+<span class="text-secondary font-body-sm text-body-sm">Metode Kas: Penyetoran Tunai Langsung ke Kasir #01</span>
+</div>
+<!-- Limit Restoration Callout -->
+<div class="inline-flex items-center gap-2 bg-surface-container-low text-primary px-3 py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-primary">trending_up</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-label-md text-primary font-bold" id="callout-limit-text">Proyeksi Pemulihan Limit: +Rp 150.000</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="callout-new-limit">Limit baru: Rp 200.000 / Rp 1.000.000</span>
+</div>
+</div>
+</div>
+<!-- Right side: Payment Total & Primary Action CTA -->
+<div class="flex items-center justify-between sm:justify-end gap-space-lg w-full lg:w-auto shrink-0">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Total Pembayaran Tunai</div>
+<div class="font-currency-display text-currency-display text-on-surface leading-tight" id="grand-total-display">Rp 200.000</div>
+</div>
+<button class="h-12 px-space-lg bg-primary hover:bg-primary-container active:scale-[0.98] text-on-primary font-headline-sm text-headline-sm rounded-lg flex items-center gap-space-sm shadow-md hover:shadow-lg transition-all" id="btn-process-payment">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="">Proses Pembayaran &amp; Pulihkan Limit</span>
+<kbd class="ml-1 px-1.5 py-0.5 rounded bg-on-primary/20 text-on-primary font-label-sm text-label-sm uppercase">F9</kbd>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Client-side Script -->
+<script>
+    (function() {
+      const inputNota1 = document.getElementById('input-nota-1');
+      const inputNota2 = document.getElementById('input-nota-2');
+      const simpananCheckboxes = document.querySelectorAll('.simpanan-checkbox');
+      
+      const subtotalNotaDisplay = document.getElementById('subtotal-nota-display');
+      const subtotalSimpananDisplay = document.getElementById('subtotal-simpanan-display');
+      const grandTotalDisplay = document.getElementById('grand-total-display');
+      const lblCicilan = document.getElementById('lbl-cicilan');
+      const lblSimpanan = document.getElementById('lbl-simpanan');
+      const calloutLimitText = document.getElementById('callout-limit-text');
+      const calloutNewLimit = document.getElementById('callout-new-limit');
+      
+      const btnPayAll = document.getElementById('btn-pay-all-installment');
+      const btnReset = document.getElementById('btn-reset-installment');
+      const btnProcess = document.getElementById('btn-process-payment');
+
+      const currentMemberId = 'ANG-0012';
+
+      function formatIDR(val) {
+        return 'Rp ' + Number(val || 0).toLocaleString('id-ID');
+      }
+
+      function recalculate() {
+        const valNota1 = Math.max(0, parseInt(inputNota1.value, 10) || 0);
+        const valNota2 = Math.max(0, parseInt(inputNota2.value, 10) || 0);
+        const totalNota = valNota1 + valNota2;
+
+        let totalSimpanan = 0;
+        simpananCheckboxes.forEach(cb => {
+          if (cb.checked) {
+            totalSimpanan += parseInt(cb.getAttribute('data-amount'), 10);
+          }
+        });
+
+        const grandTotal = totalNota + totalSimpanan;
+        
+        let remainingDebt = 950000;
+        let maxPlafon = 1000000;
+        if (window.KoposDB) {
+          const m = window.KoposDB.getMember(currentMemberId);
+          if (m) {
+            remainingDebt = m.current_debt;
+            maxPlafon = m.credit_limit;
+          }
+        }
+        const projectedDebt = Math.max(0, remainingDebt - totalNota);
+        const projectedNewLimit = Math.max(0, maxPlafon - projectedDebt);
+
+        // Update UI displays
+        subtotalNotaDisplay.textContent = formatIDR(totalNota);
+        subtotalSimpananDisplay.textContent = formatIDR(totalSimpanan);
+        lblCicilan.textContent = formatIDR(totalNota);
+        lblSimpanan.textContent = formatIDR(totalSimpanan);
+        grandTotalDisplay.textContent = formatIDR(grandTotal);
+
+        calloutLimitText.textContent = `Proyeksi Pemulihan Limit: +${formatIDR(totalNota)}`;
+        calloutNewLimit.textContent = `Limit baru: ${formatIDR(projectedNewLimit)} / ${formatIDR(maxPlafon)}`;
+      }
+
+      // Attach Event Listeners
+      inputNota1.addEventListener('input', recalculate);
+      inputNota2.addEventListener('input', recalculate);
+      simpananCheckboxes.forEach(cb => cb.addEventListener('change', recalculate));
+
+      btnPayAll.addEventListener('click', () => {
+        inputNota1.value = 450000;
+        inputNota2.value = 500000;
+        recalculate();
+      });
+
+      btnReset.addEventListener('click', () => {
+        inputNota1.value = 0;
+        inputNota2.value = 0;
+        recalculate();
+      });
+
+      btnProcess.addEventListener('click', () => {
+        const valNota1 = Math.max(0, parseInt(inputNota1.value, 10) || 0);
+        const valNota2 = Math.max(0, parseInt(inputNota2.value, 10) || 0);
+        const totalNota = valNota1 + valNota2;
+
+        let totalSimpanan = 0;
+        simpananCheckboxes.forEach(cb => {
+          if (cb.checked) {
+            totalSimpanan += parseInt(cb.getAttribute('data-amount'), 10);
+          }
+        });
+
+        const grandTotal = totalNota + totalSimpanan;
+        if (grandTotal <= 0) {
+          alert('Pilih nominal nota atau simpanan yang ingin disetor!');
+          return;
+        }
+
+        const originalText = btnProcess.innerHTML;
+        btnProcess.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[20px]">sync</span>
+          <span>Menyimpan ke RxDB & Memulihkan Limit...</span>
+        `;
+        btnProcess.disabled = true;
+
+        setTimeout(() => {
+          if (window.KoposDB) {
+            window.KoposDB.settleDebt(currentMemberId, totalNota);
+          }
+
+          alert(`Pembayaran pelunasan sebesar ${formatIDR(grandTotal)} berhasil diproses! Limit kredit anggota telah dipulihkan dan status diperbarui.`);
+          btnProcess.innerHTML = originalText;
+          btnProcess.disabled = false;
+          window.location.href = '/kasir';
+        }, 500);
+      });
+
+      // Hotkey F9
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'F9') {
+          e.preventDefault();
+          btnProcess.click();
+        }
+      });
+
+      // Initial run
+      recalculate();
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest shadow-[0_-1px_6px_rgba(0,0,0,0.03)] z-40"><div class="h-9 w-full px-space-lg flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant"><div class="flex items-center gap-space-md"><span class="">Cabang: <strong class="text-on-surface font-label-md">Waserda Primkoppol Ngawi</strong></span><span class="text-outline-variant">•</span><span class="">ID Outlet: <strong>PKP-NGW-01</strong></span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="">Database Cloud Terhubung</span></div><span class="text-outline-variant">•</span><span class="">KOPOS v2.4.12-pos</span></div></div></footer>
+
+</body></html>

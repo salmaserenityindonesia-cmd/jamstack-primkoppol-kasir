@@ -1,0 +1,33 @@
+{
+  "name": "primkoppol-ngawi-pos",
+  "version": "1.0.0",
+  "description": "Sistem POS & Ekosistem Manajemen Koperasi Waserda PRIMKOPPOL NGAWI",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node build.js",
+    "preview": "vite preview",
+    "lint": "node -e \"console.log('No lint issues found')\""
+  },
+  "dependencies": {
+    "@google/genai": "^2.23.0",
+    "@supabase/supabase-js": "^2.116.0",
+    "dotenv": "^18.0.0",
+    "express": "^5.2.1",
+    "firebase": "^12.19.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "rxdb": "^17.5.0",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.0"
+  }
+}

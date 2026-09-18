@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script src="/tailwind-theme.js"></script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-margin flex items-center gap-space-sm bg-surface-container-lowest"><img alt="Brand logo PRIMKOPPOL NGAWI. Primary color: #059669, Font: system-ui/Space Grotesk, Subtitle: KOPERASI POLRES NGAWI" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W5pVa4ne1bIrNVi6aLFIFisMnhsPIZJP6ZKIUo1ljc_dJfEGaf3BKAaeUv4RTgl8pLe0rD6gG5eS-TYnqucBNm3ewuITQgXyY1zUmOHSytqfXva6uWFq7-_1GQ5U9mB-GswMCwpb2FNhqurhIg6RiyHAVDXkaEOWOrjFdDoC5pWHAOGO8uDX7EU1fBzGv0-bdmEbRHCIGXzcxfmoxHmj3qiSpzEMnvzQbnlGeHiuLM2k_0KFQ1OaTXBIKc"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface leading-tight">PRIMKOPPOL</span><span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Polres Ngawi</span></div></div><div class="px-margin py-space-sm"><div class="px-space-sm py-space-xs rounded bg-surface-container-low text-on-surface-variant flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase font-semibold">Divisi</span><span class="font-label-sm text-label-sm font-bold text-primary">Waserda &amp; Logistik</span></div></div><nav class="flex flex-col gap-space-xs px-margin" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="pre-input-manajemen" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span>Tahap 1: Pre-Input</a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-sm rounded transition-colors bg-primary-container text-on-primary-container font-semibold shadow-[0_1px_8px_rgba(0,0,0,0.04)]" data-path="input-fisik-gudang" href="#"><span class="material-symbols-outlined text-[20px]">warehouse</span>Tahap 2: Fisik Gudang</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="validasi-update-stok" href="#"><span class="material-symbols-outlined text-[20px]">fact_check</span>Tahap 3: Validasi Stok</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="master-barang-hpp" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span>Master Barang &amp; HPP</a><div class="h-[1px] bg-surface-container-high my-space-xs"></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="riwayat-restock" href="#"><span class="material-symbols-outlined text-[20px]">history</span>Riwayat Faktur</a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-path="audit-selisih-opname" href="#"><span class="material-symbols-outlined text-[20px]">difference</span>Audit Selisih Opname</a></nav></div><div class="p-margin bg-surface-container-low"><div class="flex items-center justify-between py-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Sistem POS Core</span><span class="font-label-sm text-label-sm font-semibold text-primary">v2.4-STOK</span></div><div class="flex items-center justify-between py-space-xs text-on-surface-variant"><span class="font-label-sm text-label-sm">Shortcut Mode</span><span class="font-label-sm text-label-sm bg-surface-container-lowest px-space-xs rounded font-mono text-on-surface">F1-F12</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="hover:text-on-surface transition-colors cursor-pointer">Waserda POS</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="hover:text-on-surface transition-colors cursor-pointer">Manajemen Stok &amp; Restock</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="font-label-sm text-label-sm text-on-surface font-semibold">Dual-State Restocking POS</span></div><div class="h-4 w-[1px] bg-surface-container-high"></div><span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-on-surface font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-primary">store</span>Gudang Pusat &amp; Waserda Ngawi</span></div><div class="flex items-center gap-space-md"><span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-primary font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-primary animate-pulse">cloud_done</span>Cloud Sync Ready</span><div class="hidden xl:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px]">keyboard</span><span class="font-mono">[F1] Pre</span><span class="font-mono">[F2] Fisik</span><span class="font-mono">[F3] Valid</span><span class="font-mono">[F4] Save</span></div><div class="h-6 w-[1px] bg-surface-container-high"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right hidden md:flex"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Hendra Kusuma</span><span class="font-label-sm text-label-sm text-on-surface-variant">Staff Gudang &amp; Logistik</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_8px_rgba(0,0,0,0.04)]" src="https://lh3.googleusercontent.com/aida/AEtjO1V209IjDq0_-dRfgKap51v4N7VB58jkmwCXc0T4SuPC3wu23tav4svnGpJdRbWC-A_qxDvrG12zWukQfv_JOqObNaSspBvTaaE9oMPi3vm636B2gLrzCNtqfY850i2bsaRLl4a0vT-sVu52ZeAfdmwia_H-hI1-gUr1-_7gUnTgCaNx0tV9W1vYgSiLV_uaNZ2iC_JQ4rzTrzBJP2qXI1YMQ_KjlJieyGNXfnzh8WwQP13dQvmEJGJNp7wQ"/></div></div></header><main class="relative pt-16 w-full px-margin bg-background min-h-screen"><div class="flex flex-col w-full pb-16">
+<!-- Workflow Stepper Ribbon -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm p-space-md mb-space-md">
+<div class="flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Step 1 (Completed) -->
+<div class="flex items-center gap-space-sm w-full lg:w-auto opacity-75">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Langkah 01</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Pre-Input Faktur (Manajemen)</span>
+</div>
+</div>
+<div class="hidden lg:block h-[2px] flex-1 max-w-[48px] bg-primary"></div>
+<!-- Step 2 (Active Warehouse) -->
+<div class="flex items-center gap-space-sm w-full lg:w-auto bg-surface-container-low px-space-md py-space-xs rounded-lg">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">barcode_scanner</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">Langkah 02 • Aktif</span>
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold">Input Berbasis SKU (Gudang Fisik)</span>
+</div>
+</div>
+<div class="hidden lg:block h-[2px] flex-1 max-w-[48px] bg-surface-container-high"></div>
+<!-- Step 3 (Next) -->
+<div class="flex items-center gap-space-sm w-full lg:w-auto opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Langkah 03</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Validasi &amp; Rekonsiliasi Stok POS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Control Bar (Faktur Select & Metadata Tray) -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm p-space-md mb-space-md">
+<div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md">
+<!-- Dropdown Select Section -->
+<div class="flex flex-col gap-space-xs w-full xl:w-2/5">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant" for="faktur-select">Pilih Nomor Faktur Pending</label>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Tersinkron dari Manajemen</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-primary text-[20px] pointer-events-none">receipt_long</span>
+<select class="w-full pl-10 pr-10 py-space-sm bg-surface-container-low text-on-surface font-headline-sm text-headline-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest cursor-pointer shadow-sm appearance-none" id="faktur-select">
+<option selected="">INV-2024/IND-8849 — PT Indomarco Adi Prima (Target: 450 pcs)</option>
+<option>INV-2024/WNG-3312 — CV Sumber Pangan Jaya (Target: 320 pcs)</option>
+<option>INV-2024/SDR-7710 — PT Sinar Sosro Distribusi (Target: 180 pcs)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Metadata Info Pills -->
+<div class="flex flex-wrap items-center gap-space-xs w-full xl:w-auto">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded">
+<span class="material-symbols-outlined text-[16px] text-secondary">person_pin</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pemeriksa:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Hendra Kusuma</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Status:</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Sedang Dihitung</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded">
+<span class="material-symbols-outlined text-[16px] text-secondary">flag</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Target Faktur:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">450 pcs</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Waktu Mulai:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-mono font-medium">10:30 WIB</span>
+</div>
+<div class="flex items-center gap-space-xs bg-secondary-container px-space-sm py-space-xs rounded text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[14px]">sensors_off</span>
+<span class="font-label-sm text-label-sm font-semibold">Offline Ready</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Scanning Zone (Operational Core) -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-md p-space-lg mb-space-md relative overflow-hidden">
+<!-- Ambient scanner glow backdrop -->
+<div class="absolute -right-20 -top-20 w-56 h-56 rounded-full bg-surface-container opacity-60 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">center_focus_strong</span>
+<h2 class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider font-bold">Scan Barcode / Ketik SKU Barang</h2>
+</div>
+<span class="hidden md:inline-flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low px-space-sm py-space-xs rounded font-mono">
+<span class="material-symbols-outlined text-[14px]">memory</span> Local IndexedDB Aktif
+        </span>
+</div>
+<!-- Large Prominent Scanner Input Box -->
+<div class="flex flex-col sm:flex-row items-stretch gap-space-sm pt-space-xs">
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-primary text-[28px] pointer-events-none">barcode_reader</span>
+<input autofocus="" class="w-full h-14 pl-14 pr-16 bg-surface-container-low text-on-surface font-headline-md text-headline-md placeholder:text-on-surface-variant/60 placeholder:font-body-md placeholder:text-body-md rounded-lg shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-all" id="barcode-input" placeholder="Arahkan scanner ke barcode produk atau ketik kode SKU... (Contoh: 899238810231)" style="caret-color: #006948;" type="text"/>
+<span class="absolute right-3 px-space-xs py-space-xs rounded bg-surface-container font-mono text-on-surface-variant font-label-sm text-label-sm">
+            [ENTER]
+          </span>
+</div>
+<!-- Add Manual SKU Shortcut Button -->
+<button class="h-14 px-space-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-lg text-label-lg rounded-lg shadow-sm flex items-center justify-center gap-space-xs cursor-pointer transition-colors active:scale-95 shrink-0" onclick="triggerManualInput()" type="button">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Tambah Manual (+)</span>
+<span class="bg-surface-container-lowest px-space-xs rounded text-on-surface-variant font-mono font-label-sm text-label-sm ml-space-xs">[F2]</span>
+</button>
+</div>
+<!-- Helper / Sub-info banner -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-xs pt-space-xs text-on-surface-variant">
+<p class="font-body-sm text-body-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">wifi_protected_setup</span>
+<span>Mode Offline-First aktif: Data tersimpan di memori lokal tablet dan tersinkronisasi otomatis begitu koneksi stabil.</span>
+</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80 font-mono">Auto-Focus Enabled</span>
+</div>
+</div>
+</div>
+<!-- Bottom Data Table Viewport -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-md">
+<!-- Table Header Section -->
+<div class="p-space-md bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">inventory</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Daftar Barang Fisik Diterima</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hasil perhitungan fisik real-time sebelum validasi selisih</p>
+</div>
+</div>
+<!-- Live scanning counter badge -->
+<div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+<div class="flex flex-col text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Total Terhitung Saat Ini</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">420 / 450 pcs <span class="font-label-md text-label-md text-on-surface-variant font-normal">(3 SKU)</span></span>
+</div>
+</div>
+</div>
+<!-- Interactive Table Grid -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md w-16 text-center">Foto</th>
+<th class="py-space-sm px-space-md">SKU / Barcode</th>
+<th class="py-space-sm px-space-md min-w-[220px]">Nama Barang</th>
+<th class="py-space-sm px-space-md w-24">Satuan</th>
+<th class="py-space-sm px-space-md min-w-[210px] text-center">Jumlah Fisik Dihitung</th>
+<th class="py-space-sm px-space-md">Kondisi Fisik</th>
+<th class="py-space-sm px-space-md w-20 text-center">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-none font-body-md text-body-md text-on-surface">
+<!-- Row 1: Minyak Goreng Bimoli 2L -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-md text-center">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-low shadow-sm flex items-center justify-center mx-auto">
+<img class="w-full h-full object-cover" data-alt="Commercial retail pouch of Bimoli palm cooking oil two liters with transparent golden yellow liquid in neat clean grocery packaging, soft commercial white background studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_awdj74ddfxhaD1wls2wc_tkMqEDR48nG4c92Gytm0R2nZy96V1E06XPiIfH10SHP7pqLscyt6kayoEuPmm9cjPWhMM0JntfgBi6cF4uWQS6LGhQ1A3P5MRGD0ZexjLrr-A7gHUCsmelDQoLi6ZDw8xpMkqMrgIQT8-auY_IknaIBqCxQJ_Ig_nwobnlt8q2Ba-EwPghURENKky9rcoY2fWRdubQqAMrLcL2B74Bg4q3WzWmwAmg4JA"/>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-mono font-bold text-on-surface">MYK-GRG-2LT</span>
+<span class="font-mono font-label-sm text-label-sm text-on-surface-variant flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">qr_code_2</span> 899238810231
+                </span>
+</div>
+</td>
+<td class="py-space-sm px-space-md font-semibold">
+              Minyak Goreng Sawit 2L Refill Bimoli
+              <div class="font-label-sm text-label-sm text-on-surface-variant font-normal">Kategori: Sembako / Minyak</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="bg-surface-container-high px-space-xs py-0.5 rounded font-label-md text-label-md text-on-surface font-medium">Pouch</span>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center justify-center gap-space-xs">
+<button aria-label="Kurangi jumlah" class="w-11 h-11 bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="decrementQty('qty-row-1')" type="button">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<input class="w-20 h-11 bg-surface-container-low text-center font-currency-display text-currency-display text-on-surface font-bold rounded focus:outline-none focus:bg-surface-container-lowest shadow-inner font-mono" id="qty-row-1" onchange="updateTotalCalc()" type="number" value="200"/>
+<button aria-label="Tambah jumlah" class="w-11 h-11 bg-primary text-on-primary font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="incrementQty('qty-row-1')" type="button">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Segel Utuh / Baik
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<button class="w-9 h-9 text-tertiary hover:bg-error-container hover:text-on-error-container rounded flex items-center justify-center mx-auto transition-colors cursor-pointer" onclick="removeRow(this)" title="Hapus baris hitungan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Beras Premium Ramos Ngawi 5kg -->
+<tr class="bg-surface-container-low hover:bg-surface-container transition-colors">
+<td class="py-space-sm px-space-md text-center">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-lowest shadow-sm flex items-center justify-center mx-auto">
+<img class="w-full h-full object-cover" data-alt="Packaged woven poly bag of five kilogram Indonesian premium white rice Ramos Ngawi with clean green and gold typography graphics, high-end cooperative retail studio shot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJD7g8RL6gQwkAPuMaQBbffsuSMdMNK53tIVzDq2PCF5CAZNYvoiUEfe6tkpD-A8WGsTQ915g4kICGvGLqecUcfKoLxOwjU-d3VaKXj3ALMxU-UulnEMaVH1upch199n4cuQGu21wbzINkE5WmmepsT5EHMNOPxOsYFGa91kd_yMLMalssiPT0adBXNEqR7fDIFc4YqHLSrsFd1bd36X7cDryoKa_Z9eau2CQ700UVM-zckumsQxDx1A"/>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-mono font-bold text-on-surface">BRS-PRM-5KG</span>
+<span class="font-mono font-label-sm text-label-sm text-on-surface-variant flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">qr_code_2</span> 899300182731
+                </span>
+</div>
+</td>
+<td class="py-space-sm px-space-md font-semibold">
+              Beras Premium Ramos Ngawi 5kg
+              <div class="font-label-sm text-label-sm text-on-surface-variant font-normal">Kategori: Sembako / Beras Lokal</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="bg-surface-container-high px-space-xs py-0.5 rounded font-label-md text-label-md text-on-surface font-medium">Sak</span>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center justify-center gap-space-xs">
+<button aria-label="Kurangi jumlah" class="w-11 h-11 bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="decrementQty('qty-row-2')" type="button">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<input class="w-20 h-11 bg-surface-container-lowest text-center font-currency-display text-currency-display text-on-surface font-bold rounded focus:outline-none shadow-inner font-mono" id="qty-row-2" onchange="updateTotalCalc()" type="number" value="120"/>
+<button aria-label="Tambah jumlah" class="w-11 h-11 bg-primary text-on-primary font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="incrementQty('qty-row-2')" type="button">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Kering &amp; Bersih
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<button class="w-9 h-9 text-tertiary hover:bg-error-container hover:text-on-error-container rounded flex items-center justify-center mx-auto transition-colors cursor-pointer" onclick="removeRow(this)" title="Hapus baris hitungan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Gula Pasir Gulaku 1kg -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-space-sm px-space-md text-center">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-low shadow-sm flex items-center justify-center mx-auto">
+<img class="w-full h-full object-cover" data-alt="Pack of Gulaku premium crystal white sugar one kilogram in glossy plastic bag, bright studio product photography with cooperative grocery setup." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSqOpN3eg-UlNY3sFcTthVqUW2K6d-HeBcgQXrCaJ8k89eWV5QCvyttlnzZB95W1Vu8_S3oGnf-yHC7Ul7gJOTmTVa5FVqGYnBs0PGltP5DWZoBgoXDmppWW46z4QH0H9YgTXM9_Gcf7Gkq5VZfG1SXhrJxcwf0BvFh7HyW7nd7RDY7mP3TDKpsvH5A7TToENsxIOlNMDK7_MKmoqOGkbe-f5mpvCOxXLyzHyWrNTQl7o4LsZwi89Vvg"/>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-mono font-bold text-on-surface">GLA-KRS-1KG</span>
+<span class="font-mono font-label-sm text-label-sm text-on-surface-variant flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">qr_code_2</span> 899100234190
+                </span>
+</div>
+</td>
+<td class="py-space-sm px-space-md font-semibold">
+              Gula Pasir Kristal Putih 1kg Gulaku
+              <div class="font-label-sm text-label-sm text-on-surface-variant font-normal">Kategori: Sembako / Gula</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="bg-surface-container-high px-space-xs py-0.5 rounded font-label-md text-label-md text-on-surface font-medium">Bungkus</span>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center justify-center gap-space-xs">
+<button aria-label="Kurangi jumlah" class="w-11 h-11 bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="decrementQty('qty-row-3')" type="button">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<input class="w-20 h-11 bg-surface-container-low text-center font-currency-display text-currency-display text-on-surface font-bold rounded focus:outline-none focus:bg-surface-container-lowest shadow-inner font-mono" id="qty-row-3" onchange="updateTotalCalc()" type="number" value="100"/>
+<button aria-label="Tambah jumlah" class="w-11 h-11 bg-primary text-on-primary font-headline-md text-headline-md rounded flex items-center justify-center shadow-sm active:scale-95 transition-transform cursor-pointer" onclick="incrementQty('qty-row-3')" type="button">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Baik
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<button class="w-9 h-9 text-tertiary hover:bg-error-container hover:text-on-error-container rounded flex items-center justify-center mx-auto transition-colors cursor-pointer" onclick="removeRow(this)" title="Hapus baris hitungan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Summary Footer -->
+<div class="bg-surface-container p-space-md flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Data input tersimpan otomatis ke cache perangkat • Terakhir diperbarui 2 detik lalu</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant">Akumulasi Fisik:</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface font-mono" id="stat-akumulasi">420 pcs</span>
+</div>
+<div class="h-4 w-[1px] bg-surface-container-high hidden sm:block"></div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant">Target Faktur:</span>
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface font-mono">450 pcs</span>
+</div>
+<div class="h-4 w-[1px] bg-surface-container-high hidden sm:block"></div>
+<!-- Discrepancy indicator pill -->
+<div class="flex items-center gap-space-xs bg-error-container px-space-sm py-space-xs rounded">
+<span class="material-symbols-outlined text-[16px] text-on-error-container">warning</span>
+<span class="font-label-sm text-label-sm text-on-error-container font-semibold">Selisih Sementara:</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-error-container font-mono" id="stat-selisih">-30 pcs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Floating Action Banner -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-lg p-space-md flex flex-col md:flex-row items-center justify-between gap-space-md sticky bottom-4 z-30">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[24px]">task</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Pemeriksaan fisik gudang sedang berlangsung</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Klik tombol Lanjutkan ke Validasi bila proses scanning barang fisik dari truk pengiriman telah rampung.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto justify-end">
+<button class="h-11 px-space-md bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md rounded shadow-sm flex items-center gap-space-xs cursor-pointer transition-colors" onclick="confirmDraftSave()" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Simpan Draft</span>
+</button>
+<button class="h-11 px-space-lg bg-primary hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm rounded shadow flex items-center justify-center gap-space-sm cursor-pointer transition-all active:scale-95" onclick="proceedToStep3()" type="button">
+<span>Lanjutkan ke Tahap 3: Validasi Stok</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-space-xs rounded text-label-sm font-mono font-bold">[F9]</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  function incrementQty(elementId) {
+    const input = document.getElementById(elementId);
+    if (input) {
+      input.value = parseInt(input.value || 0, 10) + 1;
+      updateTotalCalc();
+    }
+  }
+
+  function decrementQty(elementId) {
+    const input = document.getElementById(elementId);
+    if (input && parseInt(input.value || 0, 10) > 0) {
+      input.value = parseInt(input.value || 0, 10) - 1;
+      updateTotalCalc();
+    }
+  }
+
+  function updateTotalCalc() {
+    const r1 = parseInt(document.getElementById('qty-row-1')?.value || 0, 10);
+    const r2 = parseInt(document.getElementById('qty-row-2')?.value || 0, 10);
+    const r3 = parseInt(document.getElementById('qty-row-3')?.value || 0, 10);
+    const total = r1 + r2 + r3;
+    const target = 450;
+    const diff = total - target;
+
+    const statAkumulasi = document.getElementById('stat-akumulasi');
+    const statSelisih = document.getElementById('stat-selisih');
+
+    if (statAkumulasi) {
+      statAkumulasi.textContent = total + ' pcs';
+    }
+    if (statSelisih) {
+      statSelisih.textContent = (diff > 0 ? '+' : '') + diff + ' pcs';
+    }
+  }
+
+  function removeRow(btn) {
+    const row = btn.closest('tr');
+    if (row && confirm('Hapus baris barang dari data hitungan fisik ini?')) {
+      row.remove();
+      updateTotalCalc();
+    }
+  }
+
+  function triggerManualInput() {
+    const sku = prompt('Masukkan SKU atau Barcode Barang secara manual:', '');
+    if (sku) {
+      const barcodeInput = document.getElementById('barcode-input');
+      if (barcodeInput) {
+        barcodeInput.value = sku;
+        barcodeInput.focus();
+      }
+    }
+  }
+
+  function confirmDraftSave() {
+    alert('Draft perhitungan fisik tersimpan aman di IndexedDB perangkat offline Anda.');
+  }
+
+  function proceedToStep3() {
+    alert('Beralih ke Tahap 3: Validasi Stok & Penggabungan Master HPP...');
+  }
+
+  // Keyboard shortcut listener for warehouse POS terminal
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'F2') {
+      e.preventDefault();
+      triggerManualInput();
+    } else if (e.key === 'F9') {
+      e.preventDefault();
+      proceedToStep3();
+    }
+  });
+</script></main></div></body></html>

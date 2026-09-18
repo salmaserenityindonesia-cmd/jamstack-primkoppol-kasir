@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script src="/tailwind-theme.js"></script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-md"><img alt="Brand logo PRIMKOPPOL NGAWI. Primary color: #059669, Font: system-ui/Space Grotesk, Subtitle: KOPERASI POLRES NGAWI" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W5pVa4ne1bIrNVi6aLFIFisMnhsPIZJP6ZKIUo1ljc_dJfEGaf3BKAaeUv4RTgl8pLe0rD6gG5eS-TYnqucBNm3ewuITQgXyY1zUmOHSytqfXva6uWFq7-_1GQ5U9mB-GswMCwpb2FNhqurhIg6RiyHAVDXkaEOWOrjFdDoC5pWHAOGO8uDX7EU1fBzGv0-bdmEbRHCIGXzcxfmoxHmj3qiSpzEMnvzQbnlGeHiuLM2k_0KFQ1OaTXBIKc"/><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight">PRIMKOPPOL NGAWI</span><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-secondary-container">POS SUITE v2.4</span></div><span class="font-label-sm text-label-sm text-on-surface-variant">Koperasi Pegawai Republik Indonesia Polres Ngawi</span></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-sm bg-surface-container-low px-space-md py-1.5 rounded-lg"><div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Status Jaringan</span><span class="font-label-md text-label-md text-primary font-bold">Database Online (Sync 0ms)</span></div></div><div class="flex items-center gap-space-md bg-surface-container-low px-space-md py-1.5 rounded-lg"><div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Sari Wulandari</span><span class="font-label-md text-label-md text-on-surface">Kasir Shift #02</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1V209IjDq0_-dRfgKap51v4N7VB58jkmwCXc0T4SuPC3wu23tav4svnGpJdRbWC-A_qxDvrG12zWukQfv_JOqObNaSspBvTaaE9oMPi3vm636B2gLrzCNtqfY850i2bsaRLl4a0vT-sVu52ZeAfdmwia_H-hI1-gUr1-_7gUnTgCaNx0tV9W1vYgSiLV_uaNZ2iC_JQ4rzTrzBJP2qXI1YMQ_KjlJieyGNXfnzh8WwQP13dQvmEJGJNp7wQ"/></div></div></div><div class="w-full bg-surface-container px-gutter"><div class="flex items-center justify-between overflow-x-auto"><nav class="flex items-center gap-space-xs py-1.5" data-active-classes="bg-primary-container text-on-primary-container font-bold shadow-sm"><a class="font-label-md text-label-md px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="terminal-kasir" href="#">Terminal Kasir [F1]</a><a class="font-label-md text-label-md px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="pelunasan-piutang-dan-setoran" href="#">Pelunasan Piutang &amp; Setoran [F2]</a><a class="font-label-md text-label-md px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="master-barang-dan-restock" href="#">Master Barang &amp; Restock [F3]</a><a class="font-label-md text-label-md px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="laporan-penjualan" href="#">Laporan Penjualan [F4]</a><a aria-current="page" class="px-space-md py-1.5 rounded-lg transition-colors whitespace-nowrap bg-primary-container text-on-primary-container font-bold shadow-sm" data-path="laporan-stok-dan-fast-moving" href="#">Laporan Stok &amp; Fast Moving [F5]</a><a class="font-label-md text-label-md px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="rekap-shift" href="#">Rekap Shift [F6]</a></nav><div class="hidden lg:flex items-center gap-space-md pl-gutter"><span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Shortcut: <span class="font-bold text-on-surface">[F8] Cari Item</span> • <span class="font-bold text-on-surface">[F9] Bayar</span> • <span class="font-bold text-tertiary">[F12] Tutup Kasir</span></span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-40px)]"><div class="flex flex-col w-full">
+<!-- Content Body Container -->
+<div class="w-full px-gutter py-space-lg flex flex-col gap-space-lg">
+<!-- 1. Breadcrumb & Executive Title Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-secondary">
+<span class="hover:text-primary transition-colors cursor-pointer">Waserda POS</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Logistik &amp; Inventori</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Laporan Sisa &amp; Fast-Moving Items</span>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Laporan Sisa Barang &amp; Top 20 Fast-Moving Products</h1>
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">Frekuensi Tertinggi</span>
+</div>
+<p class="font-body-md text-body-md text-secondary max-w-4xl">
+          Analisis inventori komparatif sisa stok fisik terhadap tingkat perputaran dan frekuensi penjualan tertinggi, dilengkapi kalkulasi HPP beli, harga jual, margin laba unit &amp; kontribusi SHU periode berjalan.
+        </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm flex-wrap self-start lg:self-center">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all active:scale-95 shadow-sm" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Cetak Rekap [F10]</span>
+</button>
+<button onclick="exportToGoogleDrive('inventory')" class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-label-md text-label-md font-semibold transition-all active:scale-95 shadow-sm" title="Simpan Laporan Inventaris ke Google Drive">
+<svg class="w-4 h-4 shrink-0" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+  <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+  <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+  <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+  <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+  <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+  <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+</svg>
+<span>Simpan ke Google Drive</span>
+<span class="text-[10px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.5 rounded">Spreadsheet</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md shadow-md hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+<span>+ Rekomendasi Restock Otomatis</span>
+</button>
+</div>
+</div>
+<!-- 2. Quick Filter Bar & Audit Sync State -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md">
+<!-- Date range selectors -->
+<div class="flex items-center gap-space-xs overflow-x-auto w-full xl:w-auto pb-1 xl:pb-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold mr-space-xs whitespace-nowrap">Rentang Waktu:</span>
+<button class="px-3 py-1.5 rounded-lg text-secondary hover:bg-surface-container font-label-md text-label-md whitespace-nowrap transition-colors">Hari Ini</button>
+<button class="px-3 py-1.5 rounded-lg text-secondary hover:bg-surface-container font-label-md text-label-md whitespace-nowrap transition-colors">7 Hari Terakhir</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold whitespace-nowrap shadow-sm">Bulan Ini (Oktober 2024)</button>
+<button class="px-3 py-1.5 rounded-lg text-secondary hover:bg-surface-container font-label-md text-label-md whitespace-nowrap transition-colors">Triwulan Ini</button>
+<button class="px-3 py-1.5 rounded-lg text-secondary hover:bg-surface-container font-label-md text-label-md whitespace-nowrap transition-colors flex items-center gap-1">
+<span>Kustom</span>
+<span class="material-symbols-outlined text-[14px]">calendar_month</span>
+</button>
+</div>
+<!-- Sync Verification Chip -->
+<div class="flex items-center gap-space-sm bg-primary-container/10 px-space-md py-1.5 rounded-lg self-stretch xl:self-auto justify-between xl:justify-start">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Audit Sinkronisasi POS &amp; Kartu Gudang: 100% Cocok (Terverifikasi)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID-AUDIT #7729-NGAWI</span>
+</div>
+</div>
+<!-- Secondary Filters and Metadata -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary">Kategori:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>Semua Kategori (Sembako, Pangan Pokok, Minuman, Sanitasi, Snack)</option>
+<option>Sembako &amp; Pangan Pokok</option>
+<option>Minuman Siap Saji</option>
+<option>Sanitasi &amp; Personal Care</option>
+<option>UMKM Khas Ngawi</option>
+</select>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary">Status Stok:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>Semua Status (Aman, Menipis, Kritis)</option>
+<option>Aman (Run-out &gt; 6 Hari)</option>
+<option>Menipis / Reorder (Run-out 3-5 Hari)</option>
+<option>Kritis (Run-out &lt; 2 Hari)</option>
+</select>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary">Urutan:</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Frekuensi Penjualan Tertinggi (Peringkat 1 s/d 20)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Periode Analisis: <strong class="text-on-surface">01 Okt 2024 s/d 24 Okt 2024</strong> (24 Hari Operasional Kasir)</span>
+</div>
+</div>
+</div>
+<!-- 3. KPI Summary Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-surface-container-low opacity-60 pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Total Sisa Stok (Top 20)</span>
+<span class="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-currency-display text-on-surface mt-1">4.895 <span class="font-body-sm text-body-sm text-secondary font-normal">Unit/Pcs</span></div>
+</div>
+<div class="mt-space-md flex items-center justify-between pt-space-xs">
+<span class="font-label-sm text-label-sm text-secondary">Valuasi Aset Stok:</span>
+<span class="font-label-md text-label-md font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">Rp 78.420.000</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Total Frekuensi Transaksi</span>
+<span class="material-symbols-outlined text-primary text-[20px]">receipt_long</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-currency-display text-on-surface mt-1">5.494 <span class="font-body-sm text-body-sm text-secondary font-normal">Kali Trx</span></div>
+</div>
+<div class="mt-space-md flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="font-label-md text-label-md font-semibold">+18.4% Kecepatan Kasir</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">8.285 Unit Laku</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Total Akumulasi Laba (SHU)</span>
+<span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-currency-display text-primary mt-1">Rp 18.997.000</div>
+</div>
+<div class="mt-space-md flex items-center justify-between pt-space-xs">
+<span class="font-label-sm text-label-sm text-secondary">Rata-rata Margin:</span>
+<span class="font-label-md text-label-md font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">15.7% Kontribusi SHU</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Status Buffer &amp; Reorder</span>
+<span class="material-symbols-outlined text-tertiary text-[20px]">warning</span>
+</div>
+<div class="font-headline-md text-headline-md font-currency-display text-tertiary mt-1">3 SKU Kritis / Reorder</div>
+</div>
+<div class="mt-space-md flex items-center justify-between pt-space-xs">
+<span class="font-label-sm text-label-sm text-secondary">Rata-rata Ketahanan:</span>
+<span class="font-label-md text-label-md font-bold text-secondary bg-surface-container px-2 py-0.5 rounded">5.8 Hari Terakhir</span>
+</div>
+</div>
+</div>
+<!-- 4. Visual Analytic Highlights: Top 3 Velocity vs Stock Buffer Alert Box -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Left Column: Top 3 Fast-Moving Velocity Pods -->
+<div class="lg:col-span-7 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">military_tech</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top 3 Produk Frekuensi Tertinggi (Velocity Leaders)</h3>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Kontributor 31.6% Total Omzet Toko</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm mt-space-xs">
+<!-- Leader #1 -->
+<div class="bg-surface-container-low p-space-md rounded-lg relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-sm">#1</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">684 Nota Trx</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg font-bold text-on-surface leading-snug">Minyak Sawit 2L Refill</p>
+<p class="font-label-sm text-label-sm text-secondary mt-0.5">Sisa: <strong class="text-on-surface">229 Pcs</strong> (Aman)</p>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/60 p-2 rounded">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-secondary">Terjual:</span>
+<span class="font-bold text-on-surface">840 Pcs</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm mt-1">
+<span class="text-secondary">Laba SHU:</span>
+<span class="font-bold text-primary font-mono">Rp 2.520.000</span>
+</div>
+</div>
+</div>
+<!-- Leader #2 -->
+<div class="bg-surface-container-low p-space-md rounded-lg relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-sm">#2</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">512 Nota Trx</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg font-bold text-on-surface leading-snug">Beras Ramos Premium 5kg</p>
+<p class="font-label-sm text-label-sm text-secondary mt-0.5">Sisa: <strong class="text-on-surface">120 Sak</strong> (Aman)</p>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/60 p-2 rounded">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-secondary">Terjual:</span>
+<span class="font-bold text-on-surface">410 Sak</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm mt-1">
+<span class="text-secondary">Laba SHU:</span>
+<span class="font-bold text-primary font-mono">Rp 2.050.000</span>
+</div>
+</div>
+</div>
+<!-- Leader #3 -->
+<div class="bg-surface-container-low p-space-md rounded-lg relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-sm">#3</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">489 Nota Trx</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg font-bold text-on-surface leading-snug">Telur Ayam Ras Segar 1kg</p>
+<p class="font-label-sm text-label-sm text-secondary mt-0.5">Sisa: <strong class="text-on-surface">138 Kg</strong> (Aman)</p>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/60 p-2 rounded">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-secondary">Terjual:</span>
+<span class="font-bold text-on-surface">530 Kg</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm mt-1">
+<span class="text-secondary">Laba SHU:</span>
+<span class="font-bold text-primary font-mono">Rp 1.431.000</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-3 flex items-center justify-between text-secondary font-label-sm text-label-sm">
+<span>Tingkat ketahanan rata-rata top 3: <strong>6.5 Hari</strong></span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">insights</span>
+            Rotasi stok sembako stabil &amp; berulang
+          </span>
+</div>
+</div>
+<!-- Right Column: Reorder Urgency Alert Box -->
+<div class="lg:col-span-5 bg-error-container/20 p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-tertiary">
+<span class="material-symbols-outlined">notification_important</span>
+<h3 class="font-headline-sm text-headline-sm font-bold">Peringatan Kritis: Buffer Stok Menipis</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-label-sm text-label-sm font-bold animate-pulse">ACTION REQ</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-1">
+            Produk dengan perputaran tinggi terdeteksi memiliki sisa stok mendekati atau di bawah batas minimum pemesanan kembali (Lead Time Suplier Ngawi: 2 Hari).
+          </p>
+</div>
+<div class="flex flex-col gap-2 my-space-sm">
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest text-on-surface shadow-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<div>
+<p class="font-label-md text-label-md font-bold">Kopi Bubuk Robusta Ngawi 250g</p>
+<p class="font-label-sm text-label-sm text-secondary">Sisa: <strong class="text-tertiary font-bold">32 Pack</strong> (Min Buffer: 50 Pack)</p>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold">Habis dlm 1.7 Hari</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest text-on-surface shadow-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<div>
+<p class="font-label-md text-label-md font-bold">Gula Pasir Kristal Putih 1kg</p>
+<p class="font-label-sm text-label-sm text-secondary">Sisa: <strong class="text-on-surface font-bold">45 Bks</strong> (Min Buffer: 60 Bks)</p>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Habis dlm 1.8 Hari</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-secondary">Estimasi waktu pemulihan stok: 24 - 48 Jam</span>
+<button class="px-3 py-1.5 rounded-lg bg-tertiary hover:bg-tertiary-container text-on-tertiary font-label-md text-label-md font-bold transition-all shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+<span>Buat Draft PO Supplier</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 5. Main Table: Tabel Peringkat 20 Barang Frekuensi Penjualan Tertinggi -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Filter Bar & Search Tools -->
+<div class="p-space-md bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<div class="relative w-full md:w-80">
+<input class="w-full bg-surface-container-lowest pl-9 pr-12 py-2 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none shadow-xs" id="filter-input" placeholder="Cari SKU, Barcode, atau Nama Produk... [F2]" type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-secondary text-[18px]">search</span>
+<span class="absolute right-2 top-2 px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-secondary font-mono">F2</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary hidden lg:inline-block">Limitasi: <strong class="text-on-surface">Top 20 SKU</strong> Frekuensi Kasir Terbanyak</span>
+</div>
+<!-- Sorting Tags -->
+<div class="flex items-center gap-space-xs overflow-x-auto w-full md:w-auto justify-start md:justify-end">
+<span class="font-label-sm text-label-sm text-secondary mr-1">Urutan:</span>
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm font-semibold flex items-center gap-1 shadow-xs">
+<span>Frekuensi Tertinggi</span>
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-secondary font-label-sm text-label-sm transition-colors">
+            Laba Terbesar
+          </button>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-secondary font-label-sm text-label-sm transition-colors">
+            Sisa Stok Menipis
+          </button>
+</div>
+</div>
+<!-- Dense Ledger Table -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse" id="report-table">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-3 text-center w-12">Rank</th>
+<th class="py-3 px-3 min-w-[220px]">Produk &amp; SKU</th>
+<th class="py-3 px-3 text-right">Frekuensi Trx</th>
+<th class="py-3 px-3 text-right">Total Terjual</th>
+<th class="py-3 px-3 text-right">Sisa Stok Fisik</th>
+<th class="py-3 px-3 text-center">Status Stok</th>
+<th class="py-3 px-3 text-right">HPP (Beli)</th>
+<th class="py-3 px-3 text-right">Harga Jual</th>
+<th class="py-3 px-3 text-right">Laba / Unit</th>
+<th class="py-3 px-3 text-right">Akumulasi SHU</th>
+<th class="py-3 px-3 text-center">Run-Out</th>
+<th class="py-3 px-3 text-center">Aksi</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y-0" id="table-body">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-bold">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 font-label-sm text-label-sm font-bold shadow-xs">#1</span>
+</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Minyak Goreng Sawit 2L Refill</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">MYK-GRG-2LT</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Sembako Pokok</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">684 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">840 <span class="text-[11px] font-normal text-secondary">pch</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">229 <span class="text-[11px] font-normal text-secondary">pch</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 32.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 35.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.000</div>
+<div class="text-[10px] text-secondary">8.57%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 2.520.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">6.5 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-bold">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-300 text-slate-800 font-label-sm text-label-sm font-bold shadow-xs">#2</span>
+</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Beras Premium Ramos 5kg</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">BRS-PRM-5KG</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Pangan Pokok</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">512 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">410 <span class="text-[11px] font-normal text-secondary">sak</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">120 <span class="text-[11px] font-normal text-secondary">sak</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 60.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 65.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 5.000</div>
+<div class="text-[10px] text-secondary">7.69%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 2.050.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">7.0 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-bold">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-600/30 text-amber-900 font-label-sm text-label-sm font-bold shadow-xs">#3</span>
+</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Telur Ayam Ras Segar 1kg</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">TLR-RAS-1KG</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Pangan Pokok</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">489 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">530 <span class="text-[11px] font-normal text-secondary">kg</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">138 <span class="text-[11px] font-normal text-secondary">kg</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 24.800</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 27.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 2.700</div>
+<div class="text-[10px] text-secondary">9.82%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 1.431.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">6.2 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#4</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Gula Pasir Kristal Putih 1kg</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">GLA-KRS-1KG</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Sembako</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">442 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">620 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">45 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Menipis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 14.500</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 16.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 1.500</div>
+<div class="text-[10px] text-secondary">9.38%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 930.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-amber-700">1.8 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-tertiary transition-colors" title="Pesan Ulang Segera">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#5</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Mie Instan Goreng Spesial 85g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">MIE-SGM-85G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Makanan Cepat</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">395 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">1.420 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">540 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 2.800</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 3.200</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 400</div>
+<div class="text-[10px] text-secondary">12.50%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 568.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">9.1 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#6</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Kopi Bubuk Robusta Ngawi 250g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">KPI-RBS-250G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">UMKM Khas</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">360 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">450 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">32 <span class="text-[11px] font-normal text-secondary">pack</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">Kritis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 18.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 22.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 4.000</div>
+<div class="text-[10px] text-secondary">18.18%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 1.800.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-tertiary">1.7 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-tertiary transition-colors" title="Pesan Ulang Segera">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+</button>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#7</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Tepung Terigu Segitiga Biru 1kg</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">TPG-SGT-1KG</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Bahan Pokok</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">318 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">310 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">80 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 11.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 13.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 2.000</div>
+<div class="text-[10px] text-secondary">15.38%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 620.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">6.2 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#8</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Susu Kental Manis Putih 370g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">SSU-SKM-370G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Minuman &amp; Susu</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">285 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">340 <span class="text-[11px] font-normal text-secondary">klg</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">74 <span class="text-[11px] font-normal text-secondary">klg</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 10.500</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 12.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 1.500</div>
+<div class="text-[10px] text-secondary">12.50%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 510.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">5.2 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 9 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#9</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Sabun Cuci Piring Ekstrak Jeruk 750ml</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">SBN-CPR-750ML</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Sanitasi</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">270 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">280 <span class="text-[11px] font-normal text-secondary">pch</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">58 <span class="text-[11px] font-normal text-secondary">pch</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 12.200</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 14.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 2.300</div>
+<div class="text-[10px] text-secondary">15.86%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 644.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">4.9 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 10 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#10</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Deterjen Bubuk Konsentrat 770g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">DTR-BBK-770G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Sanitasi RT</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">242 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">250 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">62 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 16.500</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 19.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.000</div>
+<div class="text-[10px] text-secondary">15.38%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 750.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">5.9 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 11 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#11</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Air Mineral Galon 19L Refill</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">AIR-GLN-19LT</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Minuman</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">228 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">390 <span class="text-[11px] font-normal text-secondary">gln</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">65 <span class="text-[11px] font-normal text-secondary">gln</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 17.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 20.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.000</div>
+<div class="text-[10px] text-secondary">15.00%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 1.170.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">4.0 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 12 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#12</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Kecap Manis Botol 550ml</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">KCP-MNS-550ML</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Bumbu Dapur</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">215 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">230 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">48 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Menipis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 18.500</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 21.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.000</div>
+<div class="text-[10px] text-secondary">13.95%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 690.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-amber-700">5.0 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 13 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#13</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Saus Sambal Pedas Ekstra 335ml</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">SAS-SMB-335ML</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Bumbu Dapur</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">198 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">210 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">52 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 13.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 15.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 2.500</div>
+<div class="text-[10px] text-secondary">16.13%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 525.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">5.9 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 14 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#14</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Biskuit Kaleng Aneka Rasa 650g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">BSK-KLG-650G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Makanan Ringan</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">184 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">190 <span class="text-[11px] font-normal text-secondary">klg</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">40 <span class="text-[11px] font-normal text-secondary">klg</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Menipis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 42.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 48.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 6.000</div>
+<div class="text-[10px] text-secondary">12.50%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 1.140.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-amber-700">5.1 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 15 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#15</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Teh Hitam Celup Kotak 25s</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">TEH-CLP-25S</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Minuman</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">176 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">260 <span class="text-[11px] font-normal text-secondary">ktk</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">68 <span class="text-[11px] font-normal text-secondary">ktk</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 7.800</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 9.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 1.700</div>
+<div class="text-[10px] text-secondary">17.89%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 442.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">6.3 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 16 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#16</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Garam Dapur Beryodium 250g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">GRM-DPR-250G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Bumbu Dapur</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">165 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">340 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">110 <span class="text-[11px] font-normal text-secondary">bks</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 2.500</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 3.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 1.000</div>
+<div class="text-[10px] text-secondary">28.57%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 340.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">7.8 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 17 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#17</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Pasta Gigi Herbal Ekstra 190g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">PST-GGH-190G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Personal Care</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">154 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">180 <span class="text-[11px] font-normal text-secondary">tb</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">42 <span class="text-[11px] font-normal text-secondary">tb</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Menipis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 14.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 17.000</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.000</div>
+<div class="text-[10px] text-secondary">17.65%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 540.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-amber-700">5.6 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 18 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#18</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Sabun Mandi Batang Antiseptik 110g</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">SBN-MND-110G</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Personal Care</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">148 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">310 <span class="text-[11px] font-normal text-secondary">btg</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">88 <span class="text-[11px] font-normal text-secondary">btg</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 4.200</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 5.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 1.300</div>
+<div class="text-[10px] text-secondary">23.64%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 403.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">6.8 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 19 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#19</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Shampo Rambut Botol 170ml</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">SHP-RMB-170ML</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Personal Care</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">135 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">145 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-tertiary">35 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">Menipis</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 19.000</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 22.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 3.500</div>
+<div class="text-[10px] text-secondary">15.56%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 507.500</td>
+<td class="py-2.5 px-3 text-center font-mono font-bold text-amber-700">5.8 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 20 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="py-2.5 px-3 text-center font-mono font-bold text-secondary">#20</td>
+<td class="py-2.5 px-3">
+<div class="font-label-lg text-label-lg font-bold text-on-surface">Air Mineral Botol 600ml Sedang</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
+<span class="font-mono">AIR-BTL-600ML</span>
+<span>•</span>
+<span class="bg-surface-container px-1 rounded">Minuman Siap Minum</span>
+</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">122 <span class="text-[11px] font-normal text-secondary">trx</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">480 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-on-surface">140 <span class="text-[11px] font-normal text-secondary">btl</span></td>
+<td class="py-2.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">Aman</span>
+</td>
+<td class="py-2.5 px-3 text-right font-mono text-secondary">Rp 2.800</td>
+<td class="py-2.5 px-3 text-right font-mono font-semibold text-on-surface">Rp 3.500</td>
+<td class="py-2.5 px-3 text-right font-mono">
+<div class="text-primary font-bold">Rp 700</div>
+<div class="text-[10px] text-secondary">20.00%</div>
+</td>
+<td class="py-2.5 px-3 text-right font-mono font-bold text-primary">Rp 336.000</td>
+<td class="py-2.5 px-3 text-center font-mono font-semibold text-secondary">7.0 Hari</td>
+<td class="py-2.5 px-3 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Detail Kartu Stok">
+<span class="material-symbols-outlined text-[18px]">read_more</span>
+</button>
+</td>
+</tr>
+</tbody>
+<!-- Table Summary Total Row -->
+<tfoot>
+<tr class="bg-surface-container-high text-on-surface font-label-md text-label-md font-bold">
+<td class="py-3 px-3" colspan="2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">functions</span>
+<span>TOTAL AKUMULASI (20 SKU FAST-MOVING TERATAS)</span>
+</div>
+</td>
+<td class="py-3 px-3 text-right font-mono text-primary font-bold">5.494 Trx</td>
+<td class="py-3 px-3 text-right font-mono text-on-surface">8.285 Unit</td>
+<td class="py-3 px-3 text-right font-mono text-on-surface">2.088 Pcs</td>
+<td class="py-3 px-3 text-center">
+<span class="text-secondary font-normal font-label-sm">3 SKU Reorder</span>
+</td>
+<td class="py-3 px-3 text-right font-mono text-secondary">-</td>
+<td class="py-3 px-3 text-right font-mono text-secondary">-</td>
+<td class="py-3 px-3 text-right font-mono">
+<span class="text-primary font-bold">15.7% (Avg)</span>
+</td>
+<td class="py-3 px-3 text-right font-mono text-primary font-currency-display text-[16px]">Rp 18.997.000</td>
+<td class="py-3 px-3 text-center font-mono text-secondary">5.8 H (Avg)</td>
+<td class="py-3 px-3 text-center font-mono text-secondary">-</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Pagination & Record Count Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-secondary">
+<div class="flex items-center gap-space-xs">
+<span>Menampilkan <strong class="text-on-surface font-mono">1 - 20</strong> dari <strong class="text-on-surface font-mono">20</strong> Produk Pilihan (Sesuai Limitasi Filter Frekuensi Tertinggi)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-2.5 py-1 rounded bg-surface-container text-secondary font-medium cursor-not-allowed opacity-60">Sebelumnya</button>
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-bold">1</button>
+<button class="px-2.5 py-1 rounded bg-surface-container text-secondary font-medium hover:bg-surface-container-high transition-colors">Selanjutnya</button>
+</div>
+</div>
+</div>
+<!-- 6. Legalitas, Pengesahan & Audit Metadata Primkoppol -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-12 gap-space-lg">
+<div class="md:col-span-8 flex flex-col justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<div class="p-2.5 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Pernyataan Validasi &amp; Penyelarasan Fisik Waserda</h4>
+<p class="font-body-md text-body-md text-secondary mt-1">
+              Seluruh data sisa barang fisik dan frekuensi penjualan di atas telah diverifikasi secara periodik melalui penghitungan fisik etalase/gudang dan dicocokkan dengan log mutasi barcode scanner kasir otomatis. Perbedaan fisik nihil (±0%).
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-secondary pt-space-xs">
+<span>Sistem Integrasi: <strong class="text-on-surface">PRIMKOPPOL-POS v2.4.12</strong></span>
+<span>•</span>
+<span>Database Server: <strong class="text-on-surface font-mono">192.168.1.10:5432</strong></span>
+<span>•</span>
+<span>Sinkronisasi Terakhir: <strong class="text-primary font-bold">Realtime (0ms)</strong></span>
+</div>
+</div>
+<!-- Legal Signatures -->
+<div class="md:col-span-4 flex items-center justify-around gap-space-md bg-surface-container-low p-space-md rounded-lg">
+<div class="flex flex-col items-center text-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Pengelola Gudang</span>
+<div class="h-14 flex items-center justify-center">
+<span class="font-mono text-[12px] text-secondary/40 italic">[ Tanda Tangan Digital ]</span>
+</div>
+<span class="font-label-md text-label-md font-bold text-on-surface">Hendra Kusuma</span>
+<span class="font-label-sm text-label-sm text-secondary">Logistik &amp; Waserda</span>
+</div>
+<div class="w-px h-16 bg-surface-variant"></div>
+<div class="flex flex-col items-center text-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Kepala Waserda</span>
+<div class="h-14 flex items-center justify-center">
+<span class="font-mono text-[12px] text-primary/60 font-bold">[ TERVERIFIKASI PRIMKOPPOL ]</span>
+</div>
+<span class="font-label-md text-label-md font-bold text-on-surface">Aiptu Bambang Sutrisno</span>
+<span class="font-label-sm text-label-sm text-secondary">NRP 77080211</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function exportToGoogleDrive(type) {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'OPEN_DRIVE_EXPORT', reportType: type || 'inventory' }, '*');
+    } else {
+      alert('Gunakan portal desktop utama untuk sinkronisasi Google Drive.');
+    }
+  }
+
+  // Filter search interaction
+  const searchInput = document.getElementById('filter-input');
+  const tableRows = document.querySelectorAll('#table-body tr');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase().trim();
+      tableRows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(term)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+
+    // Keyboard shortcut F2 to focus search
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'F2') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-lowest shadow-[0_-1px_6px_rgba(0,0,0,0.03)]"><div class="w-full px-gutter py-2 flex flex-col md:flex-row items-center justify-between gap-space-sm text-on-surface-variant"><div class="flex items-center gap-space-md font-label-sm text-label-sm"><span class="font-semibold text-primary">PRIMKOPPOL POLRES NGAWI</span><span>•</span><span>Unit Pertokoan &amp; Waserda Terpadu</span><span>•</span><span>Terminal: POS-TER-04</span></div><div class="flex items-center gap-space-lg font-label-sm text-label-sm"><span>Server: 192.168.1.10:5432 (SSL Secure)</span><span>Plafon Limit Engine: Aktif</span><span>© 2025 Koperasi Polres Ngawi</span></div></div></footer></body></html>
