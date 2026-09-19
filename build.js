@@ -76,7 +76,6 @@ const redirectsContent = `
 /logo /stitch_primkoppol_ngawi_pos_desktop_interface/logo_primkoppol_ngawi/code.html 200
 /pelunasan-piutang /stitch_primkoppol_ngawi_pos_desktop_interface/pelunasan_piutang_setoran_tunggakan_kopos/code.html 200
 /api/env /api/env.json 200
-/* /index.html 200
 `;
 
 
