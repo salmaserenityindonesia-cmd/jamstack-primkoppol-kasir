@@ -49,6 +49,10 @@
         <span class="w-2 h-2 rounded-full bg-green-300 pulse-dot"></span>
         <span id="sync-status-text">Menyambung...</span>
       </div>
+      <button id="ai-audit-btn" class="bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 shadow-sm border border-amber-300">
+        <span class="material-symbols-outlined text-[16px]">smart_toy</span>
+        Analisis AI
+      </button>
       <button id="btn-refresh" class="p-1.5 rounded-lg hover:bg-green-700 transition" title="Refresh Data">
         <span class="material-symbols-outlined text-[20px]">refresh</span>
       </button>
@@ -118,6 +122,33 @@
     </div>
   </div>
 
+  <!-- AI Audit Result Card (Hidden by default) -->
+  <div id="ai-audit-card" class="hidden bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden relative">
+    <div class="absolute top-0 left-0 w-1 h-full bg-amber-400" id="ai-audit-indicator"></div>
+    <div class="p-5 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+        <span class="material-symbols-outlined text-[24px]">psychiatry</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="font-bold text-slate-800 text-lg">Hasil Audit Sentinel AI</h2>
+          <span id="ai-audit-status" class="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700">Aman</span>
+        </div>
+        <p id="ai-audit-summary" class="text-sm text-slate-600 mb-3">Memproses analisis data...</p>
+        
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Rekomendasi Tindak Lanjut</p>
+          <ul id="ai-audit-recommendations" class="list-disc list-inside text-sm text-slate-700 space-y-1">
+            <!-- inserted dynamically -->
+          </ul>
+        </div>
+      </div>
+      <button id="close-ai-card" class="text-slate-400 hover:text-slate-600">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Content Grid: Blocked Members + Audit Log -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -179,6 +210,10 @@
 
 <script type="module">
   import { syncDeltaData, computeMetrics, formatIDR } from '/src/supervisor/supervisorEngine.js';
+  import { analyzeShiftTransactions } from '/src/supervisor/aiAuditEngine.js';
+
+  // State
+  let currentMetrics = null;
 
   // ─── PWA Service Worker Registration ──────────────────────────────────────
   if ('serviceWorker' in navigator) {
@@ -297,6 +332,7 @@
     try {
       const { transactions, members, source } = await syncDeltaData();
       const metrics = computeMetrics(transactions, members);
+      currentMetrics = metrics;
 
       renderMetrics(metrics);
       renderBlockedMembers(metrics.blockedMembers);
@@ -322,6 +358,54 @@
       console.error('[Dashboard] Error memuat data:', err);
     }
   }
+
+  // ─── AI Audit Listener ─────────────────────────────────────────────────────
+  const aiBtn = document.getElementById('ai-audit-btn');
+  const aiCard = document.getElementById('ai-audit-card');
+  const aiCloseBtn = document.getElementById('close-ai-card');
+  
+  aiCloseBtn.addEventListener('click', () => {
+    aiCard.classList.add('hidden');
+  });
+
+  aiBtn.addEventListener('click', async () => {
+    aiCard.classList.remove('hidden');
+    document.getElementById('ai-audit-summary').textContent = 'Memproses data dan menganalisis anomali...';
+    document.getElementById('ai-audit-recommendations').innerHTML = '<li>Harap tunggu...</li>';
+    document.getElementById('ai-audit-status').textContent = 'Analisis';
+    document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700';
+
+    try {
+      const summaryPayload = {
+        totalCash: currentMetrics?.totalCash || 0,
+        totalCredit: currentMetrics?.totalCredit || 0,
+        voidCount: 0,
+        overLimitAttempts: currentMetrics?.blockedMembers?.length || 0
+      };
+
+      const result = await analyzeShiftTransactions(summaryPayload);
+      
+      document.getElementById('ai-audit-summary').textContent = result.summary;
+      
+      if (result.status === 'Aman') {
+        document.getElementById('ai-audit-status').textContent = 'Aman';
+        document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
+      } else {
+        document.getElementById('ai-audit-status').textContent = 'Waspada';
+        document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700';
+      }
+
+      document.getElementById('ai-audit-recommendations').innerHTML = result.recommendations.map(r => 
+        `<li>${r}</li>`
+      ).join('');
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById('ai-audit-summary').textContent = 'Gagal melakukan analisis AI. Cek console log.';
+      document.getElementById('ai-audit-status').textContent = 'Error';
+      document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700';
+    }
+  });
 
   // Init + refresh button + auto-refresh setiap 60 detik
   document.getElementById('btn-refresh').addEventListener('click', loadDashboard);
