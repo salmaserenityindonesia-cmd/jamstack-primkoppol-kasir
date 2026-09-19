@@ -1,7 +1,7 @@
 {
   "name": "Pengawas Primkoppol Waserda",
   "short_name": "Koppol Monitor",
-  "start_url": "/supervisor.html",
+  "start_url": "/supervisor",
   "display": "standalone",
   "theme_color": "#15803d",
   "background_color": "#f8fafc",

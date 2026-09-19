@@ -2,7 +2,7 @@ const CACHE_NAME = 'supervisor-shell-v1';
 const DYNAMIC_CACHE = 'supervisor-dynamic-v1';
 
 const ASSETS = [
-  '/supervisor.html',
+  '/supervisor',
   '/manifest.webmanifest',
   '/icon-192.png',
   '/icon-512.png',
@@ -41,8 +41,10 @@ self.addEventListener('fetch', event => {
           caches.open(DYNAMIC_CACHE).then(cache => cache.put(event.request, clone));
         }
         return networkResponse;
-      }).catch(() => {
-        // network failure, do nothing, just return cached response below
+      }).catch(err => {
+        // Jika offline & tidak ada cache, jangan return undefined, biarkan reject agar browser menampilkan halaman offline native
+        if (!cachedResponse) throw err;
+        return cachedResponse;
       });
 
       return cachedResponse || fetchPromise;
