@@ -62,6 +62,9 @@ if (!fs.existsSync(assetsDist)) fs.mkdirSync(assetsDist, { recursive: true });
 if (fs.existsSync(path.join(supervisorSrc, 'supervisorEngine.js'))) {
   fs.copyFileSync(path.join(supervisorSrc, 'supervisorEngine.js'), path.join(assetsDist, 'supervisorEngine.js'));
 }
+if (fs.existsSync(path.join(supervisorSrc, 'aiAuditEngine.js'))) {
+  fs.copyFileSync(path.join(supervisorSrc, 'aiAuditEngine.js'), path.join(assetsDist, 'aiAuditEngine.js'));
+}
 
 // Copy src directory to dist
 const sourceSrc = path.join(__dirname, 'src');
@@ -107,7 +110,8 @@ const apiDir = path.join(distDir, 'api');
 if (!fs.existsSync(apiDir)) fs.mkdirSync(apiDir, { recursive: true });
 fs.writeFileSync(path.join(apiDir, 'env.json'), JSON.stringify({
   SUPABASE_URL: process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
-  SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY,
+  GEMINI_API_KEY: process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY
 }));
 
 console.log('Build completed successfully: dist directory populated with _redirects and static env.json');

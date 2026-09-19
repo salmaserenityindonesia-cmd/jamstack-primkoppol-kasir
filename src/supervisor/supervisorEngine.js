@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { analyzeShiftTransactions } from './aiAuditEngine.js';
 
 const DB_NAME = 'supervisor_cache_db';
 const DB_VERSION = 1;
@@ -10,6 +11,7 @@ export async function initSupervisor() {
   await initDB();
   await initSupabase();
   await refreshData();
+  setupAIAuditListener();
 }
 
 function initDB() {
@@ -202,4 +204,60 @@ function renderAuditTrail(logs) {
       </div>
     </div>
   `}).join('');
+}
+
+function setupAIAuditListener() {
+  const btn = document.getElementById('ai-audit-btn');
+  const card = document.getElementById('ai-audit-card');
+  const closeBtn = document.getElementById('close-ai-card');
+  
+  if (!btn) return;
+  
+  closeBtn.addEventListener('click', () => {
+    card.classList.add('hidden');
+  });
+
+  btn.addEventListener('click', async () => {
+    card.classList.remove('hidden');
+    document.getElementById('ai-audit-summary').textContent = 'Memproses data dan menganalisis anomali...';
+    document.getElementById('ai-audit-recommendations').innerHTML = '<li>Harap tunggu...</li>';
+    document.getElementById('ai-audit-status').textContent = 'Analisis';
+    document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700';
+
+    try {
+      const cash = await getFromStore('metrics', 'daily_cash');
+      const credit = await getFromStore('metrics', 'daily_credit');
+      const allMembers = await getAllFromStore('members');
+      const blockedCount = allMembers.filter(m => m.status === 'blocked' || m.current_debt > m.credit_limit).length;
+      
+      const summaryPayload = {
+        totalCash: cash?.value || 0,
+        totalCredit: credit?.value || 0,
+        voidCount: 0, // Placeholder
+        overLimitAttempts: blockedCount
+      };
+
+      const result = await analyzeShiftTransactions(summaryPayload);
+      
+      document.getElementById('ai-audit-summary').textContent = result.summary;
+      
+      if (result.status === 'Aman') {
+        document.getElementById('ai-audit-status').textContent = 'Aman';
+        document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
+      } else {
+        document.getElementById('ai-audit-status').textContent = 'Waspada';
+        document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700';
+      }
+
+      document.getElementById('ai-audit-recommendations').innerHTML = result.recommendations.map(r => 
+        `<li>${r}</li>`
+      ).join('');
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById('ai-audit-summary').textContent = 'Gagal melakukan analisis AI. Cek console log.';
+      document.getElementById('ai-audit-status').textContent = 'Error';
+      document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700';
+    }
+  });
 }
