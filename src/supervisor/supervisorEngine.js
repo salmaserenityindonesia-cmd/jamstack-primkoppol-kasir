@@ -1,159 +1,205 @@
-/**
- * supervisorEngine.js
- * Engine delta-cache untuk PWA Pengawas Primkoppol.
- * Menggunakan IndexedDB lokal untuk menyimpan snapshot data
- * dan hanya merender delta perubahan untuk hemat bandwidth.
- */
+import { createClient } from '@supabase/supabase-js';
 
-const DB_NAME = 'koppol_supervisor_cache';
+const DB_NAME = 'supervisor_cache_db';
 const DB_VERSION = 1;
-const STORE_TRANSACTIONS = 'transactions_snapshot';
-const STORE_MEMBERS = 'members_snapshot';
-const STORE_META = 'sync_meta';
 
-let idb = null;
+let db;
+let supabase;
 
-// ─── IndexedDB Setup ──────────────────────────────────────────────────────────
-
-async function openIDB() {
-    if (idb) return idb;
-    return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, DB_VERSION);
-        req.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(STORE_TRANSACTIONS)) {
-                db.createObjectStore(STORE_TRANSACTIONS, { keyPath: 'id' });
-            }
-            if (!db.objectStoreNames.contains(STORE_MEMBERS)) {
-                db.createObjectStore(STORE_MEMBERS, { keyPath: 'id' });
-            }
-            if (!db.objectStoreNames.contains(STORE_META)) {
-                db.createObjectStore(STORE_META, { keyPath: 'key' });
-            }
-        };
-        req.onsuccess = (e) => { idb = e.target.result; resolve(idb); };
-        req.onerror = () => reject(req.error);
-    });
+export async function initSupervisor() {
+  await initDB();
+  await initSupabase();
+  await refreshData();
 }
 
-async function idbPutAll(storeName, records) {
-    const db = await openIDB();
-    return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readwrite');
-        records.forEach(r => tx.objectStore(storeName).put(r));
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-    });
-}
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-async function idbGetAll(storeName) {
-    const db = await openIDB();
-    return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readonly');
-        const req = tx.objectStore(storeName).getAll();
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-    });
-}
-
-async function idbGetMeta(key) {
-    const db = await openIDB();
-    return new Promise((resolve) => {
-        const req = db.transaction(STORE_META, 'readonly').objectStore(STORE_META).get(key);
-        req.onsuccess = () => resolve(req.result?.value || null);
-        req.onerror = () => resolve(null);
-    });
-}
-
-async function idbSetMeta(key, value) {
-    const db = await openIDB();
-    return new Promise((resolve) => {
-        const tx = db.transaction(STORE_META, 'readwrite');
-        tx.objectStore(STORE_META).put({ key, value });
-        tx.oncomplete = () => resolve();
-    });
-}
-
-// ─── Supabase Data Fetcher ────────────────────────────────────────────────────
-
-let supabaseClient = null;
-
-async function getSupabase() {
-    if (supabaseClient) return supabaseClient;
-    try {
-        const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.116.0');
-        const res = await fetch('/api/env');
-        const env = await res.json();
-        if (env.SUPABASE_URL && env.SUPABASE_ANON_KEY) {
-            supabaseClient = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
-        }
-    } catch (e) {
-        console.warn('[SupervisorEngine] Tidak dapat menginisialisasi Supabase:', e.message);
-    }
-    return supabaseClient;
-}
-
-// ─── Delta Sync ───────────────────────────────────────────────────────────────
-
-/**
- * Ambil data dari Supabase, bandingkan dengan snapshot lokal IndexedDB,
- * dan hanya render baris yang berubah (delta).
- */
-export async function syncDeltaData() {
-    const sb = await getSupabase();
-    if (!sb) {
-        console.warn('[SupervisorEngine] Offline — menggunakan cache lokal IndexedDB.');
-        return { 
-            transactions: await idbGetAll(STORE_TRANSACTIONS),
-            members: await idbGetAll(STORE_MEMBERS),
-            source: 'cache'
-        };
-    }
-
-    const lastSync = await idbGetMeta('last_sync_at');
-    const today = new Date().toISOString().slice(0, 10);
-
-    // Ambil transaksi hari ini saja (delta dari lastSync)
-    let txQuery = sb.from('transactions').select('*').gte('timestamp', today + 'T00:00:00').order('timestamp', { ascending: false });
-    if (lastSync) txQuery = txQuery.gt('timestamp', lastSync);
-
-    const { data: newTransactions } = await txQuery.limit(200);
-    const { data: allMembers } = await sb.from('members').select('id, name, unit, credit_limit, current_debt, status').order('name');
-
-    // Simpan delta ke IndexedDB
-    if (newTransactions?.length) await idbPutAll(STORE_TRANSACTIONS, newTransactions);
-    if (allMembers?.length) await idbPutAll(STORE_MEMBERS, allMembers);
-    await idbSetMeta('last_sync_at', new Date().toISOString());
-
-    const cachedTransactions = await idbGetAll(STORE_TRANSACTIONS);
-    return { transactions: cachedTransactions, members: allMembers || [], source: 'cloud+cache' };
-}
-
-// ─── Metric Calculators ───────────────────────────────────────────────────────
-
-export function computeMetrics(transactions, members) {
-    const today = new Date().toISOString().slice(0, 10);
-    const todayTrx = transactions.filter(t => t.timestamp?.startsWith(today));
-
-    const totalCash = todayTrx.filter(t => t.payment_type === 'cash').reduce((s, t) => s + (t.total_amount || 0), 0);
-    const totalCredit = todayTrx.filter(t => t.payment_type === 'credit').reduce((s, t) => s + (t.total_amount || 0), 0);
-    const totalDebtPayment = todayTrx.filter(t => t.payment_type === 'debt_payment').reduce((s, t) => s + (t.total_amount || 0), 0);
-
-    const blockedMembers = (members || []).filter(m => m.status === 'blocked' || m.current_debt > m.credit_limit);
-    const pendingSync = transactions.filter(t => t.sync_status === 'PENDING');
-
-    return {
-        totalTransactionsToday: todayTrx.length,
-        totalCash,
-        totalCredit,
-        totalDebtPayment,
-        totalRevenueToday: totalCash + totalCredit + totalDebtPayment,
-        blockedMembers,
-        pendingSync: pendingSync.length,
-        auditLog: todayTrx.slice(0, 50)
+    request.onerror = event => {
+      console.error('IndexedDB error:', event.target.error);
+      reject(event.target.error);
     };
+
+    request.onsuccess = event => {
+      db = event.target.result;
+      resolve(db);
+    };
+
+    request.onupgradeneeded = event => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('metrics')) {
+        db.createObjectStore('metrics', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('members')) {
+        db.createObjectStore('members', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('audit_trail')) {
+        db.createObjectStore('audit_trail', { keyPath: 'id' });
+      }
+    };
+  });
 }
 
-export function formatIDR(num) {
-    return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+async function initSupabase() {
+  try {
+    const res = await fetch('/api/env');
+    const env = await res.json();
+    if (env.SUPABASE_URL && env.SUPABASE_ANON_KEY) {
+      supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+    }
+  } catch (error) {
+    console.error('Error fetching Supabase config', error);
+  }
+}
+
+export async function refreshData() {
+  if (navigator.onLine && supabase) {
+    try {
+      // Fetch delta updates from Supabase
+      const today = new Date().toISOString().slice(0, 10);
+      
+      const { data: trxData } = await supabase
+        .from('transactions')
+        .select('*')
+        .gte('timestamp', today + 'T00:00:00');
+        
+      const { data: memberData } = await supabase
+        .from('members')
+        .select('*');
+
+      await updateCache(trxData || [], memberData || []);
+    } catch (e) {
+      console.warn('Failed to fetch from Supabase, using cache', e);
+    }
+  }
+  
+  await renderFromCache();
+}
+
+async function updateCache(transactions, members) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['metrics', 'members', 'audit_trail'], 'readwrite');
+    
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = (e) => reject(e);
+
+    const metricsStore = transaction.objectStore('metrics');
+    const membersStore = transaction.objectStore('members');
+    const auditStore = transaction.objectStore('audit_trail');
+
+    // Calculate metrics
+    let totalCash = 0;
+    let totalCredit = 0;
+    const auditLog = [];
+
+    transactions.forEach(t => {
+      if (t.payment_type === 'cash') totalCash += t.total_amount;
+      if (t.payment_type === 'credit') totalCredit += t.total_amount;
+      if (t.payment_type === 'debt_payment') {
+        auditLog.push(t);
+        auditStore.put(t);
+      }
+    });
+
+    metricsStore.put({ id: 'daily_cash', value: totalCash });
+    metricsStore.put({ id: 'daily_credit', value: totalCredit });
+    metricsStore.put({ id: 'low_stock', value: 0 }); // Placeholder for low stock logic
+
+    members.forEach(m => {
+      membersStore.put(m);
+    });
+  });
+}
+
+async function renderFromCache() {
+  const cash = await getFromStore('metrics', 'daily_cash');
+  const credit = await getFromStore('metrics', 'daily_credit');
+  const lowStock = await getFromStore('metrics', 'low_stock');
+  
+  const allMembers = await getAllFromStore('members');
+  const blockedMembers = allMembers.filter(m => m.status === 'blocked' || m.current_debt > m.credit_limit);
+  
+  const auditLog = await getAllFromStore('audit_trail');
+
+  // Update UI
+  document.getElementById('total-cash').textContent = formatIDR(cash?.value || 0);
+  document.getElementById('total-credit').textContent = formatIDR(credit?.value || 0);
+  document.getElementById('low-stock').textContent = lowStock?.value || 0;
+  document.getElementById('blocked-members').textContent = blockedMembers.length;
+
+  renderBlockedMembers(blockedMembers);
+  renderAuditTrail(auditLog.slice(0, 20)); // Limit to last 20
+}
+
+function getFromStore(storeName, key) {
+  return new Promise((resolve) => {
+    const transaction = db.transaction(storeName, 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.get(key);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => resolve(null);
+  });
+}
+
+function getAllFromStore(storeName) {
+  return new Promise((resolve) => {
+    const transaction = db.transaction(storeName, 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result || []);
+    request.onerror = () => resolve([]);
+  });
+}
+
+function formatIDR(num) {
+  return 'Rp ' + Number(num).toLocaleString('id-ID');
+}
+
+function renderBlockedMembers(members) {
+  const container = document.getElementById('overlimit-list');
+  if (!members.length) {
+    container.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">Tidak ada anggota terblokir.</p>';
+    return;
+  }
+
+  container.innerHTML = members.map(m => `
+    <div class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-lg">
+      <div>
+        <p class="font-bold text-sm text-slate-800">${m.name}</p>
+        <p class="text-xs text-slate-500">${m.unit || '-'}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-bold text-red-600">${formatIDR(m.current_debt)}</p>
+        <p class="text-[10px] text-slate-400">Limit: ${formatIDR(m.credit_limit)}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAuditTrail(logs) {
+  const container = document.getElementById('audit-trail');
+  if (!logs.length) {
+    container.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">Tidak ada histori pelunasan.</p>';
+    return;
+  }
+
+  // Sort by timestamp desc
+  logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  container.innerHTML = logs.map(l => {
+    const time = new Date(l.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    return `
+    <div class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-lg">
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-slate-400 font-mono">${time}</span>
+        <div>
+          <p class="font-bold text-sm text-slate-800">${l.invoice_number}</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-bold text-green-600">+${formatIDR(l.total_amount)}</p>
+      </div>
+    </div>
+  `}).join('');
 }

@@ -50,12 +50,17 @@ if (fs.existsSync(sourcePublic)) {
   fs.cpSync(sourcePublic, targetPublic, { recursive: true });
 }
 
-// Copy supervisor HTML
+// Copy supervisor HTML & Engine
 const supervisorSrc = path.join(__dirname, 'src', 'supervisor');
 const supervisorDist = path.join(distDir, 'supervisor');
 if (!fs.existsSync(supervisorDist)) fs.mkdirSync(supervisorDist, { recursive: true });
 if (fs.existsSync(path.join(supervisorSrc, 'dashboard.html'))) {
   fs.copyFileSync(path.join(supervisorSrc, 'dashboard.html'), path.join(supervisorDist, 'index.html'));
+}
+const assetsDist = path.join(distDir, 'assets');
+if (!fs.existsSync(assetsDist)) fs.mkdirSync(assetsDist, { recursive: true });
+if (fs.existsSync(path.join(supervisorSrc, 'supervisorEngine.js'))) {
+  fs.copyFileSync(path.join(supervisorSrc, 'supervisorEngine.js'), path.join(assetsDist, 'supervisorEngine.js'));
 }
 
 // Copy src directory to dist

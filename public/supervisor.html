@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengawas Primkoppol Waserda — Dashboard Monitor</title>
+  <meta name="description" content="Dashboard Pengawas Real-Time PRIMKOPPOL NGAWI">
+  <meta name="theme-color" content="#15803d">
+  
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f8fafc; }
+  </style>
+</head>
+<body class="text-slate-900">
+
+<header class="bg-green-700 text-white p-4 shadow-md sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
+      <div>
+        <h1 class="font-bold text-lg leading-tight">Pengawas Primkoppol</h1>
+        <p class="text-green-200 text-xs">Waserda Monitor</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="sync-status" class="text-xs font-semibold bg-green-800 px-3 py-1 rounded-full border border-green-600">Online</span>
+      <button id="refresh-btn" class="hover:bg-green-600 p-2 rounded-full transition-colors flex items-center">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-4 py-8 space-y-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Kas Tunai -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Kas Tunai Hari Ini</p>
+      <p id="total-cash" class="text-3xl font-bold text-green-600">Rp 0</p>
+    </div>
+    <!-- Kredit -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Kredit Hari Ini</p>
+      <p id="total-credit" class="text-3xl font-bold text-amber-600">Rp 0</p>
+    </div>
+    <!-- Stok Kritis -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Stok Kritis</p>
+      <div class="flex items-center gap-2 text-red-600">
+        <span class="material-symbols-outlined">warning</span>
+        <p id="low-stock" class="text-3xl font-bold">0</p>
+        <span class="text-sm">Item</span>
+      </div>
+    </div>
+    <!-- Anggota Over-Limit -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Anggota Terblokir</p>
+      <div class="flex items-center gap-2 text-purple-600">
+        <span class="material-symbols-outlined">person_off</span>
+        <p id="blocked-members" class="text-3xl font-bold">0</p>
+        <span class="text-sm">Orang</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Daftar Over Limit -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="bg-slate-50 p-4 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="font-bold text-slate-700 flex items-center gap-2">
+          <span class="material-symbols-outlined text-purple-600">group_remove</span>
+          Daftar Over-Limit
+        </h2>
+      </div>
+      <div id="overlimit-list" class="p-4 max-h-80 overflow-y-auto space-y-3">
+        <p class="text-sm text-slate-400 text-center py-4">Memuat data...</p>
+      </div>
+    </div>
+
+    <!-- Audit Trail -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="bg-slate-50 p-4 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="font-bold text-slate-700 flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-600">history</span>
+          Audit Trail Pelunasan
+        </h2>
+      </div>
+      <div id="audit-trail" class="p-4 max-h-80 overflow-y-auto space-y-3">
+        <p class="text-sm text-slate-400 text-center py-4">Memuat data...</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+  import { initSupervisor, refreshData } from '/assets/supervisorEngine.js';
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW Registered', reg))
+        .catch(err => console.error('SW Error', err));
+    });
+  }
+
+  // Handle Online/Offline Status
+  const statusEl = document.getElementById('sync-status');
+  window.addEventListener('online', () => {
+    statusEl.textContent = 'Online';
+    statusEl.className = 'text-xs font-semibold bg-green-800 px-3 py-1 rounded-full border border-green-600';
+    refreshData();
+  });
+  window.addEventListener('offline', () => {
+    statusEl.textContent = 'Offline (Cache)';
+    statusEl.className = 'text-xs font-semibold bg-amber-600 px-3 py-1 rounded-full border border-amber-500';
+  });
+
+  if (!navigator.onLine) {
+    statusEl.textContent = 'Offline (Cache)';
+    statusEl.className = 'text-xs font-semibold bg-amber-600 px-3 py-1 rounded-full border border-amber-500';
+  }
+
+  document.getElementById('refresh-btn').addEventListener('click', () => {
+    refreshData();
+  });
+
+  // Init Engine
+  initSupervisor();
+</script>
+
+</body>
+</html>

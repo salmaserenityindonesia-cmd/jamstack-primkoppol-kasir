@@ -1,71 +1,51 @@
-/**
- * sw.js — Service Worker Ringan untuk PWA Pengawas Primkoppol
- * Cache-First Strategy untuk shell UI Supervisor Dashboard.
- */
+const CACHE_NAME = 'supervisor-shell-v1';
+const DYNAMIC_CACHE = 'supervisor-dynamic-v1';
 
-const CACHE_NAME = 'koppol-supervisor-v1';
-
-const SHELL_ASSETS = [
-    '/supervisor',
-    '/manifest.json',
-    '/icon-192.png',
-    '/icon-512.png',
-    '/tailwind-theme.js',
-    'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap',
-    'https://cdn.tailwindcss.com'
+const ASSETS = [
+  '/supervisor.html',
+  '/manifest.webmanifest',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/tailwind-theme.js',
+  'https://cdn.tailwindcss.com'
 ];
 
-// Install: pra-cache shell assets
-self.addEventListener('install', (event) => {
-    console.log('[SW] Installing Koppol Monitor Service Worker...');
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(SHELL_ASSETS.filter(url => !url.startsWith('https://cdn')));
-        }).then(() => self.skipWaiting())
-    );
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(ASSETS);
+    })
+  );
+  self.skipWaiting();
 });
 
-// Activate: hapus cache lama
-self.addEventListener('activate', (event) => {
-    console.log('[SW] Activating Koppol Monitor Service Worker...');
-    event.waitUntil(
-        caches.keys().then((keys) =>
-            Promise.all(
-                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-            )
-        ).then(() => self.clients.claim())
-    );
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME && key !== DYNAMIC_CACHE)
+          .map(key => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
-// Fetch: Cache-First untuk shell, Network-First untuk API
-self.addEventListener('fetch', (event) => {
-    const { request } = event;
-    const url = new URL(request.url);
+self.addEventListener('fetch', event => {
+  // Stale-While-Revalidate Strategy for UI shell & assets
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        if (networkResponse && networkResponse.ok && event.request.method === 'GET' && !event.request.url.includes('/api/')) {
+          const clone = networkResponse.clone();
+          caches.open(DYNAMIC_CACHE).then(cache => cache.put(event.request, clone));
+        }
+        return networkResponse;
+      }).catch(() => {
+        // network failure, do nothing, just return cached response below
+      });
 
-    // Network-first untuk API calls (data harus segar)
-    if (url.pathname.startsWith('/api/')) {
-        event.respondWith(
-            fetch(request).catch(() => caches.match(request))
-        );
-        return;
-    }
-
-    // Cache-first untuk shell UI dan aset statis
-    event.respondWith(
-        caches.match(request).then((cached) => {
-            if (cached) return cached;
-            return fetch(request).then((response) => {
-                if (response.ok && request.method === 'GET') {
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
-                }
-                return response;
-            }).catch(() => {
-                // Fallback ke halaman supervisor saat offline
-                if (request.headers.get('accept')?.includes('text/html')) {
-                    return caches.match('/supervisor');
-                }
-            });
-        })
-    );
+      return cachedResponse || fetchPromise;
+    })
+  );
 });

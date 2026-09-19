@@ -1,35 +1,35 @@
 # Phase 1: PWA Supervisor Dashboard (Fase 6)
 
 ## Objective
-Mengimplementasikan PWA Supervisor Dashboard untuk Pengawas Koperasi Primkoppol dengan kapabilitas Offline-First, delta caching IndexedDB, dan monitoring real-time kredit anggota.
+Mengimplementasikan PWA Supervisor Dashboard sesuai spesifikasi PRD Primkoppol dengan protokol GSD.
 
 ## Tasks
 
-- [x] **Task 1: Setup Web App Manifest & Service Worker untuk PWA Pengawas**
-  - **Files:** `public/manifest.json`, `public/sw.js`, `index.html`
+- [x] **Task 1: Setup Shell PWA (Manifest & Service Worker Caching)**
+  - **Files:** `public/manifest.webmanifest`, `public/sw.js`, `public/supervisor.html`
   - **Action:**
-    1. Buat berkas `public/manifest.json` yang mendefinisikan identitas PWA Pengawas Koperasi Primkoppol:
-       - `name`: "Pengawas Primkoppol Waserda"
-       - `short_name`: "Koppol Monitor"
-       - `display`: "standalone"
-       - `start_url`: "/supervisor"
-       - `theme_color`: "#15803d"
-       - `icons`: tautkan ikon aplikasi berukuran 192x192 dan 512x512.
-    2. Buat Service Worker ringan di `public/sw.js` yang meng-cache shell UI dasbor pengawas untuk kapabilitas Offline-First.
-    3. Daftarkan Service Worker dan tautkan `manifest.json` pada header modul pengawas.
-  - **Verify:** Jalankan pemeriksaan Lighthouse audit atau verifikasi manifest via DevTools/build log untuk memastikan status PWA terpasang valid.
-  - **Completion:** Konfigurasi PWA shell siap dipasang di ponsel atau browser pengawas.
+    1. Buat berkas `public/manifest.webmanifest` dengan konfigurasi PWA:
+       - name: "Pengawas Primkoppol Waserda"
+       - short_name: "Koppol Monitor"
+       - start_url: "/supervisor.html"
+       - display: "standalone"
+       - theme_color: "#15803d"
+       - background_color: "#f8fafc"
+    2. Buat Service Worker di `public/sw.js` dengan strategi caching shell UI (Stale-While-Revalidate) agar dasbor dapat dibuka saat minim sinyal.
+    3. Buat file tampilan `public/supervisor.html` berbasis Tailwind yang memuat navigasi ringkasan toko dan pendaftaran Service Worker.
+  - **Verify:** Jalankan pemeriksaan lokal (`npm run build`) dan verifikasi berkas terdaftar pada folder build.
+  - **Completion:** Shell PWA mandiri untuk pengawas siap dijalankan secara offline-first.
 
-- [x] **Task 2: Antarmuka Dashboard Real-Time & IndexedDB Delta Cache**
-  - **Files:** `src/supervisor/dashboard.html`, `src/supervisor/supervisorEngine.js`
+- [x] **Task 2: Engine Supervisor & Delta Caching IndexedDB**
+  - **Files:** `src/supervisor/supervisorEngine.js`, `public/supervisor.html`
   - **Action:**
-    1. Buat modul tampilan `src/supervisor/dashboard.html` yang memuat kartu metrik ringkasan:
-       - Total Transaksi Hari Ini (Tunai & Kredit Bayar Mundur).
-       - Panel Peringatan Stok Kritis (Low Stock Alert).
-       - Daftar Anggota Terblokir (Over-Limit Status) beserta nilai tunggakannya.
-       - Log Audit Trail Transaksi dan Pelunasan Kasir.
-    2. Buat `src/supervisor/supervisorEngine.js` yang berlangganan (subscribe) langsung ke database/Supabase dengan teknik caching lokal IndexedDB:
-       - Simpan snapshot data di IndexedDB lokal browser pengawas.
-       - Hanya render pembaruan delta data baru untuk menghemat bandwidth.
-  - **Verify:** Jalankan build lokal dan uji buka halaman dashboard supervisor. Pastikan metrik ringkasan muncul dan data tersimpan di IndexedDB saat koneksi dimatikan (offline test).
-  - **Completion:** Dashboard PWA Pengawas aktif dengan fitur delta caching dan monitoring status kredit anggota.
+    1. Buat `src/supervisor/supervisorEngine.js` yang memanfaatkan Dexie/IndexedDB lokal khusus pengawas (`supervisor_cache_db`):
+       - Simpan cache metrik transaksi, inventori stok, dan daftar anggota.
+       - Buat fungsi sinkronisasi delta ke Supabase/RxDB untuk mengunduh pembaruan terbaru.
+    2. Tampilkan metrik ringkasan pada `public/supervisor.html`:
+       - Ringkasan Penjualan Harian (Tunai & Kredit).
+       - Indikator Peringatan Stok Kritis (Low Stock Alert).
+       - Daftar Anggota Over-Limit beserta tunggakannya.
+       - Log Audit Trail pelunasan kasir.
+  - **Verify:** Buka `/supervisor.html` di server lokal, pastikan metrik kartu terbaca dan cache IndexedDB terbentuk di DevTools.
+  - **Completion:** Dashboard pengawas aktif dengan kemampuan delta caching dan monitoring status kredit anggota.
