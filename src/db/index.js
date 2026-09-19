@@ -1,14 +1,18 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
+import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { createClient } from '@supabase/supabase-js';
 import { memberSchema, transactionSchema } from './schema.js';
 
-export let supabase = null;
+// Register Leader Election plugin (BroadcastChannel-based)
+addRxPlugin(RxDBLeaderElectionPlugin);
 
 if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
     addRxPlugin(RxDBDevModePlugin);
 }
+
+export let supabase = null;
 
 let dbPromise = null;
 
@@ -29,8 +33,10 @@ export const initDatabase = async () => {
             }
 
             const db = await createRxDatabase({
-                name: 'primkoppol_pos_local',
-                storage: getRxStorageDexie()
+                name: 'primkoppol_pos_db',
+                storage: getRxStorageDexie(),
+                multiInstance: true,   // Cross-tab sync via BroadcastChannel
+                eventReduce: true      // Optimasi event processing
             });
 
             await db.addCollections({
@@ -38,12 +44,13 @@ export const initDatabase = async () => {
                 transactions: { schema: transactionSchema }
             });
 
+            // Leader Election: hanya tab Leader yang menjalankan sinkronisasi Supabase
             if (supabase) {
-                // Background Sync: Ambil perubahan anggota dari Supabase ke RxDB lokal
-                startMemberSync(db);
-
-                // Background Sync: Dorong transaksi offline ke Supabase
-                startTransactionOutbox(db);
+                db.waitForLeadership().then(() => {
+                    console.log('[RxDB] Leader elected — starting Supabase sync');
+                    startMemberSync(db);
+                    startTransactionOutbox(db);
+                });
             }
 
             return db;
