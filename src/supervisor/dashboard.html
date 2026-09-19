@@ -400,8 +400,8 @@
       ).join('');
 
     } catch (err) {
-      console.error(err);
-      document.getElementById('ai-audit-summary').textContent = 'Gagal melakukan analisis AI. Cek console log.';
+      console.error('[AI Audit Error]', err);
+      document.getElementById('ai-audit-summary').textContent = 'Gagal melakukan analisis AI: ' + err.message;
       document.getElementById('ai-audit-status').textContent = 'Error';
       document.getElementById('ai-audit-status').className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700';
     }

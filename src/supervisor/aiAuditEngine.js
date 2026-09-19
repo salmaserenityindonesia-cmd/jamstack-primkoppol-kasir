@@ -40,7 +40,7 @@ Berikan response DALAM FORMAT JSON SAJA (tanpa markdown), dengan struktur:
   "recommendations": ["Rekomendasi 1", "Rekomendasi 2"]
 }`;
 
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -53,7 +53,8 @@ Berikan response DALAM FORMAT JSON SAJA (tanpa markdown), dengan struktur:
   });
 
   if (!response.ok) {
-    throw new Error(`Gemini API Error: ${response.statusText}`);
+    const errorData = await response.text();
+    throw new Error(`Gemini API Error (${response.status}): ${errorData}`);
   }
 
   const data = await response.json();
