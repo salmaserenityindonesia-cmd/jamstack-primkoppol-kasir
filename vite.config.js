@@ -4,10 +4,13 @@ import { resolve } from 'path';
 export default defineConfig({
   base: '/',
   build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      }
+    outDir: 'dist',
+    emptyOutDir: true,
+    lib: {
+      entry: resolve(__dirname, 'src/index.js'),
+      name: 'POS_DB',
+      fileName: (format) => `assets/index.js`,
+      formats: ['es']
     }
   }
 });

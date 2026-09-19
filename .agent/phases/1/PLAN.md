@@ -1,47 +1,36 @@
-# Phase 1: Implementasi RxDB Dexie Storage + Leader Election (MPA)
+# Phase 1: Replikasi Supabase dengan Proteksi Leader Election
 
 ## Objective
-Mengimplementasikan modul database RxDB berbasis Dexie.js Storage Engine dengan Leader Election pada arsitektur MPA Primkoppol Kasir. Hanya tab Leader yang menjalankan sinkronisasi Supabase, menghindari race condition antar-tab.
-
-## Kondisi Awal (Temuan Audit)
-
-File yang sudah ada dan relevan:
-
-| File | Status | Catatan |
-|------|--------|---------|
-| [`package.json`](file:///c:/jamstack-primkoppol-kasir/package.json) | ✅ `rxdb` ^17.5.0, `rxjs` ^7.8.2, `@supabase/supabase-js` ^2.116.0 sudah terdaftar | Tidak perlu install ulang paket inti |
-| [`src/db/index.js`](file:///c:/jamstack-primkoppol-kasir/src/db/index.js) | ⚠️ Sudah menggunakan `getRxStorageDexie()` tapi **belum ada** Leader Election, multi-instance, atau eventReduce | Perlu refactor |
-| [`src/db/schema.js`](file:///c:/jamstack-primkoppol-kasir/src/db/schema.js) | ✅ Skema `members` dan `transactions` sudah lengkap | Tidak perlu diubah |
+Mengimplementasikan modul replikasi Supabase dengan proteksi Leader Election pada arsitektur MPA Primkoppol Kasir sesuai protokol GSD.
 
 ## Tasks
 
-- [x] **Task 1: Verifikasi Paket Inti RxDB, Dexie Storage, dan Leader Election**
-  - **Files:** `package.json`
+- [x] **Task 1: Inisialisasi Supabase Client & FIFO Sync Worker**
+  - **Files:** `src/db/syncEngine.js`, `src/db/database.js`
   - **Action:**
-    1. Periksa `package.json` — konfirmasi bahwa `rxdb`, `rxjs`, dan `@supabase/supabase-js` sudah terdaftar di dependencies.
-    2. Verifikasi bahwa plugin `rxdb/plugins/storage-dexie` dan `rxdb/plugins/leader-election` tersedia sebagai sub-path export dari paket `rxdb` (tidak perlu install terpisah).
-    3. Pastikan tidak ada plugin berbayar (seperti `rxdb-premium`, `memory-synced`, atau `shared-worker` storage) yang dimasukkan.
-  - **Verify:** Jalankan `npm ls rxdb rxjs @supabase/supabase-js` untuk konfirmasi ketersediaan paket.
-  - **Completion:** Dependensi RxDB gratis dan mesin Dexie terdaftar di `package.json`.
+    1. Buat file `src/db/syncEngine.js`.
+    2. Inisialisasi Supabase Client menggunakan kredensial publik dari environment variables atau config (`VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`).
+    3. Buat fungsi async `syncPendingTransactions()`:
+       - Query koleksi `transactions` di RxDB lokal dengan kondisi `sync_status: 'PENDING'` terurut berdasarkan timestamp (FIFO).
+       - Untuk setiap transaksi, kirim payload ke tabel `transactions` di Supabase.
+       - Jika insert Supabase berhasil, perbarui status dokumen di RxDB lokal menjadi `sync_status: 'SENT'`.
+       - Tangani kondisi offline (network error) secara graceful tanpa melempar fatal exception ke UI.
+    4. Buat fungsi `startPeriodicSync(intervalMs = 10000)` yang menjalankan `syncPendingTransactions` berkala dan mendengarkan event online browser (`window.addEventListener('online')`).
+  - **Verify:** Validasi sintaks `syncEngine.js` via Node CLI atau build check untuk memastikan ekspor modul berjalan bersih.
+  - **Completion:** Fungsi sync worker FIFO ke Supabase berhasil dibuat dan siap diaktifkan.
 
-- [x] **Task 2: Refactor Database Singleton dengan Leader Election & Multi-Instance**
-  - **Files:** [`src/db/index.js`](file:///c:/jamstack-primkoppol-kasir/src/db/index.js)
+- [x] **Task 2: Kaitkan Sync Worker Eksklusif ke RxDB Leader Election**
+  - **Files:** `src/db/database.js`, `src/index.js`
   - **Action:**
-    1. Tambahkan import dan registrasi `RxDBLeaderElectionPlugin` melalui `addRxPlugin()`.
-    2. Tambahkan opsi pada `createRxDatabase()`:
-       - `name`: `'primkoppol_pos_db'` (ganti dari `primkoppol_pos_local`)
-       - `multiInstance`: `true` — agar beberapa tab browser berbagi state via BroadcastChannel
-       - `eventReduce`: `true` — untuk optimasi event processing
-    3. Bungkus logika sinkronisasi Supabase (`startMemberSync` dan `startTransactionOutbox`) di dalam blok `db.waitForLeadership()` agar **hanya tab Leader** yang menjalankan sync, mencegah race condition dan duplikasi write.
-    4. Ekspor `initDatabase()` sebagai singleton agar dapat diakses dari script halaman MPA mana pun via `<script type="module">`.
-    5. Pertahankan pola singleton `dbPromise` yang sudah ada — hanya memperkaya konfigurasi, bukan menulis ulang dari nol.
-  - **Verify:** Jalankan `npm run build` untuk memastikan build berhasil. Buka dua tab browser ke halaman yang sama dan verifikasi di console bahwa hanya satu tab yang melaporkan "Leader elected — starting sync".
-  - **Completion:** Database RxDB Dexie aktif dengan multi-instance support dan manajemen Leader Election berjalan otomatis.
-
-## Catatan Penting
-
-> [!IMPORTANT]
-> Plugin `rxdb/plugins/storage-dexie` dan `rxdb/plugins/leader-election` adalah **sub-path export** dari paket `rxdb` — mereka sudah tersedia tanpa instalasi terpisah selama `rxdb` terdaftar di `package.json`.
-
-> [!WARNING]
-> Skema di `schema.js` **tidak diubah** dalam phase ini. Perubahan skema memerlukan migrasi RxDB dan harus direncanakan di phase terpisah.
+    1. Buka `src/db/database.js`.
+    2. Impor `startPeriodicSync` dan `syncPendingTransactions` dari `./syncEngine.js`.
+    3. Di dalam inisialisasi database, manfaatkan API leader election RxDB:
+       ```javascript
+       db.waitForLeadership().then(() => {
+         console.log('[RxDB] Tab ini terpilih sebagai LEADER. Memulai worker sinkronisasi Supabase...');
+         startPeriodicSync();
+       });
+       ```
+    4. Pada `src/index.js`, ekspos helper pemicu manual `window.POS_DB.triggerSync = syncPendingTransactions;` agar kasir atau aksi checkout dapat langsung memicu sinkronisasi tanpa jeda interval.
+  - **Verify:** Jalankan `npm run build` di terminal lokal. Pastikan aset build terkompilasi ke `dist/` tanpa error modul Supabase atau RxDB.
+  - **Completion:** Worker sinkronisasi Supabase terkunci khusus pada tab Leader, mencegah duplikasi koneksi dan menjamin data offline terkirim aman secara FIFO.
