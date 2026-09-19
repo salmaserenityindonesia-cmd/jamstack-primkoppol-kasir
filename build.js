@@ -43,6 +43,21 @@ if (fs.existsSync(sourceStitch)) {
   fs.cpSync(sourceStitch, targetStitch, { recursive: true });
 }
 
+// Copy public directory (manifest, icons, sw.js)
+const sourcePublic = path.join(__dirname, 'public');
+const targetPublic = path.join(distDir);
+if (fs.existsSync(sourcePublic)) {
+  fs.cpSync(sourcePublic, targetPublic, { recursive: true });
+}
+
+// Copy supervisor HTML
+const supervisorSrc = path.join(__dirname, 'src', 'supervisor');
+const supervisorDist = path.join(distDir, 'supervisor');
+if (!fs.existsSync(supervisorDist)) fs.mkdirSync(supervisorDist, { recursive: true });
+if (fs.existsSync(path.join(supervisorSrc, 'dashboard.html'))) {
+  fs.copyFileSync(path.join(supervisorSrc, 'dashboard.html'), path.join(supervisorDist, 'index.html'));
+}
+
 // Copy src directory to dist
 const sourceSrc = path.join(__dirname, 'src');
 const targetSrc = path.join(distDir, 'src');
@@ -75,6 +90,7 @@ const redirectsContent = `
 /ai-audit /stitch_primkoppol_ngawi_pos_desktop_interface/ai_audit_operasional_kopos_pwa/code.html 200
 /logo /stitch_primkoppol_ngawi_pos_desktop_interface/logo_primkoppol_ngawi/code.html 200
 /pelunasan-piutang /stitch_primkoppol_ngawi_pos_desktop_interface/pelunasan_piutang_setoran_tunggakan_kopos/code.html 200
+/supervisor /supervisor/index.html 200
 /api/env /api/env.json 200
 `;
 

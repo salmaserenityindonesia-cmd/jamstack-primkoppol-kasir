@@ -223,7 +223,13 @@ app.get('/pelunasan-piutang', (req, res) => {
 // Serve static assets from stitch directory and root
 app.use('/stitch', express.static(stitchDir));
 app.use(express.static(stitchDir));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
+
+// Supervisor dashboard route
+app.get('/supervisor', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'supervisor', 'dashboard.html'));
+});
 
 // Main entry point
 app.get('/', (req, res) => {

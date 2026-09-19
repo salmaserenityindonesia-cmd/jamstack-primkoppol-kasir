@@ -1,36 +1,35 @@
-# Phase 1: Replikasi Supabase dengan Proteksi Leader Election
+# Phase 1: PWA Supervisor Dashboard (Fase 6)
 
 ## Objective
-Mengimplementasikan modul replikasi Supabase dengan proteksi Leader Election pada arsitektur MPA Primkoppol Kasir sesuai protokol GSD.
+Mengimplementasikan PWA Supervisor Dashboard untuk Pengawas Koperasi Primkoppol dengan kapabilitas Offline-First, delta caching IndexedDB, dan monitoring real-time kredit anggota.
 
 ## Tasks
 
-- [x] **Task 1: Inisialisasi Supabase Client & FIFO Sync Worker**
-  - **Files:** `src/db/syncEngine.js`, `src/db/database.js`
+- [x] **Task 1: Setup Web App Manifest & Service Worker untuk PWA Pengawas**
+  - **Files:** `public/manifest.json`, `public/sw.js`, `index.html`
   - **Action:**
-    1. Buat file `src/db/syncEngine.js`.
-    2. Inisialisasi Supabase Client menggunakan kredensial publik dari environment variables atau config (`VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`).
-    3. Buat fungsi async `syncPendingTransactions()`:
-       - Query koleksi `transactions` di RxDB lokal dengan kondisi `sync_status: 'PENDING'` terurut berdasarkan timestamp (FIFO).
-       - Untuk setiap transaksi, kirim payload ke tabel `transactions` di Supabase.
-       - Jika insert Supabase berhasil, perbarui status dokumen di RxDB lokal menjadi `sync_status: 'SENT'`.
-       - Tangani kondisi offline (network error) secara graceful tanpa melempar fatal exception ke UI.
-    4. Buat fungsi `startPeriodicSync(intervalMs = 10000)` yang menjalankan `syncPendingTransactions` berkala dan mendengarkan event online browser (`window.addEventListener('online')`).
-  - **Verify:** Validasi sintaks `syncEngine.js` via Node CLI atau build check untuk memastikan ekspor modul berjalan bersih.
-  - **Completion:** Fungsi sync worker FIFO ke Supabase berhasil dibuat dan siap diaktifkan.
+    1. Buat berkas `public/manifest.json` yang mendefinisikan identitas PWA Pengawas Koperasi Primkoppol:
+       - `name`: "Pengawas Primkoppol Waserda"
+       - `short_name`: "Koppol Monitor"
+       - `display`: "standalone"
+       - `start_url`: "/supervisor"
+       - `theme_color`: "#15803d"
+       - `icons`: tautkan ikon aplikasi berukuran 192x192 dan 512x512.
+    2. Buat Service Worker ringan di `public/sw.js` yang meng-cache shell UI dasbor pengawas untuk kapabilitas Offline-First.
+    3. Daftarkan Service Worker dan tautkan `manifest.json` pada header modul pengawas.
+  - **Verify:** Jalankan pemeriksaan Lighthouse audit atau verifikasi manifest via DevTools/build log untuk memastikan status PWA terpasang valid.
+  - **Completion:** Konfigurasi PWA shell siap dipasang di ponsel atau browser pengawas.
 
-- [x] **Task 2: Kaitkan Sync Worker Eksklusif ke RxDB Leader Election**
-  - **Files:** `src/db/database.js`, `src/index.js`
+- [x] **Task 2: Antarmuka Dashboard Real-Time & IndexedDB Delta Cache**
+  - **Files:** `src/supervisor/dashboard.html`, `src/supervisor/supervisorEngine.js`
   - **Action:**
-    1. Buka `src/db/database.js`.
-    2. Impor `startPeriodicSync` dan `syncPendingTransactions` dari `./syncEngine.js`.
-    3. Di dalam inisialisasi database, manfaatkan API leader election RxDB:
-       ```javascript
-       db.waitForLeadership().then(() => {
-         console.log('[RxDB] Tab ini terpilih sebagai LEADER. Memulai worker sinkronisasi Supabase...');
-         startPeriodicSync();
-       });
-       ```
-    4. Pada `src/index.js`, ekspos helper pemicu manual `window.POS_DB.triggerSync = syncPendingTransactions;` agar kasir atau aksi checkout dapat langsung memicu sinkronisasi tanpa jeda interval.
-  - **Verify:** Jalankan `npm run build` di terminal lokal. Pastikan aset build terkompilasi ke `dist/` tanpa error modul Supabase atau RxDB.
-  - **Completion:** Worker sinkronisasi Supabase terkunci khusus pada tab Leader, mencegah duplikasi koneksi dan menjamin data offline terkirim aman secara FIFO.
+    1. Buat modul tampilan `src/supervisor/dashboard.html` yang memuat kartu metrik ringkasan:
+       - Total Transaksi Hari Ini (Tunai & Kredit Bayar Mundur).
+       - Panel Peringatan Stok Kritis (Low Stock Alert).
+       - Daftar Anggota Terblokir (Over-Limit Status) beserta nilai tunggakannya.
+       - Log Audit Trail Transaksi dan Pelunasan Kasir.
+    2. Buat `src/supervisor/supervisorEngine.js` yang berlangganan (subscribe) langsung ke database/Supabase dengan teknik caching lokal IndexedDB:
+       - Simpan snapshot data di IndexedDB lokal browser pengawas.
+       - Hanya render pembaruan delta data baru untuk menghemat bandwidth.
+  - **Verify:** Jalankan build lokal dan uji buka halaman dashboard supervisor. Pastikan metrik ringkasan muncul dan data tersimpan di IndexedDB saat koneksi dimatikan (offline test).
+  - **Completion:** Dashboard PWA Pengawas aktif dengan fitur delta caching dan monitoring status kredit anggota.

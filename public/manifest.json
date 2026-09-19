@@ -1,0 +1,26 @@
+{
+  "name": "Pengawas Primkoppol Waserda",
+  "short_name": "Koppol Monitor",
+  "description": "Dashboard Pengawas Real-Time Koperasi Waserda PRIMKOPPOL NGAWI — Monitoring Kredit, Audit Shift Kasir, dan Status Sinkronisasi.",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "start_url": "/supervisor",
+  "scope": "/supervisor",
+  "theme_color": "#15803d",
+  "background_color": "#f0fdf4",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

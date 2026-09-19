@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengawas Primkoppol Waserda — Dashboard Monitor</title>
+  <meta name="description" content="Dashboard Pengawas Real-Time PRIMKOPPOL NGAWI — Monitoring kredit anggota, audit shift kasir, dan status sinkronisasi.">
+  <meta name="theme-color" content="#15803d">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/tailwind-theme.js"></script>
+
+  <style>
+    body { font-family: 'Hanken Grotesk', sans-serif; }
+    .metric-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .fade-in { animation: fadeIn 0.35s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen antialiased">
+
+<!-- Top Navigation Bar -->
+<header class="bg-green-800 text-white sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="/icon-192.png" alt="Logo" class="w-8 h-8 rounded-lg">
+      <div>
+        <h1 class="font-bold text-base leading-tight font-['Space_Grotesk']">Pengawas Primkoppol</h1>
+        <p class="text-green-200 text-xs">Waserda Koperasi Polres Ngawi</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div id="sync-indicator" class="flex items-center gap-1.5 text-xs bg-green-700/60 px-2.5 py-1 rounded-full">
+        <span class="w-2 h-2 rounded-full bg-green-300 pulse-dot"></span>
+        <span id="sync-status-text">Menyambung...</span>
+      </div>
+      <button id="btn-refresh" class="p-1.5 rounded-lg hover:bg-green-700 transition" title="Refresh Data">
+        <span class="material-symbols-outlined text-[20px]">refresh</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+  <!-- Date Banner -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 id="today-label" class="text-xl font-bold text-gray-800 font-['Space_Grotesk']">Dashboard Hari Ini</h2>
+      <p id="last-updated" class="text-xs text-gray-500 mt-0.5">Memuat data...</p>
+    </div>
+    <div id="offline-badge" class="hidden items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-amber-200">
+      <span class="material-symbols-outlined text-[14px]">wifi_off</span>
+      Mode Offline — Cache Lokal
+    </div>
+  </div>
+
+  <!-- Metric Cards Grid -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="metric-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Transaksi Hari Ini</span>
+        <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+          <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+        </div>
+      </div>
+      <div id="metric-total-trx" class="text-3xl font-bold text-gray-900 font-['Space_Grotesk']">—</div>
+      <p class="text-xs text-gray-400 mt-1">Semua jenis transaksi</p>
+    </div>
+
+    <div class="metric-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Kas Tunai</span>
+        <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
+          <span class="material-symbols-outlined text-[20px]">payments</span>
+        </div>
+      </div>
+      <div id="metric-cash" class="text-2xl font-bold text-green-700 font-['Space_Grotesk']">—</div>
+      <p class="text-xs text-gray-400 mt-1">Tunai masuk hari ini</p>
+    </div>
+
+    <div class="metric-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Kredit Berjalan</span>
+        <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+          <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+        </div>
+      </div>
+      <div id="metric-credit" class="text-2xl font-bold text-amber-700 font-['Space_Grotesk']">—</div>
+      <p class="text-xs text-gray-400 mt-1">Bayar mundur / tempo</p>
+    </div>
+
+    <div class="metric-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Anggota Terblokir</span>
+        <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+          <span class="material-symbols-outlined text-[20px]">person_off</span>
+        </div>
+      </div>
+      <div id="metric-blocked" class="text-3xl font-bold text-red-700 font-['Space_Grotesk']">—</div>
+      <p class="text-xs text-gray-400 mt-1">Over-limit / diblokir</p>
+    </div>
+  </div>
+
+  <!-- Content Grid: Blocked Members + Audit Log -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Blocked Members Panel -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-red-500 text-[20px]">block</span>
+          <h3 class="font-bold text-gray-800">Anggota Terblokir / Over-Limit</h3>
+        </div>
+        <span id="blocked-count-badge" class="text-xs font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">0</span>
+      </div>
+      <div id="blocked-members-list" class="divide-y divide-gray-50 max-h-72 overflow-y-auto">
+        <div class="p-8 text-center text-gray-400">
+          <span class="material-symbols-outlined text-4xl mb-2 opacity-40">hourglass_empty</span>
+          <p class="text-sm">Memuat data anggota...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Trail Log -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-500 text-[20px]">history</span>
+          <h3 class="font-bold text-gray-800">Audit Trail Transaksi Kasir</h3>
+        </div>
+        <span id="audit-count-badge" class="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">0</span>
+      </div>
+      <div id="audit-log-list" class="divide-y divide-gray-50 max-h-72 overflow-y-auto">
+        <div class="p-8 text-center text-gray-400">
+          <span class="material-symbols-outlined text-4xl mb-2 opacity-40">hourglass_empty</span>
+          <p class="text-sm">Memuat log transaksi...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Sync Warning -->
+  <div id="pending-sync-alert" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+      <span class="material-symbols-outlined text-[22px]">cloud_upload</span>
+    </div>
+    <div>
+      <h4 class="font-bold text-amber-800 text-sm">Antrean Sinkronisasi Aktif</h4>
+      <p id="pending-sync-count" class="text-xs text-amber-700 mt-0.5">Beberapa transaksi belum terkirim ke cloud.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between text-xs text-gray-400 border-t border-gray-200 mt-4">
+  <span>Pengawas Primkoppol Waserda • PKP-NGW-01</span>
+  <span id="pwa-install-hint" class="hidden text-green-600 font-medium cursor-pointer hover:underline" id="pwa-install-btn">
+    + Pasang sebagai App
+  </span>
+</footer>
+
+<script type="module">
+  import { syncDeltaData, computeMetrics, formatIDR } from '/src/supervisor/supervisorEngine.js';
+
+  // ─── PWA Service Worker Registration ──────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('[PWA] Service Worker terdaftar:', reg.scope);
+    }).catch(err => console.warn('[PWA] SW registration gagal:', err));
+  }
+
+  // ─── PWA Install Prompt ────────────────────────────────────────────────────
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('pwa-install-hint').classList.remove('hidden');
+  });
+  document.getElementById('pwa-install-hint')?.addEventListener('click', () => {
+    deferredPrompt?.prompt();
+  });
+
+  // ─── Formatting helpers ────────────────────────────────────────────────────
+  function formatDate() {
+    return new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function paymentTypeLabel(type) {
+    return { cash: 'Tunai', credit: 'Kredit', debt_payment: 'Pelunasan' }[type] || type;
+  }
+
+  function paymentTypeColor(type) {
+    return { cash: 'text-green-700 bg-green-50', credit: 'text-amber-700 bg-amber-50', debt_payment: 'text-blue-700 bg-blue-50' }[type] || 'text-gray-600 bg-gray-100';
+  }
+
+  // ─── Render functions ──────────────────────────────────────────────────────
+  function renderMetrics(metrics) {
+    document.getElementById('metric-total-trx').textContent = metrics.totalTransactionsToday;
+    document.getElementById('metric-cash').textContent = formatIDR(metrics.totalCash);
+    document.getElementById('metric-credit').textContent = formatIDR(metrics.totalCredit);
+    document.getElementById('metric-blocked').textContent = metrics.blockedMembers.length;
+    document.getElementById('blocked-count-badge').textContent = metrics.blockedMembers.length;
+    document.getElementById('audit-count-badge').textContent = metrics.auditLog.length;
+
+    // Pending sync alert
+    if (metrics.pendingSync > 0) {
+      document.getElementById('pending-sync-alert').classList.remove('hidden');
+      document.getElementById('pending-sync-count').textContent = `${metrics.pendingSync} transaksi dalam antrean sinkronisasi cloud.`;
+    } else {
+      document.getElementById('pending-sync-alert').classList.add('hidden');
+    }
+  }
+
+  function renderBlockedMembers(members) {
+    const el = document.getElementById('blocked-members-list');
+    if (!members.length) {
+      el.innerHTML = `<div class="p-8 text-center text-gray-400">
+        <span class="material-symbols-outlined text-4xl mb-2 text-green-400">check_circle</span>
+        <p class="text-sm font-medium text-green-600">Tidak ada anggota terblokir</p>
+      </div>`;
+      return;
+    }
+    el.innerHTML = members.map(m => {
+      const usage = m.credit_limit > 0 ? Math.round((m.current_debt / m.credit_limit) * 100) : 0;
+      return `<div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center font-bold text-xs">
+            ${m.name.split(' ').map(w => w[0]).join('').slice(0,2)}
+          </div>
+          <div>
+            <p class="font-semibold text-sm text-gray-800">${m.name}</p>
+            <p class="text-xs text-gray-400">${m.unit || '—'}</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-bold text-red-700">${formatIDR(m.current_debt)}</p>
+          <p class="text-xs text-gray-400">${usage}% dari ${formatIDR(m.credit_limit)}</p>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderAuditLog(log) {
+    const el = document.getElementById('audit-log-list');
+    if (!log.length) {
+      el.innerHTML = `<div class="p-8 text-center text-gray-400">
+        <span class="material-symbols-outlined text-4xl mb-2 opacity-40">receipt_long</span>
+        <p class="text-sm">Belum ada transaksi hari ini.</p>
+      </div>`;
+      return;
+    }
+    el.innerHTML = log.map(t => {
+      const time = t.timestamp ? new Date(t.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '—';
+      return `<div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-400 font-mono w-12 shrink-0">${time}</span>
+          <div>
+            <p class="text-xs font-semibold text-gray-700">${t.invoice_number || t.id}</p>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${paymentTypeColor(t.payment_type)}">
+              ${paymentTypeLabel(t.payment_type)}
+            </span>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-bold text-gray-800">${formatIDR(t.total_amount)}</p>
+          <span class="text-[10px] font-medium ${t.sync_status === 'SENT' ? 'text-green-600' : 'text-amber-600'}">${t.sync_status}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ─── Main Load Function ────────────────────────────────────────────────────
+  async function loadDashboard() {
+    document.getElementById('today-label').textContent = `Dashboard — ${formatDate()}`;
+    const syncEl = document.getElementById('sync-status-text');
+    const syncIndicator = document.getElementById('sync-indicator');
+    syncEl.textContent = 'Menyinkronkan...';
+
+    try {
+      const { transactions, members, source } = await syncDeltaData();
+      const metrics = computeMetrics(transactions, members);
+
+      renderMetrics(metrics);
+      renderBlockedMembers(metrics.blockedMembers);
+      renderAuditLog(metrics.auditLog);
+
+      const ts = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('last-updated').textContent = `Diperbarui pukul ${ts} • Sumber: ${source}`;
+
+      if (source === 'cache') {
+        syncEl.textContent = 'Offline — Cache';
+        syncIndicator.classList.remove('bg-green-700/60');
+        syncIndicator.classList.add('bg-amber-700/60');
+        document.getElementById('offline-badge').classList.remove('hidden');
+        document.getElementById('offline-badge').classList.add('flex');
+      } else {
+        syncEl.textContent = 'Sinkron ✓';
+        syncIndicator.classList.remove('bg-amber-700/60');
+        syncIndicator.classList.add('bg-green-700/60');
+        document.getElementById('offline-badge').classList.add('hidden');
+      }
+    } catch (err) {
+      syncEl.textContent = 'Gagal';
+      console.error('[Dashboard] Error memuat data:', err);
+    }
+  }
+
+  // Init + refresh button + auto-refresh setiap 60 detik
+  document.getElementById('btn-refresh').addEventListener('click', loadDashboard);
+  window.addEventListener('online', loadDashboard);
+  loadDashboard();
+  setInterval(loadDashboard, 60000);
+</script>
+
+</body>
+</html>
