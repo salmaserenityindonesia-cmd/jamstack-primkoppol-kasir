@@ -2,7 +2,7 @@ import { createRxDatabase, addRxPlugin } from 'rxdb';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
 import { memberSchema, transactionSchema, productSchema } from './schemas.js';
-import { startPeriodicSync } from './syncEngine.js';
+import { startPeriodicSync, pullInitialProductsFromSupabase } from './syncEngine.js';
 
 addRxPlugin(RxDBLeaderElectionPlugin);
 
@@ -92,7 +92,9 @@ export async function getDatabase() {
             }
         });
 
-        // Jalankan seeder produk awal
+        // Tarik data awal dari Supabase
+        await pullInitialProductsFromSupabase(dbInstance);
+        // Jalankan seeder produk awal (hanya akan berjalan jika koleksi masih kosong)
         await seedProducts(dbInstance);
 
         // Tunggu kepemimpinan secara asinkron tanpa memblokir dbInstance

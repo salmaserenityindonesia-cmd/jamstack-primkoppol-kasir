@@ -106,6 +106,51 @@ export async function syncProductsToSupabase() {
     }
 }
 
+export async function pullInitialProductsFromSupabase(db) {
+    try {
+        if (!navigator.onLine) {
+            console.log('[SyncEngine] Offline. Menunda pull initial products.');
+            return;
+        }
+
+        const existingCount = await db.products.find().exec();
+        if (existingCount.length > 0) {
+            console.log('[SyncEngine] Koleksi lokal sudah ada. Skip initial pull.');
+            return;
+        }
+
+        console.log('[SyncEngine] Koleksi lokal kosong. Menarik data awal dari Supabase...');
+        const { data, error } = await supabase.from('products').select('*');
+
+        if (error) {
+            console.error('[SyncEngine] Gagal pull data dari Supabase:', error.message);
+            return;
+        }
+
+        if (data && data.length > 0) {
+            const formattedData = data.map(item => ({
+                barcode: item.barcode,
+                sku: item.sku,
+                name: item.name,
+                category: item.category,
+                unit: item.unit,
+                cost_price: item.cost_price,
+                price: item.price,
+                stock: item.stock,
+                is_active: item.is_active,
+                updated_at: item.updated_at || new Date().toISOString()
+            }));
+
+            await db.products.bulkUpsert(formattedData);
+            console.log(`[SyncEngine] Berhasil mengimpor ${formattedData.length} produk ke lokal.`);
+        } else {
+            console.log('[SyncEngine] Tidak ada data produk di Supabase untuk diimpor.');
+        }
+    } catch (err) {
+        console.error('[SyncEngine] Terjadi kesalahan saat initial pull produk:', err);
+    }
+}
+
 let syncInterval = null;
 
 export function startPeriodicSync(intervalMs = 10000) {
