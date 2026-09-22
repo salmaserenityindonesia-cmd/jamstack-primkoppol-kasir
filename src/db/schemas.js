@@ -70,3 +70,41 @@ export const transactionSchema = {
     },
     required: ['id', 'invoice_number', 'total_amount', 'payment_type', 'sync_status', 'timestamp', 'items']
 };
+
+export const productSchema = {
+    title: 'product schema',
+    version: 0,
+    primaryKey: 'barcode',
+    type: 'object',
+    properties: {
+        barcode: {
+            type: 'string',
+            maxLength: 50
+        },
+        sku: {
+            type: 'string'
+        },
+        name: {
+            type: 'string'
+        },
+        price: {
+            type: 'number'
+        },
+        cost_price: {
+            type: 'number'
+        },
+        stock: {
+            type: 'number'
+        },
+        unit: {
+            type: 'string'
+        },
+        category: {
+            type: 'string'
+        },
+        updated_at: {
+            type: 'string'
+        }
+    },
+    required: ['barcode', 'name', 'price', 'cost_price', 'stock', 'unit', 'category']
+};

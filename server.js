@@ -226,6 +226,7 @@ app.use('/stitch', express.static(stitchDir));
 app.use(express.static(stitchDir));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
+app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets')));
 
 // Supervisor dashboard route
 app.get('/supervisor', (req, res) => {
