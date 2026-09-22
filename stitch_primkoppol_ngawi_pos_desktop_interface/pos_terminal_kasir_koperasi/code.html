@@ -51,17 +51,17 @@ Hold Nota
 <!-- Barcode input wrapper -->
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3.5 text-secondary text-[22px] pointer-events-none">barcode_reader</span>
-<input id="barcode-input" autofocus="" class="w-full pl-11 pr-24 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary transition shadow-inner" placeholder="Scan barcode / ketik SKU (Contoh: 899100122222, 899234567890)..." type="text">
+<input id="pos-barcode-input" autofocus="" class="w-full pl-11 pr-24 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary transition shadow-inner" placeholder="Scan barcode / ketik SKU (Contoh: 899100122222, 899234567890)..." type="text">
 <kbd class="absolute right-3 px-2 py-0.5 text-[11px] font-semibold text-secondary bg-surface-container rounded border border-outline-variant/40">F1 Cari</kbd>
 </div>
 
 <!-- Quick Product Catalog Shortlist -->
 <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs text-secondary">
   <span class="font-semibold text-on-surface shrink-0">Cepat:</span>
-  <button type="button" onclick="quickAddProduct('899234567890')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Indomie (Rp 3.100)</button>
-  <button type="button" onclick="quickAddProduct('899100122222')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Gula 1kg (Rp 16.500)</button>
-  <button type="button" onclick="quickAddProduct('899886633333')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Kopi Kapal Api (Rp 14.500)</button>
-  <button type="button" onclick="quickAddProduct('899123456789')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Teh Sosro (Rp 7.500)</button>
+  <button type="button" onclick="quickAddProduct('899345678')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Gula Pasir (Rp 16.000)</button>
+  <button type="button" onclick="quickAddProduct('899123456')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Minyak Goreng (Rp 35.000)</button>
+  <button type="button" onclick="quickAddProduct('899987654')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Beras Premium (Rp 65.000)</button>
+  <button type="button" onclick="quickAddProduct('899456789')" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface shrink-0 font-medium transition border border-outline-variant/30">+ Terigu (Rp 13.000)</button>
 </div>
 </div>
 
@@ -381,26 +381,7 @@ Bayar Tunai
 <script>
   (function() {
     let currentMemberId = 'ANG-0012'; // Default Budi Santoso (Overlimit threshold test)
-    let cart = [
-      {
-        barcode: '899999955555',
-        sku: 'BRS-PRM-5KG',
-        name: 'Beras Premium 5kg',
-        category: 'Pangan Pokok',
-        price: 65000,
-        qty: 1,
-        icon: 'inventory_2'
-      },
-      {
-        barcode: '899276111111',
-        sku: 'MYK-GRG-2LT',
-        name: 'Minyak Goreng 2L',
-        category: 'Sembako',
-        price: 35000,
-        qty: 1,
-        icon: 'liquor'
-      }
-    ];
+    let cart = [];
 
     function formatIDR(num) {
       return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
@@ -609,10 +590,11 @@ Bayar Tunai
       renderCart();
     };
 
-    window.quickAddProduct = function(barcode) {
-      if (!window.KoposDB) return;
-      const product = window.KoposDB.data.products.find(p => p.barcode === barcode);
-      if (!product) return;
+    window.quickAddProduct = async function(barcode) {
+      if (!window.POS_DB) return;
+      const db = await window.POS_DB.getDatabase();
+      const product = await db.products.findOne({ selector: { barcode: barcode } }).exec();
+      if (!product || product.is_active === false) return;
 
       const existing = cart.find(c => c.barcode === barcode);
       if (existing) {
@@ -631,24 +613,40 @@ Bayar Tunai
       renderCart();
     };
 
-    const barcodeInput = document.getElementById('barcode-input');
+    const barcodeInput = document.getElementById('pos-barcode-input');
     if (barcodeInput) {
-      barcodeInput.addEventListener('keydown', function(e) {
+      barcodeInput.addEventListener('keydown', async function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
           const code = barcodeInput.value.trim();
           if (!code) return;
 
-          const prod = window.KoposDB ? window.KoposDB.data.products.find(p => p.barcode === code || p.sku.toLowerCase() === code.toLowerCase()) : null;
-          if (prod) {
-            window.quickAddProduct(prod.barcode);
-            barcodeInput.value = '';
-          } else {
-            alert(`Produk dengan Barcode / SKU "${code}" tidak terdaftar di master Waserda.`);
+          if (window.POS_DB) {
+            const db = await window.POS_DB.getDatabase();
+            // Coba cari dari barcode dulu, jika tidak ada, dari sku
+            let prod = await db.products.findOne({ selector: { barcode: code } }).exec();
+            if (!prod) {
+                prod = await db.products.findOne({ selector: { sku: code } }).exec();
+            }
+
+            if (prod && prod.is_active !== false) {
+              window.quickAddProduct(prod.barcode);
+              barcodeInput.value = '';
+            } else {
+              alert(`Produk dengan Barcode / SKU "${code}" tidak ditemukan atau sedang dinonaktifkan.`);
+            }
           }
         }
       });
     }
+
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'F1') {
+        e.preventDefault();
+        const input = document.getElementById('pos-barcode-input');
+        if (input) input.focus();
+      }
+    });
 
     window.openMemberSelectorModal = function() {
       if (!window.KoposDB) return;
@@ -727,6 +725,9 @@ Bayar Tunai
       const change = Math.max(0, tendered - totals.net);
       document.getElementById('modal-cash-change').textContent = formatIDR(change);
     }
+
+    // Initial Render
+    renderCart();
 
     const tenderInput = document.getElementById('tendered-cash-input');
     if (tenderInput) {
