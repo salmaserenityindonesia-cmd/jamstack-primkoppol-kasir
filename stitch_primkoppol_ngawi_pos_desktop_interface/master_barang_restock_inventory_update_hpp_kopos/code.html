@@ -214,11 +214,11 @@ function showErrorOnScreen(msg) {
 <!-- Search Bar and Quick Filters -->
 <div class="flex flex-wrap items-center gap-space-sm">
 <!-- Category Filter Pills -->
-<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg">
-<button class="px-3 py-1 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm font-semibold">Semua</button>
-<button class="px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Stok Kritis</button>
-<button class="px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Sembako</button>
-<button class="px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Pangan Pokok</button>
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg" id="inventory-filter-container">
+<button data-filter="all" class="filter-btn active px-3 py-1 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm font-semibold">Semua</button>
+<button data-filter="critical" class="filter-btn px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Stok Kritis</button>
+<button data-filter="newly_added" class="filter-btn px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Baru Ditambahkan</button>
+<button data-filter="recently_updated" class="filter-btn px-3 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">Baru di Update</button>
 </div>
 <!-- Search Input -->
 <div class="relative flex items-center min-w-[260px]">
@@ -371,6 +371,7 @@ function showErrorOnScreen(msg) {
     const fmt = new Intl.NumberFormat('id-ID');
     let allProducts = [];
     let searchQuery = '';
+    let currentFilter = 'all';
 
     function formatRp(n) {
         return 'Rp ' + fmt.format(n);
@@ -465,15 +466,34 @@ function showErrorOnScreen(msg) {
 
     function applyFilter() {
         const q = searchQuery.toLowerCase().trim();
-        if (!q) {
-            renderRows(allProducts);
-            updateMetrics(allProducts);
-            return;
+        let filtered = allProducts;
+        
+        if (q) {
+            filtered = filtered.filter(p => {
+                const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+                return doc.name.toLowerCase().includes(q) || doc.barcode.toLowerCase().includes(q) || (doc.sku && doc.sku.toLowerCase().includes(q));
+            });
         }
-        const filtered = allProducts.filter(p => {
-            const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
-            return doc.name.toLowerCase().includes(q) || doc.barcode.toLowerCase().includes(q) || (doc.sku && doc.sku.toLowerCase().includes(q));
-        });
+        
+        if (currentFilter === 'critical') {
+            filtered = filtered.filter(p => {
+                const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+                return doc.stock <= 5;
+            });
+        } else if (currentFilter === 'newly_added') {
+            filtered = [...filtered].sort((a, b) => {
+                const docA = (typeof a.toJSON === 'function') ? a.toJSON() : a;
+                const docB = (typeof b.toJSON === 'function') ? b.toJSON() : b;
+                return (docB.created_at || 0) - (docA.created_at || 0);
+            });
+        } else if (currentFilter === 'recently_updated') {
+            filtered = [...filtered].sort((a, b) => {
+                const docA = (typeof a.toJSON === 'function') ? a.toJSON() : a;
+                const docB = (typeof b.toJSON === 'function') ? b.toJSON() : b;
+                return (docB.updated_at || 0) - (docA.updated_at || 0);
+            });
+        }
+
         renderRows(filtered);
         updateMetrics(allProducts);
         // Update pagination for filtered view
@@ -489,6 +509,25 @@ function showErrorOnScreen(msg) {
         searchInput.addEventListener('input', function(e) {
             searchQuery = e.target.value;
             applyFilter();
+        });
+    }
+
+    // Hubungkan filter buttons
+    const filterContainer = document.getElementById('inventory-filter-container');
+    if (filterContainer) {
+        const filterBtns = filterContainer.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-semibold', 'active');
+                    b.classList.add('text-on-surface-variant', 'hover:text-on-surface');
+                });
+                this.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-semibold', 'active');
+                this.classList.remove('text-on-surface-variant', 'hover:text-on-surface');
+                
+                currentFilter = this.getAttribute('data-filter') || 'all';
+                applyFilter();
+            });
         });
     }
 
