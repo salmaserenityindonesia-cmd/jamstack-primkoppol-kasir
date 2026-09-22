@@ -230,6 +230,12 @@ function showErrorOnScreen(msg) {
 <span class="material-symbols-outlined text-base">add_circle</span>
 <span class="">Tambah SKU</span>
 </button>
+<!-- Action Button: Inactive Items -->
+<button id="btn-barang-nonaktif" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base">inventory_2</span>
+<span class="">📦 Barang Non-Aktif</span>
+<span id="badge-nonaktif" class="ml-1 px-1.5 py-0.5 rounded-full bg-error text-on-error text-[10px] font-bold leading-none">0</span>
+</button>
 <!-- Export Button -->
 <button class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 transition-colors" type="button">
 <span class="material-symbols-outlined text-base">download</span>
@@ -364,14 +370,122 @@ function showErrorOnScreen(msg) {
   </div>
 </div>
 
+<!-- Modal Edit SKU -->
+<div id="modal-edit-sku" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('modal-edit-sku').classList.add('hidden')"></div>
+  <div class="relative bg-surface rounded-xl shadow-lg w-full max-w-lg mx-4 flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-high shrink-0">
+      <h3 class="font-headline-md text-headline-md text-on-surface">Edit Data SKU / Barang Waserda</h3>
+      <button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors" onclick="document.getElementById('modal-edit-sku').classList.add('hidden')" type="button">
+        <span class="material-symbols-outlined text-xl">close</span>
+      </button>
+    </div>
+    <div class="p-space-lg flex-1 overflow-y-auto flex flex-col gap-space-md">
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface">Barcode / SKU</label>
+        <input id="edit-barcode" class="w-full bg-surface-container-highest text-on-surface-variant font-body-md text-body-md px-3 py-2.5 rounded-lg focus:outline-none font-mono" type="text" readonly>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface">Nama Produk Lengkap</label>
+        <input id="edit-name" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md px-3 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container" type="text">
+      </div>
+      <div class="grid grid-cols-2 gap-space-md">
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface">Kategori</label>
+          <div class="relative flex items-center">
+            <select id="edit-category" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-3 pr-9 py-2.5 rounded-lg appearance-none cursor-pointer focus:outline-none focus:bg-surface-container">
+              <option value="Sembako">Sembako</option>
+              <option value="Pangan Pokok">Pangan Pokok</option>
+              <option value="Bahan Kue">Bahan Kue</option>
+              <option value="Minuman">Minuman</option>
+              <option value="Kebersihan">Kebersihan</option>
+              <option value="Umum">Umum</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 text-secondary text-lg pointer-events-none">arrow_drop_down</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface">Satuan</label>
+          <div class="relative flex items-center">
+            <select id="edit-unit" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-3 pr-9 py-2.5 rounded-lg appearance-none cursor-pointer focus:outline-none focus:bg-surface-container">
+              <option value="Pcs">Pcs</option>
+              <option value="Karton">Karton</option>
+              <option value="Sak">Sak</option>
+              <option value="Bks">Bks</option>
+              <option value="Botol">Botol</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 text-secondary text-lg pointer-events-none">arrow_drop_down</span>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-space-md">
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface">Harga Beli Pokok / HPP</label>
+          <input id="edit-cost" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md px-3 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container font-mono" type="number" min="0">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface">Harga Jual Kasir</label>
+          <input id="edit-price" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md px-3 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container font-mono" type="number" min="0">
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface">Stok Awal Fisik</label>
+        <input id="edit-stock" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md px-3 py-2.5 rounded-lg focus:outline-none focus:bg-surface-container font-mono" type="number" min="0">
+      </div>
+    </div>
+    <div class="flex items-center justify-between px-space-lg py-space-md border-t border-surface-container-high bg-surface-container-lowest shrink-0 rounded-b-xl">
+      <button id="btn-deactivate-sku" class="px-space-md py-2 rounded-lg bg-error-container hover:bg-error-container/80 text-error font-label-md text-label-md transition-colors" type="button">Non-Aktifkan Barang Ini</button>
+      <div class="flex items-center gap-space-sm">
+        <button class="px-space-md py-2 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors" onclick="document.getElementById('modal-edit-sku').classList.add('hidden')" type="button">Batal</button>
+        <button id="btn-submit-edit-sku" class="px-space-md py-2 rounded-lg bg-[#059669] hover:bg-emerald-700 text-white font-label-md text-label-md shadow-sm transition-colors" type="button">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Daftar Barang Non-Aktif -->
+<div id="modal-barang-nonaktif" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('modal-barang-nonaktif').classList.add('hidden')"></div>
+  <div class="relative bg-surface rounded-xl shadow-lg w-full max-w-4xl mx-4 flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-container-high shrink-0">
+      <h3 class="font-headline-md text-headline-md text-on-surface">Daftar SKU / Barang Non-Aktif</h3>
+      <button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors" onclick="document.getElementById('modal-barang-nonaktif').classList.add('hidden')" type="button">
+        <span class="material-symbols-outlined text-xl">close</span>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-0">
+      <table class="w-full text-left font-body-md text-body-md border-collapse">
+        <thead class="sticky top-0 bg-surface z-10 shadow-sm">
+          <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+            <th class="py-3 px-space-md">Barcode</th>
+            <th class="py-3 px-space-md">Nama Produk</th>
+            <th class="py-3 px-space-md">Kategori</th>
+            <th class="py-3 px-space-md text-right">Harga Jual</th>
+            <th class="py-3 px-space-md text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="inactive-table-body" class="divide-y divide-surface-container-high">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
+    <div class="flex items-center justify-end px-space-lg py-space-md border-t border-surface-container-high bg-surface-container-lowest shrink-0 rounded-b-xl">
+      <button class="px-space-md py-2 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors" onclick="document.getElementById('modal-barang-nonaktif').classList.add('hidden')" type="button">Tutup</button>
+    </div>
+  </div>
+</div>
+
 </div></main><footer class="w-full bg-surface-container-lowest shadow-[0_-1px_6px_rgba(0,0,0,0.03)] z-40"><div class="h-9 w-full px-space-lg flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant"><div class="flex items-center gap-space-md"><span class="">Cabang: <strong class="text-on-surface font-label-md">Waserda Primkoppol Ngawi</strong></span><span class="text-outline-variant">•</span><span class="">ID Outlet: <strong>PKP-NGW-01</strong></span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="">Database Cloud Terhubung</span></div><span class="text-outline-variant">•</span><span class="">PRIMKOPPOL POS v2.4.12</span></div></div></footer>
 
 <script>
 (function() {
     const fmt = new Intl.NumberFormat('id-ID');
     let allProducts = [];
+    let activeProducts = [];
+    let inactiveProducts = [];
     let searchQuery = '';
     let currentFilter = 'all';
+    let currentEditBarcode = null;
 
     function formatRp(n) {
         return 'Rp ' + fmt.format(n);
@@ -429,13 +543,9 @@ function showErrorOnScreen(msg) {
                 </td>
                 <td class="py-3 px-space-md text-center">
                     <div class="inline-flex items-center gap-1.5">
-                        <button class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-colors" type="button">
+                        <button data-barcode="${doc.barcode}" class="btn-edit-sku px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-colors" type="button">
                             <span class="material-symbols-outlined text-sm">edit</span>
                             <span>Edit</span>
-                        </button>
-                        <button class="px-2.5 py-1 rounded bg-error-container/40 hover:bg-error-container text-error font-label-sm text-label-sm flex items-center gap-1 transition-colors" type="button">
-                            <span class="material-symbols-outlined text-sm">block</span>
-                            <span>Non-Aktifkan</span>
                         </button>
                     </div>
                 </td>
@@ -466,7 +576,7 @@ function showErrorOnScreen(msg) {
 
     function applyFilter() {
         const q = searchQuery.toLowerCase().trim();
-        let filtered = allProducts;
+        let filtered = activeProducts;
         
         if (q) {
             filtered = filtered.filter(p => {
@@ -495,11 +605,11 @@ function showErrorOnScreen(msg) {
         }
 
         renderRows(filtered);
-        updateMetrics(allProducts);
+        updateMetrics(activeProducts);
         // Update pagination for filtered view
         const elPagination = document.getElementById('pagination-info');
         if (elPagination) {
-            elPagination.querySelector('span').innerHTML = 'Menampilkan <strong>' + filtered.length + '</strong> dari <strong>' + allProducts.length + '</strong> produk';
+            elPagination.querySelector('span').innerHTML = 'Menampilkan <strong>' + filtered.length + '</strong> dari <strong>' + activeProducts.length + '</strong> produk';
         }
     }
 
@@ -588,12 +698,160 @@ function showErrorOnScreen(msg) {
         });
     }
 
+    // Modal Edit & Deaktivasi
+    document.getElementById('product-table-body').addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-edit-sku');
+        if (btn) {
+            const barcode = btn.getAttribute('data-barcode');
+            const product = activeProducts.find(p => {
+                const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+                return doc.barcode === barcode;
+            });
+            if (product) {
+                const doc = (typeof product.toJSON === 'function') ? product.toJSON() : product;
+                currentEditBarcode = barcode;
+                document.getElementById('edit-barcode').value = doc.barcode;
+                document.getElementById('edit-name').value = doc.name || '';
+                document.getElementById('edit-category').value = doc.category || 'Umum';
+                document.getElementById('edit-unit').value = doc.unit || 'Pcs';
+                document.getElementById('edit-cost').value = doc.cost_price || 0;
+                document.getElementById('edit-price').value = doc.price || 0;
+                document.getElementById('edit-stock').value = doc.stock || 0;
+                
+                document.getElementById('modal-edit-sku').classList.remove('hidden');
+            }
+        }
+    });
+
+    const btnSubmitEditSku = document.getElementById('btn-submit-edit-sku');
+    if (btnSubmitEditSku) {
+        btnSubmitEditSku.addEventListener('click', function() {
+            if (!currentEditBarcode || !window.POS_DB) return;
+            const barcode = document.getElementById('edit-barcode').value.trim();
+            const name = document.getElementById('edit-name').value.trim();
+            const category = document.getElementById('edit-category').value;
+            const unit = document.getElementById('edit-unit').value;
+            const costStr = document.getElementById('edit-cost').value;
+            const priceStr = document.getElementById('edit-price').value;
+            const stockStr = document.getElementById('edit-stock').value;
+
+            if (!name || !costStr || !priceStr) {
+                return alert('Nama Produk dan Harga harus diisi!');
+            }
+
+            const product = activeProducts.find(p => (typeof p.toJSON === 'function' ? p.toJSON() : p).barcode === currentEditBarcode);
+            const baseDoc = product ? (typeof product.toJSON === 'function' ? product.toJSON() : product) : {};
+
+            const payload = {
+                ...baseDoc,
+                barcode: barcode,
+                name: name,
+                category: category,
+                unit: unit,
+                cost_price: parseInt(costStr) || 0,
+                price: parseInt(priceStr) || 0,
+                stock: parseInt(stockStr) || 0,
+                updated_at: Date.now()
+            };
+
+            window.POS_DB.upsertProduct(payload).then(() => {
+                document.getElementById('modal-edit-sku').classList.add('hidden');
+            }).catch(err => {
+                console.error('Gagal edit SKU:', err);
+                alert('Gagal edit SKU. ' + err.message);
+            });
+        });
+    }
+
+    const btnDeactivateSku = document.getElementById('btn-deactivate-sku');
+    if (btnDeactivateSku) {
+        btnDeactivateSku.addEventListener('click', function() {
+            if (!currentEditBarcode || !window.POS_DB) return;
+            if (confirm('Yakin ingin menonaktifkan barang ini?')) {
+                const product = activeProducts.find(p => {
+                    const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+                    return doc.barcode === currentEditBarcode;
+                });
+                if (product) {
+                    const doc = (typeof product.toJSON === 'function') ? product.toJSON() : product;
+                    const payload = { ...doc, is_active: false, updated_at: Date.now() };
+                    window.POS_DB.upsertProduct(payload).then(() => {
+                        document.getElementById('modal-edit-sku').classList.add('hidden');
+                    }).catch(err => {
+                        console.error('Gagal menonaktifkan SKU:', err);
+                        alert('Gagal menonaktifkan SKU. ' + err.message);
+                    });
+                }
+            }
+        });
+    }
+
+    // Modal Inactive
+    function renderInactiveRows() {
+        const tbody = document.getElementById('inactive-table-body');
+        if (!tbody) return;
+
+        if (inactiveProducts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant font-body-md">Tidak ada barang non-aktif.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = inactiveProducts.map(p => {
+            const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+            return `<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+                <td class="py-3 px-space-md font-mono text-sm text-on-surface">${doc.barcode}</td>
+                <td class="py-3 px-space-md text-on-surface">${doc.name}</td>
+                <td class="py-3 px-space-md text-on-surface-variant text-sm">${doc.category}</td>
+                <td class="py-3 px-space-md text-right font-mono text-on-surface">${formatRp(doc.price)}</td>
+                <td class="py-3 px-space-md text-center">
+                    <button data-barcode="${doc.barcode}" class="btn-reactivate-sku px-2.5 py-1.5 rounded bg-primary/10 hover:bg-primary/20 text-primary font-label-sm text-label-sm transition-colors">Aktifkan Kembali</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    const btnBarangNonaktif = document.getElementById('btn-barang-nonaktif');
+    if (btnBarangNonaktif) {
+        btnBarangNonaktif.addEventListener('click', function() {
+            renderInactiveRows();
+            document.getElementById('modal-barang-nonaktif').classList.remove('hidden');
+        });
+    }
+
+    document.getElementById('inactive-table-body').addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-reactivate-sku');
+        if (btn) {
+            const barcode = btn.getAttribute('data-barcode');
+            const product = inactiveProducts.find(p => {
+                const doc = (typeof p.toJSON === 'function') ? p.toJSON() : p;
+                return doc.barcode === barcode;
+            });
+            if (product) {
+                const doc = (typeof product.toJSON === 'function') ? product.toJSON() : product;
+                const payload = { ...doc, is_active: true, updated_at: Date.now() };
+                window.POS_DB.upsertProduct(payload).then(() => {
+                    // It will automatically refresh via subscriber
+                }).catch(err => {
+                    console.error('Gagal mengaktifkan SKU:', err);
+                    alert('Gagal mengaktifkan SKU. ' + err.message);
+                });
+            }
+        }
+    });
+
     // Tunggu POS_DB tersedia lalu subscribe
     function waitForPosDb() {
         if (window.POS_DB && typeof window.POS_DB.subscribeProducts === 'function') {
             window.POS_DB.subscribeProducts(function(products) {
                 allProducts = products;
+                activeProducts = products.filter(p => (typeof p.toJSON === 'function' ? p.toJSON() : p).is_active !== false);
+                inactiveProducts = products.filter(p => (typeof p.toJSON === 'function' ? p.toJSON() : p).is_active === false);
+                
+                const badge = document.getElementById('badge-nonaktif');
+                if (badge) badge.textContent = inactiveProducts.length;
+
                 applyFilter();
+                renderInactiveRows();
             });
         } else {
             setTimeout(waitForPosDb, 100);
