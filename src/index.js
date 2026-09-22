@@ -1,7 +1,7 @@
 import { getDatabase } from './db/database.js';
 import { validateCreditLimit, processTransaction } from './db/creditEngine.js';
 import { processDebtPayment } from './db/settlementEngine.js';
-import { syncPendingTransactions } from './db/syncEngine.js';
+import { syncPendingTransactions, syncProductsToSupabase } from './db/syncEngine.js';
 
 window.POS_DB = {
     getDatabase,
@@ -9,6 +9,7 @@ window.POS_DB = {
     processTransaction,
     processDebtPayment,
     triggerSync: syncPendingTransactions,
+    syncProducts: syncProductsToSupabase,
 
     // === Product helpers ===
 
@@ -27,9 +28,14 @@ window.POS_DB = {
     // Insert-or-update produk
     async upsertProduct(productData) {
         const db = await getDatabase();
-        return db.products.upsert({
+        const doc = await db.products.upsert({
             ...productData,
             updated_at: new Date().toISOString()
         });
+        
+        // Asynchronously sync to Supabase (fire and forget)
+        syncProductsToSupabase();
+        
+        return doc;
     }
 };

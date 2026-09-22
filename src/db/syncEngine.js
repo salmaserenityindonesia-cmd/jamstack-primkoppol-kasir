@@ -61,6 +61,51 @@ export async function syncPendingTransactions() {
     }
 }
 
+export async function syncProductsToSupabase() {
+    try {
+        if (!navigator.onLine) {
+            console.log('[SyncEngine] Offline. Menunggu koneksi pulih...');
+            return;
+        }
+
+        const db = await getDatabase();
+        const products = await db.products.find().exec();
+
+        if (products.length === 0) {
+            return;
+        }
+
+        console.log(`[SyncEngine] Memulai sinkronisasi ${products.length} produk ke Supabase...`);
+
+        const payload = products.map(doc => {
+            const data = doc.toJSON();
+            return {
+                barcode: data.barcode,
+                sku: data.sku,
+                name: data.name,
+                category: data.category || null,
+                unit: data.unit || null,
+                cost_price: data.cost_price || 0,
+                price: data.price || 0,
+                stock: data.stock || 0,
+                is_active: data.is_active !== false
+            };
+        });
+
+        const { error } = await supabase
+            .from('products')
+            .upsert(payload, { onConflict: 'barcode' });
+
+        if (error) {
+            console.error('[SyncEngine] Gagal sinkronisasi produk:', error.message);
+        } else {
+            console.log('[SyncEngine] Sinkronisasi produk berhasil!');
+        }
+    } catch (err) {
+        console.error('[SyncEngine] Terjadi kesalahan saat sinkronisasi produk:', err);
+    }
+}
+
 let syncInterval = null;
 
 export function startPeriodicSync(intervalMs = 10000) {
