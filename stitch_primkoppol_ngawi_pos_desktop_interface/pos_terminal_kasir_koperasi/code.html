@@ -51,8 +51,10 @@ Hold Nota
 <!-- Barcode input wrapper -->
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3.5 text-secondary text-[22px] pointer-events-none">barcode_reader</span>
-<input id="pos-barcode-input" autofocus="" class="w-full pl-11 pr-24 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary transition shadow-inner" placeholder="Scan barcode / ketik SKU (Contoh: 899100122222, 899234567890)..." type="text">
+<input id="pos-barcode-input" autofocus="" class="w-full pl-11 pr-24 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary transition shadow-inner" placeholder="Scan barcode / ketik SKU (Contoh: 899100122222, 899234567890)..." type="text" autocomplete="off">
 <kbd class="absolute right-3 px-2 py-0.5 text-[11px] font-semibold text-secondary bg-surface-container rounded border border-outline-variant/40">F1 Cari</kbd>
+<!-- Autocomplete Dropdown -->
+<div id="pos-search-dropdown" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-50 hidden divide-y divide-slate-100"></div>
 </div>
 
 <!-- Quick Product Catalog Shortlist -->
@@ -614,28 +616,132 @@ Bayar Tunai
     };
 
     const barcodeInput = document.getElementById('pos-barcode-input');
-    if (barcodeInput) {
-      barcodeInput.addEventListener('keydown', async function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const code = barcodeInput.value.trim();
-          if (!code) return;
+    const searchDropdown = document.getElementById('pos-search-dropdown');
+    let selectedIndex = -1;
+    let filteredSuggestions = [];
 
+    function renderSuggestions() {
+      if (filteredSuggestions.length === 0) {
+        searchDropdown.classList.add('hidden');
+        return;
+      }
+      searchDropdown.innerHTML = filteredSuggestions.map((prod, idx) => {
+        const isSelected = idx === selectedIndex;
+        return `
+          <div onclick="selectSuggestion(${idx})" class="p-3 cursor-pointer transition ${isSelected ? 'bg-primary/10 text-primary border-l-4 border-primary' : 'hover:bg-surface-container-low'}">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="font-bold text-sm text-on-surface ${isSelected ? 'text-primary' : ''}">${prod.name}</p>
+                <div class="flex gap-2 items-center text-xs mt-0.5">
+                  <span class="font-mono text-secondary bg-surface-container px-1 py-0.5 rounded">${prod.barcode}</span>
+                  <span class="text-secondary">${prod.category || 'Umum'}</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-currency-display font-bold text-sm ${isSelected ? 'text-primary' : 'text-on-surface'}">${formatIDR(prod.price)}</p>
+                <p class="text-[10px] text-secondary">Stok: ${prod.stock}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      searchDropdown.classList.remove('hidden');
+
+      // Scroll into view if needed
+      if (selectedIndex >= 0) {
+        const activeItem = searchDropdown.children[selectedIndex];
+        if (activeItem) {
+          activeItem.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    }
+
+    window.selectSuggestion = function(idx) {
+      if (idx >= 0 && idx < filteredSuggestions.length) {
+        const prod = filteredSuggestions[idx];
+        window.quickAddProduct(prod.barcode);
+        barcodeInput.value = '';
+        searchDropdown.classList.add('hidden');
+        filteredSuggestions = [];
+        selectedIndex = -1;
+      }
+    };
+
+    if (barcodeInput) {
+      barcodeInput.addEventListener('input', async function(e) {
+        const query = e.target.value.trim().toLowerCase();
+        selectedIndex = -1;
+        
+        if (query.length >= 1) {
           if (window.POS_DB) {
             const db = await window.POS_DB.getDatabase();
-            // Coba cari dari barcode dulu, jika tidak ada, dari sku
-            let prod = await db.products.findOne({ selector: { barcode: code } }).exec();
-            if (!prod) {
-                prod = await db.products.findOne({ selector: { sku: code } }).exec();
-            }
+            const allProducts = await db.products.find().exec();
+            
+            filteredSuggestions = allProducts.filter(p => 
+              p.is_active !== false && 
+              (p.barcode.toLowerCase().includes(query) || 
+               p.name.toLowerCase().includes(query) ||
+               p.sku.toLowerCase().includes(query))
+            ).slice(0, 8); // top 8
 
-            if (prod && prod.is_active !== false) {
-              window.quickAddProduct(prod.barcode);
-              barcodeInput.value = '';
-            } else {
-              alert(`Produk dengan Barcode / SKU "${code}" tidak ditemukan atau sedang dinonaktifkan.`);
+            renderSuggestions();
+          }
+        } else {
+          filteredSuggestions = [];
+          renderSuggestions();
+        }
+      });
+
+      barcodeInput.addEventListener('keydown', async function(e) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (filteredSuggestions.length > 0) {
+            selectedIndex = (selectedIndex + 1) % filteredSuggestions.length;
+            renderSuggestions();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (filteredSuggestions.length > 0) {
+            selectedIndex = (selectedIndex - 1 + filteredSuggestions.length) % filteredSuggestions.length;
+            renderSuggestions();
+          }
+        } else if (e.key === 'Escape') {
+          filteredSuggestions = [];
+          renderSuggestions();
+          barcodeInput.value = '';
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (selectedIndex >= 0 && filteredSuggestions.length > 0) {
+            window.selectSuggestion(selectedIndex);
+          } else {
+            // exact match fallback
+            const code = barcodeInput.value.trim();
+            if (!code) return;
+            
+            if (window.POS_DB) {
+              const db = await window.POS_DB.getDatabase();
+              let prod = await db.products.findOne({ selector: { barcode: code } }).exec();
+              if (!prod) {
+                  prod = await db.products.findOne({ selector: { sku: code } }).exec();
+              }
+  
+              if (prod && prod.is_active !== false) {
+                window.quickAddProduct(prod.barcode);
+                barcodeInput.value = '';
+                filteredSuggestions = [];
+                renderSuggestions();
+              } else {
+                alert(`Produk dengan Barcode / SKU "${code}" tidak ditemukan atau sedang dinonaktifkan.`);
+              }
             }
           }
+        }
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!barcodeInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+          searchDropdown.classList.add('hidden');
         }
       });
     }
