@@ -189,16 +189,22 @@
     text.textContent = 'Menyinkronkan...';
 
     try {
+        let result;
         // Call syncEngine
         if (window.parent && window.parent.POS_DB && typeof window.parent.POS_DB.forceSync === 'function') {
-            await window.parent.POS_DB.forceSync();
+            result = await window.parent.POS_DB.forceSync();
         } else if (window.POS_DB && typeof window.POS_DB.forceSync === 'function') {
-            await window.POS_DB.forceSync();
+            result = await window.POS_DB.forceSync();
         } else {
             throw new Error("Modul sinkronisasi belum dimuat oleh sistem.");
         }
+        
+        if (result === true) {
+            alert("Sistem sudah tersinkronisasi (0 antrean)");
+        }
     } catch (error) {
         alert("Gagal: " + error.message);
+    } finally {
         btn.disabled = false;
         icon.classList.remove('animate-spin');
         text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';

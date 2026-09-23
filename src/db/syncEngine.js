@@ -24,7 +24,8 @@ export async function syncPendingTransactions() {
         }).exec();
 
         if (pendingDocs.length === 0) {
-            return;
+            window.dispatchEvent(new CustomEvent('sync:success', { detail: 'NO_DATA' }));
+            return true;
         }
 
         console.log(`[SyncEngine] Ditemukan ${pendingDocs.length} transaksi PENDING. Memulai sinkronisasi...`);
@@ -33,7 +34,7 @@ export async function syncPendingTransactions() {
             const payload = doc.toJSON();
             const { id, invoice_number, member_id, total_amount, payment_type, timestamp, items } = payload;
             
-            const { error } = await supabase
+            const insertPromise = supabase
                 .from('transactions')
                 .insert([{
                     id, 
@@ -44,6 +45,12 @@ export async function syncPendingTransactions() {
                     timestamp, 
                     items
                 }]);
+
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Timeout: Server Supabase tidak merespons dalam 10 detik')), 10000);
+            });
+
+            const { error } = await Promise.race([insertPromise, timeoutPromise]);
 
             if (error) {
                 console.error(`[SYNC ENGINE ERROR] Gagal mengirim data:`, error.message);
