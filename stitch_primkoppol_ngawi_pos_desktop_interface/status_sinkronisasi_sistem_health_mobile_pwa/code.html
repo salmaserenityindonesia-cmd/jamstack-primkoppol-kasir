@@ -186,50 +186,81 @@
 
     btn.disabled = true;
     icon.classList.add('animate-spin');
-    text.textContent = 'Memvalidasi antrean RxDB...';
+    text.textContent = 'Sedang mencoba mendorong data ke cloud...';
 
-    setTimeout(() => {
-      icon.classList.remove('animate-spin');
-      text.textContent = 'Sinkronisasi Selesai (0 pending)';
+    // Call syncEngine
+    if (window.parent && window.parent.POS_DB && typeof window.parent.POS_DB.forceSync === 'function') {
+        window.parent.POS_DB.forceSync();
+    } else if (window.POS_DB && typeof window.POS_DB.forceSync === 'function') {
+        window.POS_DB.forceSync();
+    } else {
+        alert("Fungsi sinkronisasi belum siap.");
+        btn.disabled = false;
+        icon.classList.remove('animate-spin');
+        text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
+    }
+  }
+
+  const eventTarget = (window.parent && window.parent !== window) ? window.parent : window;
+
+  eventTarget.addEventListener('sync:success', function(e) {
+      const icon = document.getElementById('syncIcon');
+      const text = document.getElementById('syncText');
+      const btn = document.getElementById('syncBtn');
+      const pendingCount = document.querySelector('.font-display-lg'); // Element showing pending count
       
-      // Flash new log row into feed
+      if (pendingCount) pendingCount.textContent = '0';
+      if (icon) icon.classList.remove('animate-spin');
+      if (text) text.textContent = 'Sinkronisasi Selesai (0 pending)';
+      if (btn) {
+          setTimeout(() => {
+              btn.disabled = false;
+              text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
+          }, 2500);
+      }
+      
       const feed = document.getElementById('logsFeed');
       if (feed) {
-        const newRow = document.createElement('div');
-        newRow.className = 'p-3 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 transition-all transform -translate-y-2 opacity-0 animate-in fade-in slide-in-from-top-2 duration-300';
-        newRow.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 min-w-0">
-              <div class="w-7 h-7 rounded-lg bg-primary-fixed flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-on-primary-fixed text-[16px]">sync_saved_locally</span>
+          const newRow = document.createElement('div');
+          newRow.className = 'p-3 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 transition-all transform -translate-y-2 opacity-0 animate-in fade-in slide-in-from-top-2 duration-300';
+          newRow.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-primary-fixed flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-on-primary-fixed text-[16px]">sync_saved_locally</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="font-label-md text-label-md text-on-surface font-semibold truncate">MANUAL_HANDSHAKE (Success)</span>
+                  <span class="font-label-sm text-label-sm text-secondary">ID: ${e.detail}</span>
+                </div>
               </div>
-              <div class="flex flex-col min-w-0">
-                <span class="font-label-md text-label-md text-on-surface font-semibold truncate">MANUAL_HANDSHAKE (Full Probe)</span>
-                <span class="font-label-sm text-label-sm text-secondary">Client Push-Pull • Sent via WebSocket</span>
+              <div class="flex flex-col items-end flex-shrink-0">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-semibold text-[10px]">✓ Success</span>
+                <span class="font-label-sm text-label-sm text-secondary text-[11px] mt-0.5">Baru saja</span>
               </div>
             </div>
-            <div class="flex flex-col items-end flex-shrink-0">
-              <span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-semibold text-[10px]">✓ Success</span>
-              <span class="font-label-sm text-label-sm text-secondary text-[11px] mt-0.5">Baru saja</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between pt-1 border-t border-surface-container-high text-on-surface-variant font-body-sm text-body-sm">
-            <span>Perubahan: 0 record</span>
-            <span class="font-label-sm text-label-sm text-primary font-medium">Synced in 48ms</span>
-          </div>
-        `;
-        feed.insertBefore(newRow, feed.firstChild);
-        setTimeout(() => {
-          newRow.classList.remove('-translate-y-2', 'opacity-0');
-        }, 30);
+          `;
+          feed.insertBefore(newRow, feed.firstChild);
+          setTimeout(() => newRow.classList.remove('-translate-y-2', 'opacity-0'), 30);
+      }
+  });
+
+  eventTarget.addEventListener('sync:error', function(e) {
+      const icon = document.getElementById('syncIcon');
+      const text = document.getElementById('syncText');
+      const btn = document.getElementById('syncBtn');
+
+      if (icon) icon.classList.remove('animate-spin');
+      if (text) text.textContent = 'Gagal Sinkronisasi';
+      if (btn) {
+          setTimeout(() => {
+              btn.disabled = false;
+              text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
+          }, 2000);
       }
 
-      setTimeout(() => {
-        btn.disabled = false;
-        text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
-      }, 2500);
-    }, 1200);
-  }
+      alert("Gagal mengirim data ke Supabase:\n" + e.detail);
+  });
 
   function clearLogToast() {
     alert('Filter aktif: Menampilkan semua event log transaksi sinkronisasi 24 jam terakhir.');
