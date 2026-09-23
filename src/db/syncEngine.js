@@ -175,8 +175,7 @@ export function startPeriodicSync(intervalMs = 10000) {
     });
 }
 
-// Ekspos forceSync ke window untuk dipanggil dari UI
-if (typeof window !== 'undefined') {
-    window.POS_DB = window.POS_DB || {};
-    window.POS_DB.forceSync = syncPendingTransactions;
+export async function forceSync() {
+    console.log('[SyncEngine] Memulai Force Sync manual...');
+    return await syncPendingTransactions();
 }

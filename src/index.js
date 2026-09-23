@@ -1,7 +1,7 @@
 import { getDatabase } from './db/database.js';
 import { validateCreditLimit, processTransaction } from './db/creditEngine.js';
 import { processDebtPayment } from './db/settlementEngine.js';
-import { syncPendingTransactions, syncProductsToSupabase } from './db/syncEngine.js';
+import { syncPendingTransactions, syncProductsToSupabase, forceSync } from './db/syncEngine.js';
 import { authEngine } from './auth/authEngine.js';
 // Ekspos Auth Engine ke global scope
 window.POS_AUTH = authEngine;
@@ -13,6 +13,7 @@ window.POS_DB = {
     processDebtPayment,
     triggerSync: syncPendingTransactions,
     syncProducts: syncProductsToSupabase,
+    forceSync,
 
     // === Member helpers ===
 

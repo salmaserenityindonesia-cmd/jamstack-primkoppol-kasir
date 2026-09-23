@@ -177,7 +177,7 @@
 </div>
 <script>
   // Dynamic sync trigger interaction
-  function triggerManualSync() {
+  async function triggerManualSync() {
     const icon = document.getElementById('syncIcon');
     const text = document.getElementById('syncText');
     const btn = document.getElementById('syncBtn');
@@ -186,15 +186,19 @@
 
     btn.disabled = true;
     icon.classList.add('animate-spin');
-    text.textContent = 'Sedang mencoba mendorong data ke cloud...';
+    text.textContent = 'Menyinkronkan...';
 
-    // Call syncEngine
-    if (window.parent && window.parent.POS_DB && typeof window.parent.POS_DB.forceSync === 'function') {
-        window.parent.POS_DB.forceSync();
-    } else if (window.POS_DB && typeof window.POS_DB.forceSync === 'function') {
-        window.POS_DB.forceSync();
-    } else {
-        alert("Fungsi sinkronisasi belum siap.");
+    try {
+        // Call syncEngine
+        if (window.parent && window.parent.POS_DB && typeof window.parent.POS_DB.forceSync === 'function') {
+            await window.parent.POS_DB.forceSync();
+        } else if (window.POS_DB && typeof window.POS_DB.forceSync === 'function') {
+            await window.POS_DB.forceSync();
+        } else {
+            throw new Error("Modul sinkronisasi belum dimuat oleh sistem.");
+        }
+    } catch (error) {
+        alert("Gagal: " + error.message);
         btn.disabled = false;
         icon.classList.remove('animate-spin');
         text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
