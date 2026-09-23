@@ -11,6 +11,55 @@ window.POS_DB = {
     triggerSync: syncPendingTransactions,
     syncProducts: syncProductsToSupabase,
 
+    // === Member helpers ===
+
+    async getMembers(filter = {}) {
+        const db = await getDatabase();
+        const query = {};
+        if (filter.status && filter.status !== 'all') {
+            query.status = filter.status;
+        }
+        return db.members.find({ selector: query }).exec();
+    },
+
+    async subscribeMembers(callback) {
+        const db = await getDatabase();
+        return db.members.find().$.subscribe(members => callback(members));
+    },
+
+    async upsertMember(memberData) {
+        const db = await getDatabase();
+        const doc = await db.members.upsert({
+            ...memberData,
+            updated_at: new Date().toISOString()
+        });
+        return doc;
+    },
+
+    async deactivateMember(memberId) {
+        const db = await getDatabase();
+        const member = await db.members.findOne(memberId).exec();
+        if (member) {
+            return member.patch({
+                status: 'inactive',
+                updated_at: new Date().toISOString()
+            });
+        }
+        return null;
+    },
+
+    async reactivateMember(memberId) {
+        const db = await getDatabase();
+        const member = await db.members.findOne(memberId).exec();
+        if (member) {
+            return member.patch({
+                status: 'active',
+                updated_at: new Date().toISOString()
+            });
+        }
+        return null;
+    },
+
     // === Product helpers ===
 
     // Ambil semua produk (one-shot)
