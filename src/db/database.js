@@ -1,7 +1,7 @@
 import { createRxDatabase, addRxPlugin } from 'rxdb';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
-import { memberSchema, transactionSchema, productSchema } from './schemas.js';
+import { memberSchema, transactionSchema, productSchema, userSchema } from './schemas.js';
 import { startPeriodicSync, pullInitialProductsFromSupabase } from './syncEngine.js';
 
 addRxPlugin(RxDBLeaderElectionPlugin);
@@ -71,6 +71,35 @@ async function seedProducts(db) {
     console.log('[RxDB] Seeder: 4 produk awal selesai diproses.');
 }
 
+// Seeder: buat akun admin default jika koleksi users masih kosong
+async function seedAdminUser(db) {
+    const existing = await db.users.find().exec();
+    if (existing.length > 0) return;
+
+    // Hash 'primkoppol' via SubtleCrypto
+    const encoder = new TextEncoder();
+    const data = encoder.encode('primkoppol');
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    try {
+        await db.users.insert({
+            id            : 'admin-001',
+            email         : 'salmaserenityindonesia@gmail.com',
+            name          : 'Super Administrator',
+            password_hash : passwordHash,
+            role          : 'admin',
+            status        : 'active',
+            permissions   : [],
+            updated_at    : new Date().toISOString()
+        });
+        console.log('[RxDB] Seeder: akun admin default berhasil dibuat.');
+    } catch (err) {
+        console.error('[RxDB] Gagal insert admin seeder:', err);
+    }
+}
+
 export async function getDatabase() {
     if (!dbInstance) {
         dbInstance = await createRxDatabase({
@@ -89,6 +118,9 @@ export async function getDatabase() {
             },
             products: {
                 schema: productSchema
+            },
+            users: {
+                schema: userSchema
             }
         });
 
@@ -96,6 +128,8 @@ export async function getDatabase() {
         await pullInitialProductsFromSupabase(dbInstance);
         // Jalankan seeder produk awal (hanya akan berjalan jika koleksi masih kosong)
         await seedProducts(dbInstance);
+        // Jalankan seeder admin (hanya jika koleksi users masih kosong)
+        await seedAdminUser(dbInstance);
 
         // Tunggu kepemimpinan secara asinkron tanpa memblokir dbInstance
         dbInstance.waitForLeadership().then(() => {

@@ -1,3 +1,5 @@
+// Database schemas for the POS application
+
 export const memberSchema = {
     title: 'member schema',
     version: 0,
@@ -116,4 +118,24 @@ export const productSchema = {
         }
     },
     required: ['barcode', 'name', 'price', 'cost_price', 'stock', 'unit', 'category']
+};
+
+// User schema for authentication and RBAC
+export const userSchema = {
+    title: 'user schema',
+    version: 0,
+    primaryKey: 'id',
+    type: 'object',
+    properties: {
+        id: { type: 'string', maxLength: 100 },
+        email: { type: 'string', format: 'email' },
+        name: { type: 'string' },
+        password_hash: { type: 'string' },
+        role: { type: 'string', enum: ['admin', 'pengawas', 'kasir'] },
+        status: { type: 'string', enum: ['active', 'inactive'] },
+        permissions: { type: 'array', items: { type: 'string' } },
+        updated_at: { type: 'string' }
+    },
+    required: ['id', 'email', 'name', 'password_hash', 'role', 'status'],
+    indexes: []
 };

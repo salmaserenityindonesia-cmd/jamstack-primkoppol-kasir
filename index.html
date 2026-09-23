@@ -162,6 +162,59 @@
         <span class="material-symbols-outlined text-[16px]">open_in_new</span>
         <span class="hidden sm:inline">Buka Tab Baru</span>
       </button>
+
+      <!-- ===== USER PROFILE WIDGET ===== -->
+      <div id="user-profile-widget" class="relative flex items-center gap-2 pl-3 border-l border-gray-200/80">
+        <!-- Avatar inisial -->
+        <div id="user-avatar"
+             class="w-8 h-8 rounded-full bg-primary flex items-center justify-center
+                    text-white font-bold text-sm shrink-0 select-none cursor-pointer"
+             onclick="document.getElementById('btn-profile-dropdown').click()">?</div>
+
+        <!-- Nama & Badge Role -->
+        <div class="hidden lg:flex flex-col leading-tight">
+          <span id="user-display-name" class="text-xs font-semibold text-on-surface">Memuat…</span>
+          <span id="user-role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full w-fit mt-0.5 bg-gray-100 text-gray-500">–</span>
+        </div>
+
+        <!-- Tombol dropdown -->
+        <button id="btn-profile-dropdown"
+                class="p-1 rounded-lg hover:bg-surface-container transition"
+                title="Menu Akun">
+          <span class="material-symbols-outlined text-[18px] text-secondary">arrow_drop_down</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="profile-dropdown-menu"
+             class="hidden absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl
+                    shadow-xl border border-gray-100 z-[999] overflow-hidden">
+          <!-- Info User -->
+          <div class="px-4 py-3 border-b border-gray-100 bg-gray-50/60">
+            <p id="dropdown-user-email" class="text-xs text-gray-400 truncate">–</p>
+            <p id="dropdown-user-name" class="text-sm font-semibold text-on-surface mt-0.5">–</p>
+          </div>
+          <!-- Aksi -->
+          <div class="py-1">
+            <button onclick="openMyProfileModal()"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm
+                           text-on-surface hover:bg-surface-container transition">
+              <span class="material-symbols-outlined text-[18px] text-secondary">manage_accounts</span>
+              Profil &amp; Ganti Password
+            </button>
+          </div>
+          <!-- Divider + Logout -->
+          <div class="border-t border-slate-100">
+            <button id="btn-logout"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm
+                           text-red-600 hover:bg-red-50 transition">
+              <span class="material-symbols-outlined text-[18px]">logout</span>
+              Keluar / Logout
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- ===== END USER PROFILE WIDGET ===== -->
+
     </div>
   </header>
 
@@ -2616,5 +2669,534 @@
     });
   </script>
   <script type="module" src="/src/main.jsx"></script>
+
+  <!-- ===== MODAL: LOGIN WAJIB (AUTH GATE) ===== -->
+  <div id="modal-login-gate"
+       class="hidden fixed inset-0 z-[500] flex items-center justify-center bg-black/70 backdrop-blur-md">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+
+      <!-- Branding Header -->
+      <div class="bg-gradient-to-br from-primary to-primary/80 px-8 pt-8 pb-6 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <span class="material-symbols-outlined text-white text-3xl">point_of_sale</span>
+        </div>
+        <h2 class="font-bold text-xl text-white">PRIMKOPPOL NGAWI</h2>
+        <p class="text-xs text-white/70 mt-1">Waserda &amp; POS System v2.4</p>
+      </div>
+
+      <!-- Blok Inisialisasi Sistem (tersembunyi setelah ready) -->
+      <div id="init-status-block" class="px-8 pt-5 pb-2 space-y-3">
+        <!-- Teks status dinamis -->
+        <div class="flex items-center gap-2">
+          <span id="init-spinner" class="material-symbols-outlined text-primary text-[18px] animate-spin">progress_activity</span>
+          <p id="init-status-text" class="text-xs text-secondary font-medium">
+            Memuat bundle JavaScript &amp; modul RxDB...
+          </p>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+          <div id="init-progress-bar"
+               class="h-full rounded-full transition-all duration-500 ease-out bg-primary"
+               style="width: 0%"></div>
+        </div>
+
+        <!-- Checklist 3 item -->
+        <ul id="init-checklist" class="space-y-1.5 pt-1">
+          <li class="flex items-center gap-2 text-xs text-secondary" id="check-db">
+            <span class="material-symbols-outlined text-[14px] text-gray-300">pending</span>
+            Engine Database Lokal
+          </li>
+          <li class="flex items-center gap-2 text-xs text-secondary" id="check-auth">
+            <span class="material-symbols-outlined text-[14px] text-gray-300">pending</span>
+            Skema Autentikasi Pengguna
+          </li>
+          <li class="flex items-center gap-2 text-xs text-secondary" id="check-cloud">
+            <span class="material-symbols-outlined text-[14px] text-gray-300">pending</span>
+            Konektivitas Cloud / Offline Mode
+          </li>
+        </ul>
+
+        <!-- Error / timeout panel (hidden by default) -->
+        <div id="init-error-panel" class="hidden rounded-xl bg-red-50 border border-red-100 px-4 py-3 space-y-2">
+          <p class="text-xs font-semibold text-red-700">Sistem gagal dimuat dalam waktu yang ditentukan.</p>
+          <p id="init-error-detail" class="text-[11px] text-red-500 font-mono"></p>
+          <button onclick="forceReloadSystem()"
+                  class="w-full mt-1 py-2 rounded-lg text-xs font-semibold bg-red-600 text-white hover:bg-red-700 transition flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">refresh</span>
+            Muat Ulang Sistem
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Login -->
+      <form id="form-login" class="px-8 py-6 space-y-4" onsubmit="return false;">
+        <p class="text-sm font-semibold text-on-surface text-center">Masuk ke Sistem</p>
+
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-secondary block">Email / Username</label>
+          <input id="login-email" type="email"
+                 placeholder="email@primkoppol.id"
+                 autocomplete="username"
+                 class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm
+                        focus:outline-none focus:ring-2 focus:ring-primary/30 transition">
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-secondary block">Password</label>
+          <input id="login-password" type="password"
+                 placeholder="••••••••"
+                 autocomplete="current-password"
+                 class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm
+                        focus:outline-none focus:ring-2 focus:ring-primary/30 transition">
+        </div>
+
+        <p id="login-error" class="text-xs text-red-500 hidden rounded-lg bg-red-50 px-3 py-2 border border-red-100"></p>
+
+        <button id="btn-do-login" type="button" onclick="doLogin()" disabled
+                class="w-full py-3 rounded-xl font-semibold text-sm bg-primary text-white
+                       hover:bg-primary/90 transition shadow-sm flex items-center justify-center gap-2
+                       disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="material-symbols-outlined text-[18px]">login</span>
+          Masuk ke Sistem
+        </button>
+
+        <p class="text-center text-[11px] text-gray-400">
+          Hubungi Admin jika lupa password.
+        </p>
+      </form>
+    </div>
+  </div>
+  <!-- ===== END MODAL LOGIN WAJIB ===== -->
+
+  <!-- ===== MODAL: PROFIL SAYA ===== -->
+  <div id="modal-my-profile"
+       class="hidden fixed inset-0 z-[300] flex items-center justify-center
+              bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 flex flex-col">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h2 class="font-bold text-base text-on-surface">Profil Pengguna &amp; Keamanan Akun</h2>
+        <button onclick="closeMyProfileModal()"
+                class="p-1.5 rounded-lg hover:bg-surface-container text-secondary transition">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Info Read-Only -->
+      <div class="px-6 py-5 border-b border-gray-100 flex items-center gap-4">
+        <div id="modal-avatar"
+             class="w-14 h-14 rounded-full bg-primary flex items-center justify-center
+                    text-white font-bold text-xl shrink-0">?</div>
+        <div>
+          <p id="modal-full-name" class="font-semibold text-on-surface text-base">–</p>
+          <p id="modal-email" class="text-xs text-secondary mt-0.5">–</p>
+          <span id="modal-role-badge"
+                class="text-[10px] font-bold px-2 py-0.5 rounded-full mt-1.5 inline-block
+                       bg-gray-100 text-gray-700">–</span>
+        </div>
+      </div>
+
+      <!-- Form Ganti Password -->
+      <form id="form-change-password" class="px-6 py-5 space-y-3" onsubmit="return false;">
+        <p class="text-xs font-semibold text-secondary uppercase tracking-wider">Ubah Password</p>
+        <input id="input-current-pass" type="password"
+               placeholder="Password Saat Ini"
+               autocomplete="current-password"
+               class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm
+                      focus:outline-none focus:ring-2 focus:ring-primary/30 transition">
+        <input id="input-new-pass" type="password"
+               placeholder="Password Baru (min. 6 karakter)"
+               autocomplete="new-password"
+               class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm
+                      focus:outline-none focus:ring-2 focus:ring-primary/30 transition">
+        <input id="input-confirm-pass" type="password"
+               placeholder="Konfirmasi Password Baru"
+               autocomplete="new-password"
+               class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm
+                      focus:outline-none focus:ring-2 focus:ring-primary/30 transition">
+        <p id="password-form-error" class="text-xs text-red-500 hidden"></p>
+      </form>
+
+      <!-- Footer -->
+      <div class="flex justify-end gap-2 px-6 py-4 bg-gray-50 rounded-b-2xl border-t border-gray-100">
+        <button onclick="closeMyProfileModal()" type="button"
+                class="px-4 py-2 rounded-xl text-sm font-semibold text-secondary
+                       hover:bg-surface-container border border-gray-200 transition">
+          Tutup
+        </button>
+        <button onclick="submitChangePassword()" type="button"
+                class="px-4 py-2 rounded-xl text-sm font-semibold bg-primary
+                       text-white hover:bg-primary/90 transition">
+          Simpan Password Baru
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== END MODAL PROFIL SAYA ===== -->
+
+  <!-- ===== PROFILE WIDGET & MODAL SCRIPTS ===== -->
+  <script>
+    // ── Konfigurasi badge per role ──────────────────────────────────────────
+    const ROLE_CONFIG = {
+      admin    : { label: 'ADMIN',    cls: 'bg-violet-100 text-violet-800'   },
+      pengawas : { label: 'PENGAWAS', cls: 'bg-blue-100 text-blue-800'      },
+      kasir    : { label: 'KASIR',    cls: 'bg-emerald-100 text-emerald-800' }
+    };
+
+    function _getRoleCfg(role) {
+      return ROLE_CONFIG[role] ?? { label: (role ?? '?').toUpperCase(), cls: 'bg-gray-100 text-gray-700' };
+    }
+
+    function _getInitials(name) {
+      return (name ?? 'SA').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() || 'SA';
+    }
+
+    // ── Ambil user dengan 3-lapis fallback ─────────────────────────────────
+    function _resolveUser() {
+      // Jika user sudah eksplisit logout, jangan tampilkan sesi apapun
+      if (localStorage.getItem('primkoppol_auth_logged_out')) return null;
+
+      // Lapis 1: gunakan POS_AUTH jika tersedia
+      if (window.POS_AUTH && typeof window.POS_AUTH.getCurrentUser === 'function') {
+        const u = window.POS_AUTH.getCurrentUser();
+        if (u) return u;
+      }
+      // Lapis 2: baca langsung dari localStorage
+      try {
+        const raw = localStorage.getItem('primkoppol_auth_user');
+        if (raw) return JSON.parse(raw);
+      } catch { /* abaikan parse error */ }
+      // Lapis 3: hardcoded default hanya jika belum pernah logout
+      return {
+        id         : 'usr-admin-01',
+        name       : 'Super Administrator',
+        email      : 'salmaserenityindonesia@gmail.com',
+        role       : 'admin',
+        permissions: ['*']
+      };
+    }
+
+    // ── Render widget profil navbar ─────────────────────────────────────────
+    function renderUserProfile() {
+      const user = _resolveUser();
+      if (!user) {
+        // User sudah logout — tampilkan placeholder login
+        document.getElementById('user-avatar').textContent        = '?';
+        document.getElementById('user-display-name').textContent  = 'Login';
+        document.getElementById('user-role-badge').textContent    = '';
+        document.getElementById('user-role-badge').className      = 'hidden';
+        document.getElementById('dropdown-user-name').textContent  = '–';
+        document.getElementById('dropdown-user-email').textContent = '–';
+        return;
+      }
+      // Avatar inisial
+      document.getElementById('user-avatar').textContent = _getInitials(user.name);
+      // Nama di navbar
+      document.getElementById('user-display-name').textContent = user.name;
+      // Info dropdown
+      document.getElementById('dropdown-user-name').textContent  = user.name;
+      document.getElementById('dropdown-user-email').textContent = user.email;
+      // Badge role
+      const cfg   = _getRoleCfg(user.role);
+      const badge = document.getElementById('user-role-badge');
+      badge.textContent = cfg.label;
+      badge.className   = `text-[10px] font-bold px-2 py-0.5 rounded-full w-fit mt-0.5 ${cfg.cls}`;
+    }
+
+    // ── Toggle dropdown ─────────────────────────────────────────────────────
+    document.getElementById('btn-profile-dropdown')?.addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.getElementById('profile-dropdown-menu').classList.toggle('hidden');
+    });
+
+    // Tutup dropdown saat klik di luar widget
+    document.addEventListener('click', function(e) {
+      const widget = document.getElementById('user-profile-widget');
+      if (widget && !widget.contains(e.target)) {
+        document.getElementById('profile-dropdown-menu')?.classList.add('hidden');
+      }
+    });
+
+    // ── Logout ──────────────────────────────────────────────────────────────
+    document.getElementById('btn-logout')?.addEventListener('click', function() {
+      if (window.POS_AUTH && typeof window.POS_AUTH.logout === 'function') {
+        window.POS_AUTH.logout();
+      } else {
+        localStorage.removeItem('primkoppol_auth_user');
+      }
+      location.reload();
+    });
+
+    // ── Modal: buka ─────────────────────────────────────────────────────────
+    function openMyProfileModal() {
+      const user = _resolveUser();
+
+      const initials = _getInitials(user.name);
+      document.getElementById('modal-avatar').textContent    = initials;
+      document.getElementById('modal-full-name').textContent = user.name;
+      document.getElementById('modal-email').textContent     = user.email;
+
+      const cfg   = _getRoleCfg(user.role);
+      const badge = document.getElementById('modal-role-badge');
+      badge.textContent = cfg.label;
+      badge.className   = `text-[10px] font-bold px-2 py-0.5 rounded-full mt-1.5 inline-block ${cfg.cls}`;
+
+      // Reset form & error
+      document.getElementById('form-change-password').reset();
+      document.getElementById('password-form-error').classList.add('hidden');
+
+      // Tampilkan modal & tutup dropdown
+      document.getElementById('modal-my-profile').classList.remove('hidden');
+      document.getElementById('profile-dropdown-menu').classList.add('hidden');
+    }
+
+    // ── Modal: tutup ────────────────────────────────────────────────────────
+    function closeMyProfileModal() {
+      document.getElementById('modal-my-profile').classList.add('hidden');
+      document.getElementById('form-change-password').reset();
+      document.getElementById('password-form-error').classList.add('hidden');
+    }
+
+    // ── Ganti password ──────────────────────────────────────────────────────
+    async function submitChangePassword() {
+      const currentPass = document.getElementById('input-current-pass').value.trim();
+      const newPass     = document.getElementById('input-new-pass').value.trim();
+      const confirmPass = document.getElementById('input-confirm-pass').value.trim();
+      const errEl       = document.getElementById('password-form-error');
+
+      errEl.classList.add('hidden');
+      errEl.textContent = '';
+
+      if (!currentPass || !newPass || !confirmPass) {
+        errEl.textContent = 'Semua kolom wajib diisi.';
+        errEl.classList.remove('hidden'); return;
+      }
+      if (newPass.length < 6) {
+        errEl.textContent = 'Password baru minimal 6 karakter.';
+        errEl.classList.remove('hidden'); return;
+      }
+      if (newPass !== confirmPass) {
+        errEl.textContent = 'Konfirmasi password tidak cocok.';
+        errEl.classList.remove('hidden'); return;
+      }
+
+      try {
+        await window.POS_AUTH.changeMyPassword(currentPass, newPass);
+        closeMyProfileModal();
+        if (typeof showStatusBanner === 'function') {
+          showStatusBanner('success', 'Password berhasil diperbarui!');
+        } else {
+          alert('Password berhasil diperbarui!');
+        }
+      } catch (err) {
+        errEl.textContent = 'Gagal: ' + (err.message ?? 'Terjadi kesalahan.');
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    // ── Inisialisasi: render segera, lalu sinkronisasi ulang saat POS_AUTH siap ──
+    // Render langsung — fallback ke localStorage/hardcoded agar tidak loading abadi
+    // ── Inisialisasi saat DOM siap ──────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthGate();   // tampilkan login jika belum ada sesi
+      renderUserProfile(); // render profil (akan tampilkan "Login" jika belum login)
+    });
+
+    // ── Peta step ke checklist item ──────────────────────────────────────────
+    const INIT_STEP_MAP = {
+      'db-open'   : null,
+      'db-ready'  : 'check-db',
+      'auth-ready': 'check-auth',
+      'cloud-check': null,
+      'ready'     : 'check-cloud',
+    };
+
+    function _tickCheck(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const icon = el.querySelector('span.material-symbols-outlined');
+      if (icon) { icon.textContent = 'check_circle'; icon.classList.remove('text-gray-300'); icon.classList.add('text-primary'); }
+      el.classList.remove('text-secondary'); el.classList.add('text-on-surface', 'font-medium');
+    }
+
+    // Tangkap pos:init-step
+    window.addEventListener('pos:init-step', function(e) {
+      const { step, percent, message } = e.detail;
+      // Update progress bar
+      const bar = document.getElementById('init-progress-bar');
+      if (bar) bar.style.width = percent + '%';
+      // Update teks status
+      const txt = document.getElementById('init-status-text');
+      if (txt) txt.textContent = message;
+      // Centang checklist
+      const checkId = INIT_STEP_MAP[step];
+      if (checkId) _tickCheck(checkId);
+    });
+
+    // ── Fungsi Sentral untuk menandai sistem siap ───────────────────────────
+    function checkAndMarkReady() {
+      if (window.__POS_SYSTEM_READY__ || (window.POS_AUTH && typeof window.POS_AUTH.login === 'function')) {
+        // 1. Centang semua item
+        ['check-db','check-auth','check-cloud'].forEach(_tickCheck);
+        // 2. Set progress 100%
+        const bar = document.getElementById('init-progress-bar');
+        if (bar) bar.style.width = '100%';
+        // 3. Sembunyikan panel error (jika sebelumnya ada)
+        const errorPanel = document.getElementById('init-error-panel');
+        if (errorPanel) errorPanel.classList.add('hidden');
+        // 4. Ubah teks spinner & pesan
+        const spinner = document.getElementById('init-spinner');
+        if (spinner) { spinner.textContent = 'check_circle'; spinner.classList.remove('animate-spin','text-primary'); spinner.classList.add('text-emerald-500'); }
+        const txt = document.getElementById('init-status-text');
+        if (txt) { txt.textContent = 'Sistem siap. Silakan masuk.'; txt.classList.add('text-emerald-600','font-semibold'); }
+        // 5. Aktifkan tombol login
+        const btn = document.getElementById('btn-do-login');
+        if (btn) btn.disabled = false;
+        // 6. Sembunyikan blok animasi (dipercepat)
+        setTimeout(function() {
+          const block = document.getElementById('init-status-block');
+          if (block) { block.style.opacity = '0'; block.style.transition = 'opacity 0.4s'; setTimeout(() => block.classList.add('hidden'), 400); }
+        }, 400); 
+        
+        // Re-check auth gate dengan POS_AUTH resmi
+        checkAuthGate();
+        return true;
+      }
+      return false;
+    }
+
+    // Tangkap pos:ready event (asinkron)
+    window.addEventListener('pos:ready', checkAndMarkReady);
+
+    // Polling interval ringan (fallback/agresif)
+    (function fastPollingReady() {
+      let elapsed = 0;
+      const poll = setInterval(() => {
+        elapsed += 200;
+        if (checkAndMarkReady()) {
+          clearInterval(poll);
+        } else if (elapsed > 10000) { // Berhenti polling setelah 10 detik
+          clearInterval(poll);
+        }
+      }, 200);
+    })();
+
+    // Tangkap pos:init-error — tampilkan panel error + tombol reload
+    window.addEventListener('pos:init-error', function(e) {
+      // Jika sistem sebenarnya sudah siap, abaikan error init
+      if (window.__POS_SYSTEM_READY__) return;
+      const bar = document.getElementById('init-progress-bar');
+      if (bar) { bar.style.width = '100%'; bar.classList.remove('bg-primary'); bar.classList.add('bg-red-500'); }
+      const spinner = document.getElementById('init-spinner');
+      if (spinner) { spinner.textContent = 'error'; spinner.classList.remove('animate-spin','text-primary'); spinner.classList.add('text-red-500'); }
+      const txt = document.getElementById('init-status-text');
+      if (txt) { txt.textContent = 'Inisialisasi gagal.'; txt.classList.add('text-red-600'); }
+      const panel = document.getElementById('init-error-panel');
+      if (panel) panel.classList.remove('hidden');
+      const detail = document.getElementById('init-error-detail');
+      // Utamakan pesan error asli dari engine
+      const errorMessage = window.__POS_INIT_ERROR__ || e.detail?.message || 'Unknown fatal error.';
+      if (detail) detail.textContent = errorMessage;
+    });
+
+    // ── Timeout 8 detik — jika sistem tidak siap, tampilkan error ────────
+    (function initTimeout() {
+      setTimeout(function() {
+        if (!window.__POS_SYSTEM_READY__) {
+          const timeoutMessage = window.__POS_INIT_ERROR__ || 'Timeout: modul tidak merespons dalam 8 detik. Cek koneksi atau IndexedDB browser.';
+          window.dispatchEvent(new CustomEvent('pos:init-error', {
+            detail: { message: timeoutMessage }
+          }));
+        }
+      }, 8000);
+    })();
+
+    // ── Perbaiki tombol Muat Ulang ──────────────────────────────────────────
+    function forceReloadSystem() {
+      localStorage.removeItem('primkoppol_auth_user');
+      location.reload();
+    }
+
+    // ── Auth Guard ──────────────────────────────────────────────────────────
+    function checkAuthGate() {
+      // Cek via POS_AUTH jika sudah tersedia, fallback ke localStorage
+      let isAuthenticated = false;
+      if (window.POS_AUTH && typeof window.POS_AUTH.getCurrentUser === 'function') {
+        isAuthenticated = window.POS_AUTH.getCurrentUser() !== null;
+      } else {
+        const loggedOut = localStorage.getItem('primkoppol_auth_logged_out');
+        const session   = localStorage.getItem('primkoppol_auth_user');
+        isAuthenticated = !loggedOut && !!session;
+      }
+
+      if (!isAuthenticated) {
+        document.getElementById('modal-login-gate').classList.remove('hidden');
+      } else {
+        document.getElementById('modal-login-gate').classList.add('hidden');
+      }
+    }
+
+    // ── Handler Login Form ──────────────────────────────────────────────────
+    async function doLogin() {
+      const email    = (document.getElementById('login-email')?.value ?? '').trim();
+      const password = (document.getElementById('login-password')?.value ?? '').trim();
+      const errEl    = document.getElementById('login-error');
+      const btn      = document.getElementById('btn-do-login');
+
+      // Reset error
+      errEl.classList.add('hidden');
+      errEl.textContent = '';
+
+      // Validasi dasar
+      if (!email || !password) {
+        errEl.textContent = 'Email dan password wajib diisi.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      // Tunggu POS_AUTH siap (modul dimuat async)
+      if (!window.POS_AUTH || typeof window.POS_AUTH.login !== 'function') {
+        errEl.textContent = 'Sistem masih dimuat, coba beberapa detik lagi.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      // Loading state
+      btn.disabled    = true;
+      const origHtml  = btn.innerHTML;
+      btn.innerHTML   = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Memverifikasi…';
+
+      try {
+        await window.POS_AUTH.login(email, password);
+        // Berhasil — tutup gate, render profil
+        document.getElementById('modal-login-gate').classList.add('hidden');
+        document.getElementById('form-login').reset();
+        renderUserProfile();
+      } catch (err) {
+        errEl.textContent = err.message ?? 'Login gagal. Periksa kembali email dan password.';
+        errEl.classList.remove('hidden');
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-password').focus();
+      } finally {
+        btn.disabled  = false;
+        btn.innerHTML = origHtml;
+      }
+    }
+
+    // Enter key pada input password langsung submit
+    document.getElementById('login-password')
+      ?.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doLogin();
+      });
+    // Enter key pada input email pindah ke password
+    document.getElementById('login-email')
+      ?.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('login-password')?.focus();
+      });
+  </script>
+  <!-- ===== END PROFILE WIDGET & MODAL SCRIPTS =====-->
+
 </body>
 </html>
