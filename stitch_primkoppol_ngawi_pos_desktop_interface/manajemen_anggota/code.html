@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; background-color: #f8f9ff; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/tailwind-theme.js"></script>
+  <script type="module" src="/assets/index.js"></script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen">
+  <main class="pt-space-lg pb-12 w-full min-h-[calc(100vh-3rem)] bg-surface px-gutter">
+    <div class="flex flex-col w-full gap-space-lg">
+
+      <!-- Page Header & Key Actions -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+        <div class="flex flex-col">
+          <div class="flex items-center gap-space-sm">
+            <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Manajemen Keanggotaan Primkoppol</h1>
+          </div>
+          <p class="font-body-md text-body-md text-secondary mt-1">Kelola data anggota, plafon kredit, dan simpanan wajib.</p>
+        </div>
+        <div class="flex items-center gap-space-sm shrink-0">
+          <button id="btn-tambah-anggota" class="flex items-center gap-1.5 px-space-md h-10 rounded bg-primary text-on-primary hover:bg-primary-container shadow-sm font-label-lg text-label-lg transition-all active:scale-[0.98]">
+            <span class="material-symbols-outlined text-[18px]">person_add</span>
+            <span class="">+ Tambah Anggota Baru</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter & Search Bar Toolbar -->
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm flex-1">
+          <!-- Search Input -->
+          <div class="relative flex-1 min-w-[240px]">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-secondary">search</span>
+            <input class="w-full h-10 pl-9 pr-14 rounded bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-secondary/70 focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" placeholder="Cari Nama, NRP, NIK, atau ID Anggota..." type="text">
+          </div>
+          <!-- Dropdown Status -->
+          <div class="relative min-w-[210px]">
+            <select id="filter-status" class="w-full h-10 pl-3 pr-8 rounded bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary">
+              <option value="all">Status: Semua Anggota</option>
+              <option value="active">Status: Anggota Aktif</option>
+              <option value="inactive">Status: Non-Aktif / Keluar</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-[18px] text-secondary pointer-events-none">expand_more</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Table -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+        <div class="w-full overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[1100px]">
+            <thead>
+              <tr class="bg-surface-container-low text-secondary font-label-md text-label-md uppercase tracking-wider">
+                <th class="py-3 px-space-md font-semibold w-28">ID Anggota</th>
+                <th class="py-3 px-space-md font-semibold min-w-[180px]">Nama Anggota</th>
+                <th class="py-3 px-space-md font-semibold min-w-[120px]">Unit / NRP</th>
+                <th class="py-3 px-space-md font-semibold min-w-[150px]">Bank & Rekening</th>
+                <th class="py-3 px-space-md font-semibold text-right min-w-[120px]">Limit Plafon</th>
+                <th class="py-3 px-space-md font-semibold text-right min-w-[120px]">Total Piutang</th>
+                <th class="py-3 px-space-md font-semibold text-center w-36">Status</th>
+                <th class="py-3 px-space-md font-semibold text-right pr-space-lg w-32">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="member-tbody">
+              <!-- Render via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Tambah / Edit -->
+  <div id="modal-member" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 hidden">
+    <div class="max-w-2xl w-full max-h-[90vh] flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div class="p-space-md border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+        <h3 class="font-headline-md text-headline-md font-bold text-on-surface" id="modal-member-title">Tambah Anggota Baru</h3>
+        <button id="btn-close-modal" class="text-secondary hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-6 space-y-4">
+        <form id="member-form" class="grid grid-cols-2 gap-4">
+          <input type="hidden" id="member-original-id">
+          <!-- Baris 1 -->
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">ID Anggota</label>
+            <input type="text" id="member-id" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="ANG-0000">
+          </div>
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Nama Lengkap</label>
+            <input type="text" id="member-name" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Nama Lengkap Anggota">
+          </div>
+          <!-- Baris 2 -->
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">NRP (Nomor Registrasi Pokok)</label>
+            <input type="text" id="member-nrp" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Opsional">
+          </div>
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Unit/Divisi</label>
+            <input type="text" id="member-unit" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Divisi...">
+          </div>
+          <!-- Baris 3 -->
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Nama Bank</label>
+            <select id="member-bank-name" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+              <option value="">- Pilih Bank -</option>
+              <option value="BRI">BRI</option>
+              <option value="Mandiri">Mandiri</option>
+              <option value="BNI">BNI</option>
+              <option value="BCA">BCA</option>
+              <option value="Jatim">Bank Jatim</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Nomor Rekening</label>
+            <input type="text" id="member-bank-account" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Opsional">
+          </div>
+          <!-- Baris 4 -->
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Plafon Kredit (Rp)</label>
+            <input type="number" id="member-credit-limit" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" value="500000" min="0">
+          </div>
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Simpanan Wajib per Bulan (Rp)</label>
+            <input type="number" id="member-savings" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" value="50000" min="0">
+          </div>
+          <!-- Baris 5 -->
+          <div class="col-span-2">
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Status</label>
+            <select id="member-status" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+              <option value="active">Aktif (Bisa Belanja)</option>
+              <option value="blocked">Terblokir (Tunggakan)</option>
+              <option value="inactive">Non-Aktif / Keluar</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between z-10">
+        <button type="button" id="btn-deactivate-member" class="text-error hover:bg-error/10 px-space-sm py-2 rounded font-label-md transition-colors hidden">
+          Non-Aktifkan (Keluar)
+        </button>
+        <div class="flex items-center gap-3 ml-auto">
+          <button type="button" id="btn-cancel-member" class="px-space-md py-2 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md font-medium">Batal</button>
+          <button type="button" id="btn-save-member" class="px-space-md py-2 rounded bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-label-md font-bold">Simpan Anggota</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    let currentMembers = [];
+    let currentFilter = 'all';
+
+    const tbody = document.getElementById('member-tbody');
+    const filterSelect = document.getElementById('filter-status');
+    
+    filterSelect.addEventListener('change', (e) => {
+      currentFilter = e.target.value;
+      renderTable();
+    });
+
+    const modal = document.getElementById('modal-member');
+    const form = document.getElementById('member-form');
+    const deactivateBtn = document.getElementById('btn-deactivate-member');
+
+    document.getElementById('btn-tambah-anggota').addEventListener('click', () => {
+      form.reset();
+      document.getElementById('member-original-id').value = '';
+      document.getElementById('modal-member-title').innerText = 'Tambah Anggota Baru';
+      deactivateBtn.classList.add('hidden');
+      modal.classList.remove('hidden');
+    });
+
+    const closeModal = () => modal.classList.add('hidden');
+    document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-member').addEventListener('click', closeModal);
+
+    document.getElementById('btn-save-member').addEventListener('click', async () => {
+      if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+      }
+      const data = {
+          id: document.getElementById('member-id').value,
+          name: document.getElementById('member-name').value,
+          nrp: document.getElementById('member-nrp').value,
+          unit: document.getElementById('member-unit').value,
+          bank_name: document.getElementById('member-bank-name').value,
+          bank_account_number: document.getElementById('member-bank-account').value,
+          credit_limit: parseInt(document.getElementById('member-credit-limit').value) || 0,
+          current_debt: 0,
+          mandatory_savings: parseInt(document.getElementById('member-savings').value) || 0,
+          status: document.getElementById('member-status').value
+      };
+      
+      try {
+          await window.POS_DB.upsertMember(data);
+          closeModal();
+      } catch (e) {
+          console.error("Error saving member", e);
+          alert("Gagal menyimpan anggota: " + e.message);
+      }
+    });
+
+    window.editMember = function(id) {
+        const m = currentMembers.find(x => x.id === id);
+        if (!m) return;
+        
+        document.getElementById('member-original-id').value = m.id;
+        document.getElementById('member-id').value = m.id;
+        document.getElementById('member-name').value = m.name;
+        document.getElementById('member-nrp').value = m.nrp || '';
+        document.getElementById('member-unit').value = m.unit;
+        document.getElementById('member-bank-name').value = m.bank_name || '';
+        document.getElementById('member-bank-account').value = m.bank_account_number || '';
+        document.getElementById('member-credit-limit').value = m.credit_limit;
+        document.getElementById('member-savings').value = m.mandatory_savings;
+        document.getElementById('member-status').value = m.status;
+        
+        document.getElementById('modal-member-title').innerText = 'Edit Anggota';
+        deactivateBtn.classList.remove('hidden');
+        
+        if (m.status === 'inactive') {
+            deactivateBtn.innerText = 'Re-aktivasi';
+            deactivateBtn.classList.replace('text-error', 'text-primary');
+            deactivateBtn.classList.replace('hover:bg-error/10', 'hover:bg-primary/10');
+            deactivateBtn.onclick = async () => {
+                await window.POS_DB.reactivateMember(m.id);
+                closeModal();
+            };
+        } else {
+            deactivateBtn.innerText = 'Non-Aktifkan (Keluar)';
+            deactivateBtn.classList.replace('text-primary', 'text-error');
+            deactivateBtn.classList.replace('hover:bg-primary/10', 'hover:bg-error/10');
+            deactivateBtn.onclick = async () => {
+                if(confirm('Yakin ingin non-aktifkan?')) {
+                    await window.POS_DB.deactivateMember(m.id);
+                    closeModal();
+                }
+            };
+        }
+        modal.classList.remove('hidden');
+    }
+
+    function renderTable() {
+      let filtered = currentMembers;
+      if (currentFilter === 'active') {
+          filtered = currentMembers.filter(m => m.status === 'active' || m.status === 'blocked');
+      } else if (currentFilter === 'inactive') {
+          filtered = currentMembers.filter(m => m.status === 'inactive');
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach(m => {
+          const isBlocked = m.status === 'blocked';
+          const isInactive = m.status === 'inactive';
+          
+          let statusBadge = '';
+          if (isInactive) {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container text-secondary font-label-sm text-[11px] font-bold tracking-wide uppercase">NON-AKTIF</span>`;
+          } else if (isBlocked) {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-tertiary-container text-on-tertiary-container font-label-sm text-[11px] font-bold tracking-wide uppercase shadow-sm"><span class="material-symbols-outlined text-[14px]">lock</span>AUTO-BLOCKED</span>`;
+          } else {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-primary/15 text-primary font-label-sm text-[11px] font-bold tracking-wide uppercase"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>LANCAR</span>`;
+          }
+
+          const limit = (Number(m.credit_limit) || 0).toLocaleString('id-ID');
+          const debt = (Number(m.current_debt) || 0).toLocaleString('id-ID');
+
+          const tr = document.createElement('tr');
+          tr.className = "bg-surface-container-lowest hover:bg-surface-container-low transition-colors group border-b border-outline-variant";
+          tr.innerHTML = `
+              <td class="py-3 px-space-md font-mono font-bold text-on-surface">${m.id}</td>
+              <td class="py-3 px-space-md">
+                <span class="font-headline-sm text-label-lg font-bold text-on-surface">${m.name}</span>
+              </td>
+              <td class="py-3 px-space-md">
+                <div class="flex flex-col">
+                  <span class="text-on-surface font-semibold text-sm">${m.unit}</span>
+                  <span class="text-secondary text-[11px] font-mono">${m.nrp ? 'NRP: ' + m.nrp : '-'}</span>
+                </div>
+              </td>
+              <td class="py-3 px-space-md">
+                <div class="flex flex-col">
+                  <span class="text-on-surface font-semibold text-sm">${m.bank_name || '-'}</span>
+                  <span class="text-secondary text-[11px] font-mono">${m.bank_account_number || '-'}</span>
+                </div>
+              </td>
+              <td class="py-3 px-space-md text-right font-mono text-sm font-semibold">Rp ${limit}</td>
+              <td class="py-3 px-space-md text-right font-mono text-sm font-semibold text-error">Rp ${debt}</td>
+              <td class="py-3 px-space-md text-center">
+                  ${statusBadge}
+              </td>
+              <td class="py-3 px-space-md text-right pr-space-lg">
+                  <button onclick="editMember('${m.id}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold transition-colors">
+                  <span class="material-symbols-outlined text-[14px]">edit</span> Edit
+                  </button>
+              </td>
+          `;
+          tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const initInterval = setInterval(() => {
+            if (window.POS_DB && window.POS_DB.subscribeMembers) {
+                clearInterval(initInterval);
+                window.POS_DB.subscribeMembers(members => {
+                    currentMembers = members.map(m => m.toJSON());
+                    renderTable();
+                });
+            }
+        }, 100);
+    });
+  </script>
+</body>
+</html>

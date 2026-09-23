@@ -27,6 +27,7 @@ const modules = [
   { id: 'retur', name: 'Retur Barang & Alokasi Klaim', path: '/retur-barang', file: 'retur_barang_pelanggan_alokasi_produsen_primkoppol_ngawi/code.html', category: 'Gudang & Retur' },
   { id: 'tutup-shift', name: 'Tutup Shift & Rekonsiliasi Kasir', path: '/tutup-shift', file: 'tutup_shift_rekonsiliasi_kasir_kopos/code.html', category: 'Kasir & Transaksi' },
   { id: 'matriks', name: 'Matriks Tunggakan Keanggotaan', path: '/matriks-tunggakan', file: 'matriks_tunggakan_keanggotaan_kopos/code.html', category: 'Piutang & Anggota' },
+  { id: 'manajemen-anggota', name: 'Manajemen Keanggotaan', path: '/manajemen-anggota', file: 'manajemen_anggota/code.html', category: 'Piutang & Anggota' },
   { id: 'master-barang', name: 'Master Barang & Update HPP', path: '/master-barang', file: 'master_barang_restock_inventory_update_hpp_kopos/code.html', category: 'Gudang & Retur' },
   { id: 'lap-penjualan', name: 'Laporan Penjualan Barang', path: '/laporan-penjualan', file: 'laporan_penjualan_barang_per_periode_primkoppol_ngawi/code.html', category: 'Laporan & Audit' },
   { id: 'lap-keuangan', name: 'Laporan Keuangan & Piutang', path: '/laporan-keuangan', file: 'laporan_keuangan_piutang_anggota_primkoppol_ngawi/code.html', category: 'Laporan & Audit' },
