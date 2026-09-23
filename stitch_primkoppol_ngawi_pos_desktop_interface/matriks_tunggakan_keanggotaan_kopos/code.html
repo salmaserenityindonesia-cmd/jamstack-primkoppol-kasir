@@ -220,7 +220,7 @@
 </div>
 <!-- Bottom Pagination Bar -->
 <div class="p-space-md bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-sm border-t-0">
-<div class="flex items-center gap-2 text-secondary font-body-sm text-body-sm">
+<div id="matrix-pagination-info" class="flex items-center gap-2 text-secondary font-body-sm text-body-sm">
 <span class="">Menampilkan</span>
 <span class="font-semibold text-on-surface">1 - 5</span>
 <span class="">dari</span>
@@ -228,7 +228,7 @@
 <span class="">Anggota yang menunggak</span>
 </div>
 <!-- Pagination Nav Controls -->
-<div class="flex items-center gap-1">
+<div id="matrix-pagination-controls" class="flex items-center gap-1">
 <button class="px-2.5 h-8 rounded bg-surface-container-low text-secondary hover:text-on-surface hover:bg-surface-container font-label-sm text-label-sm flex items-center gap-1 transition-colors disabled:opacity-40" disabled="">
 <span class="material-symbols-outlined text-[16px]">chevron_left</span>
 <span class="">Prev</span>
@@ -351,6 +351,18 @@
   let currentMembers = [];
   let currentFilter = 'all'; // all, active, inactive
   let isEditing = false;
+  
+  let currentPage = 1;
+  const pageSize = 10;
+  
+  function calculateArrears(member) {
+      return (member.current_debt > 0 || (member.unpaid_months || 0) > 0);
+  }
+  
+  window.changePage = function(page) {
+      currentPage = page;
+      renderTable();
+  };
 
   const tbody = document.querySelector('tbody');
   const kpiTotalActive = document.querySelector('.font-currency-display.text-on-surface.mt-2.font-bold');
@@ -364,9 +376,11 @@
     <option value="all">Status: Semua Anggota</option>
     <option value="active">Status: Anggota Aktif</option>
     <option value="inactive">Status: Non-Aktif/Keluar</option>
+    <option value="menunggak">Status: Menunggak</option>
   `;
   filterSelect.addEventListener('change', (e) => {
     currentFilter = e.target.value;
+    currentPage = 1;
     renderTable();
   });
 
@@ -434,12 +448,81 @@
         filtered = currentMembers.filter(m => m.status === 'active' || m.status === 'blocked');
     } else if (currentFilter === 'inactive') {
         filtered = currentMembers.filter(m => m.status === 'inactive');
+    } else if (currentFilter === 'menunggak') {
+        filtered = currentMembers.filter(m => calculateArrears(m));
     }
 
     memberCountBadge.innerText = filtered.length;
+    
+    const totalRecords = filtered.length;
+    const totalPages = Math.ceil(totalRecords / pageSize) || 1;
+    
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+    
+    const pagedData = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    
+    const infoContainer = document.getElementById('matrix-pagination-info');
+    if (totalRecords === 0) {
+        infoContainer.innerHTML = 'Menampilkan 0 dari 0 Anggota';
+    } else {
+        const start = (currentPage - 1) * pageSize + 1;
+        const end = Math.min(currentPage * pageSize, totalRecords);
+        infoContainer.innerHTML = `Menampilkan <span class="font-semibold text-on-surface">${start} - ${end}</span> dari <span class="font-bold text-on-surface">${totalRecords}</span> Anggota`;
+    }
+    
+    const controlsContainer = document.getElementById('matrix-pagination-controls');
+    let controlsHTML = '';
+    
+    if (totalRecords === 0) {
+        controlsHTML = `
+            <button class="px-2.5 h-8 rounded bg-surface-container-low text-secondary font-label-sm text-label-sm flex items-center gap-1 opacity-40 cursor-not-allowed" disabled>
+            <span class="material-symbols-outlined text-[16px]">chevron_left</span> Prev
+            </button>
+            <button class="px-2.5 h-8 rounded bg-surface-container-low text-secondary font-label-sm text-label-sm flex items-center gap-1 opacity-40 cursor-not-allowed" disabled>
+            Next <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
+        `;
+    } else {
+        const prevDisabled = currentPage === 1 ? 'opacity-40 cursor-not-allowed" disabled' : 'hover:text-on-surface hover:bg-surface-container transition-colors" onclick="changePage(' + (currentPage - 1) + ')"';
+        const nextDisabled = currentPage === totalPages ? 'opacity-40 cursor-not-allowed" disabled' : 'hover:text-on-surface hover:bg-surface-container transition-colors" onclick="changePage(' + (currentPage + 1) + ')"';
+        
+        controlsHTML += `
+            <button class="px-2.5 h-8 rounded bg-surface-container-low text-secondary font-label-sm text-label-sm flex items-center gap-1 ${prevDisabled}>
+            <span class="material-symbols-outlined text-[16px]">chevron_left</span> Prev
+            </button>
+        `;
+        
+        for (let i = 1; i <= totalPages; i++) {
+            if (totalPages > 7) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    if (i === currentPage) {
+                        controlsHTML += \`<button class="w-8 h-8 rounded bg-primary text-on-primary font-mono font-bold text-label-sm shadow-sm flex items-center justify-center">\${i}</button>\`;
+                    } else {
+                        controlsHTML += \`<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-mono font-medium text-label-sm flex items-center justify-center transition-colors" onclick="changePage(\${i})">\${i}</button>\`;
+                    }
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    controlsHTML += \`<span class="px-1 text-secondary font-mono text-label-sm">...</span>\`;
+                }
+            } else {
+                if (i === currentPage) {
+                    controlsHTML += \`<button class="w-8 h-8 rounded bg-primary text-on-primary font-mono font-bold text-label-sm shadow-sm flex items-center justify-center">\${i}</button>\`;
+                } else {
+                    controlsHTML += \`<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-mono font-medium text-label-sm flex items-center justify-center transition-colors" onclick="changePage(\${i})">\${i}</button>\`;
+                }
+            }
+        }
+        
+        controlsHTML += `
+            <button class="px-2.5 h-8 rounded bg-surface-container-low text-secondary font-label-sm text-label-sm flex items-center gap-1 ${nextDisabled}>
+            Next <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
+        `;
+    }
+    controlsContainer.innerHTML = controlsHTML;
 
     tbody.innerHTML = '';
-    filtered.forEach(m => {
+    pagedData.forEach(m => {
         const isBlocked = m.status === 'blocked';
         const isInactive = m.status === 'inactive';
         
