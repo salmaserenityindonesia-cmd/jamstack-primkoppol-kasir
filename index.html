@@ -8,6 +8,16 @@
   <meta property="og:title" content="PRIMKOPPOL NGAWI POS">
   <meta property="og:description" content="Sistem POS & Ekosistem Manajemen Koperasi Waserda PRIMKOPPOL NGAWI dengan proteksi kredit anggota, restock dual-state, rekonsiliasi kasir, audit operasional AI, dan ekspor spreadsheet laporan ke Google Drive.">
   
+  <!-- Penangkap Galat Agresif (GSD Protocol) -->
+  <script>
+    window.addEventListener('error', function(e) {
+        const errBox = document.querySelector('.bg-red-50');
+        if(errBox) {
+            errBox.innerHTML = `<p class="font-bold text-red-700">FATAL CRASH:</p><p class="text-sm text-red-600">${e.message}</p><p class="text-xs text-slate-500 mt-2">File: ${e.filename}:${e.lineno}</p>`;
+        }
+    });
+  </script>
+
   <!-- Typography & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3198,5 +3208,7 @@
   </script>
   <!-- ===== END PROFILE WIDGET & MODAL SCRIPTS =====-->
 
+  <!-- Pemanggilan Skrip Bundle -->
+  <script type="module" src="/assets/index.js"></script>
 </body>
 </html>
