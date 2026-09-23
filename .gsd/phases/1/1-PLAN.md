@@ -1,60 +1,55 @@
----
-phase: 1
-plan: 1
-wave: 1
----
-
-# Plan 1.1: Modal Form Tambah SKU Baru dan Integrasi RxDB
+# Phase 1: Perbaikan Seeder Akun Admin & Fail-Safe Login
 
 ## Objective
-Membuat Modal Form Tambah SKU Baru dan menghubungkannya ke RxDB pada modul Master Barang.
-
-## Context
-- .gsd/SPEC.md
-- .gsd/ARCHITECTURE.md
-- stitch_primkoppol_ngawi_pos_desktop_interface/master_barang_restock_pencetakan_kiosk/code.html
-- src/index.js
+Memperbaiki Seeder Akun Admin di RxDB dan menambahkan fail-safe login di authEngine sesuai protokol GSD.
 
 ## Tasks
 
 <task type="auto">
-  <name>Task 1: Markup Modal Dialog Tambah SKU Baru</name>
-  <files>stitch_primkoppol_ngawi_pos_desktop_interface/master_barang_restock_pencetakan_kiosk/code.html</files>
+  <name>Task 1: Perbaiki Injeksi Seeder Admin di Inisialisasi Database</name>
+  <files>src/db/database.js, src/index.js</files>
   <action>
-    1. Buka file `code.html` pada modul Master Barang.
-    2. Tambahkan markup Modal Dialog tersembunyi (hidden/fixed backdrop Tailwind) dengan ID `modal-tambah-sku`:
-       - Header: Judul "Tambah SKU / Barang Baru Waserda" dan tombol close (✕).
-       - Field Form:
-         * Barcode / SKU (Text input)
-         * Nama Produk Lengkap (Text input)
-         * Kategori (Dropdown: Sembako, Pangan Pokok, Bahan Kue, Minuman, Kebersihan, Umum)
-         * Satuan (Dropdown: Pcs, Karton, Sak, Bks, Botol)
-         * Harga Beli Pokok / HPP (Number input)
-         * Harga Jual Kasir (Number input)
-         * Stok Awal Fisik (Number input)
-       - Footer: Tombol "Batal" dan tombol aksi utama "Simpan ke Database" (warna Emerald `#059669`).
+    1. Buka berkas yang menangani inisialisasi RxDB (biasanya `src/db/database.js` atau di dalam `src/index.js` pada fungsi `initDatabase`).
+    2. Segera setelah koleksi `users` terdaftar di RxDB, tambahkan pengecekan jumlah baris data:
+       ```javascript
+       const existingUsers = await myDatabase.users.find().exec();
+       if (existingUsers.length === 0) {
+           console.log("Seeding default admin user...");
+           await myDatabase.users.insert({
+               id: 'usr-admin-01',
+               email: 'salmaserenityindonesia@gmail.com',
+               name: 'Super Administrator',
+               password_hash: 'primkoppol', // Pada tahap awal, simpan plaintext/hash sederhana ini
+               role: 'admin',
+               status: 'active',
+               permissions: ['*'],
+               updated_at: new Date().toISOString()
+           });
+       }
+       ```
+    3. Pastikan blok kode ini ditunggu (`await`) sebelum memancarkan `window.__POS_SYSTEM_READY__ = true`.
   </action>
-  <verify>Periksa struktur HTML modal agar tidak merusak tata letak kontainer tabel utama.</verify>
-  <done>Elemen antarmuka formulir modal tambah barang terpasang rapi sesuai tema desain Primkoppol.</done>
+  <verify>Buka IndexedDB di browser, periksa object store `docs` di bawah `users`, dan pastikan terdapat 1 baris data berisi email salmaserenityindonesia@gmail.com.</verify>
+  <done>Database RxDB kini dijamin selalu memiliki minimal 1 akun admin saat pertama kali dijalankan.</done>
 </task>
 
 <task type="auto">
-  <name>Task 2: Integrasikan Handler Tombol Tambah SKU ke RxDB</name>
-  <files>stitch_primkoppol_ngawi_pos_desktop_interface/master_barang_restock_pencetakan_kiosk/code.html, src/index.js</files>
+  <name>Task 2: Pasang Fail-Safe Hardcode di Engine Login</name>
+  <files>src/auth/authEngine.js</files>
   <action>
-    1. Hapus fungsi pembuatan data acak (dummy generator `Produk Baru 325`) yang menempel pada tombol "Tambah SKU".
-    2. Hubungkan tombol "Tambah SKU" (outline biru) untuk membuka `modal-tambah-sku` (menghapus kelas `hidden`).
-    3. Pasang event handler pada tombol "Simpan ke Database":
-       - Validasi bahwa input Barcode, Nama Produk, dan Harga tidak boleh kosong.
-       - Buat payload produk: { barcode, sku, name, category, unit, cost_price: Number, price: Number, stock: Number }.
-       - Panggil `window.POS_DB.upsertProduct(payload)` untuk menyimpan produk langsung ke RxDB Dexie.
-       - Reset formulir, tutup modal, dan biarkan subscriber RxDB memperbarui tabel daftar barang secara reaktif.
+    1. Buka `src/auth/authEngine.js`.
+    2. Pada fungsi `login(email, password)` yang melakukan kueri ke RxDB, tambahkan jaring pengaman (bypass) jika pembacaan database lokal bermasalah/kosong:
+       ```javascript
+       // Jika RxDB gagal menemukan user, berikan akses darurat khusus kredensial ini
+       if (!userRecord && email === 'salmaserenityindonesia@gmail.com' && password === 'primkoppol') {
+           console.warn("Bypass login aktif via Hardcoded Super Admin");
+           const fallbackAdmin = { id: 'usr-admin-01', name: 'Super Administrator', email, role: 'admin', permissions: ['*'] };
+           localStorage.setItem('primkoppol_auth_user', JSON.stringify(fallbackAdmin));
+           return fallbackAdmin;
+       }
+       ```
+    3. Jalankan `npm run build` untuk mengompilasi ulang bundle `dist/assets/index.js`.
   </action>
-  <verify>Buka halaman di browser: klik tombol "Tambah SKU", pastikan modal muncul, isi data barang riil, lalu tekan Simpan. Pastikan barang baru muncul di tabel tanpa perlu refresh halaman.</verify>
-  <done>Fitur penambahan barang baru berfungsi normal menggunakan data input riil pengguna.</done>
+  <verify>Masukkan email salmaserenityindonesia@gmail.com dan sandi primkoppol di layar login, sistem harus mengizinkan masuk tanpa error.</verify>
+  <done>Sistem login memiliki resistensi tinggi terhadap kegagalan pembacaan database inisial.</done>
 </task>
-
-## Success Criteria
-- [ ] Modal dialog UI terpasang tanpa merusak layout tabel utama.
-- [ ] Fitur tambah barang menyimpan data riil ke RxDB.
-- [ ] Tabel list barang otomatis terupdate (reaktif) setelah barang ditambahkan.

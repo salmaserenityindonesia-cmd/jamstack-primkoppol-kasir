@@ -73,30 +73,19 @@ async function seedProducts(db) {
 
 // Seeder: buat akun admin default jika koleksi users masih kosong
 async function seedAdminUser(db) {
-    const existing = await db.users.find().exec();
-    if (existing.length > 0) return;
-
-    // Hash 'primkoppol' via SubtleCrypto
-    const encoder = new TextEncoder();
-    const data = encoder.encode('primkoppol');
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-    try {
+    const existingUsers = await db.users.find().exec();
+    if (existingUsers.length === 0) {
+        console.log("Seeding default admin user...");
         await db.users.insert({
-            id            : 'admin-001',
-            email         : 'salmaserenityindonesia@gmail.com',
-            name          : 'Super Administrator',
-            password_hash : passwordHash,
-            role          : 'admin',
-            status        : 'active',
-            permissions   : [],
-            updated_at    : new Date().toISOString()
+            id: 'usr-admin-01',
+            email: 'salmaserenityindonesia@gmail.com',
+            name: 'Super Administrator',
+            password_hash: 'primkoppol', // Pada tahap awal, simpan plaintext/hash sederhana ini
+            role: 'admin',
+            status: 'active',
+            permissions: ['*'],
+            updated_at: new Date().toISOString()
         });
-        console.log('[RxDB] Seeder: akun admin default berhasil dibuat.');
-    } catch (err) {
-        console.error('[RxDB] Gagal insert admin seeder:', err);
     }
 }
 
