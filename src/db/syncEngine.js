@@ -46,18 +46,20 @@ export async function syncPendingTransactions() {
                 }]);
 
             if (error) {
-                console.error(`[SyncEngine] Gagal sinkronisasi transaksi ${id}:`, error.message);
-                // Berhenti sejenak, akan dicoba lagi siklus berikutnya untuk menjamin urutan FIFO
-                break; 
+                console.error(`[SYNC ENGINE ERROR] Gagal mengirim data:`, error.message);
+                window.dispatchEvent(new CustomEvent('sync:error', { detail: error.message }));
+                throw new Error(error.message); // throw agar ditangkap oleh catch terluar
             } else {
                 console.log(`[SyncEngine] Transaksi ${id} berhasil dikirim.`);
                 await doc.incrementalPatch({
                     sync_status: 'SENT'
                 });
+                window.dispatchEvent(new CustomEvent('sync:success', { detail: id }));
             }
         }
-    } catch (err) {
-        console.warn('[SyncEngine] Network/Sync error terselesaikan secara graceful:', err);
+    } catch (error) {
+        console.error("[SYNC ENGINE ERROR] Gagal mengirim data:", error.message);
+        window.dispatchEvent(new CustomEvent('sync:error', { detail: error.message }));
     }
 }
 
@@ -171,4 +173,10 @@ export function startPeriodicSync(intervalMs = 10000) {
         console.log('[SyncEngine] Koneksi online kembali. Memicu sinkronisasi instan...');
         syncPendingTransactions();
     });
+}
+
+// Ekspos forceSync ke window untuk dipanggil dari UI
+if (typeof window !== 'undefined') {
+    window.POS_DB = window.POS_DB || {};
+    window.POS_DB.forceSync = syncPendingTransactions;
 }
