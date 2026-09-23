@@ -26,6 +26,15 @@ export const memberSchema = {
         status: {
             type: 'string' // active/blocked
         },
+        nrp: {
+            type: 'string'
+        },
+        bank_name: {
+            type: 'string'
+        },
+        bank_account_number: {
+            type: 'string'
+        },
         updated_at: {
             type: 'string'
         }

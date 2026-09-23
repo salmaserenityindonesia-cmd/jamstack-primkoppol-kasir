@@ -292,8 +292,30 @@
           <input type="text" id="member-name" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Nama Lengkap Anggota">
         </div>
         <div>
+          <label class="block text-label-sm font-semibold text-secondary mb-1">NRP (Nomor Registrasi Pokok)</label>
+          <input type="text" id="member-nrp" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Opsional">
+        </div>
+        <div>
           <label class="block text-label-sm font-semibold text-secondary mb-1">Unit/Divisi</label>
           <input type="text" id="member-unit" required class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Divisi...">
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Nama Bank</label>
+            <select id="member-bank-name" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+              <option value="">- Pilih Bank -</option>
+              <option value="BRI">BRI</option>
+              <option value="Mandiri">Mandiri</option>
+              <option value="BNI">BNI</option>
+              <option value="BCA">BCA</option>
+              <option value="Jatim">Bank Jatim</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-label-sm font-semibold text-secondary mb-1">Nomor Rekening</label>
+            <input type="text" id="member-bank-account" class="w-full h-10 px-3 rounded bg-surface-container-lowest border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Opsional">
+          </div>
         </div>
         <div>
           <label class="block text-label-sm font-semibold text-secondary mb-1">Plafon Kredit (Rp)</label>
@@ -373,7 +395,10 @@
     const data = {
         id: document.getElementById('member-id').value,
         name: document.getElementById('member-name').value,
+        nrp: document.getElementById('member-nrp').value,
         unit: document.getElementById('member-unit').value,
+        bank_name: document.getElementById('member-bank-name').value,
+        bank_account_number: document.getElementById('member-bank-account').value,
         credit_limit: parseInt(document.getElementById('member-credit-limit').value) || 0,
         current_debt: 0, // default if new
         mandatory_savings: parseInt(document.getElementById('member-savings').value) || 0,
@@ -434,7 +459,10 @@
             <td class="py-3 px-space-md">
                 <div class="flex flex-col">
                 <span class="font-headline-sm text-label-lg font-bold text-on-surface group-hover:text-primary transition-colors">${m.name}</span>
-                <span class="text-secondary font-body-sm text-[12px]">${m.unit}</span>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="text-secondary font-body-sm text-[12px] font-medium">${m.nrp ? 'NRP: ' + m.nrp : m.unit}</span>
+                  ${m.bank_name ? `<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant text-[10px] font-mono">${m.bank_name} ${m.bank_account_number || ''}</span>` : ''}
+                </div>
                 </div>
             </td>
             <!-- placeholders for 12 months -->
@@ -465,7 +493,10 @@
             document.getElementById('member-original-id').value = m.id;
             document.getElementById('member-id').value = m.id;
             document.getElementById('member-name').value = m.name;
+            document.getElementById('member-nrp').value = m.nrp || '';
             document.getElementById('member-unit').value = m.unit;
+            document.getElementById('member-bank-name').value = m.bank_name || '';
+            document.getElementById('member-bank-account').value = m.bank_account_number || '';
             document.getElementById('member-credit-limit').value = m.credit_limit;
             document.getElementById('member-savings').value = m.mandatory_savings;
             document.getElementById('member-status').value = m.status;
