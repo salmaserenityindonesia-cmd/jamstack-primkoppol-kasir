@@ -211,22 +211,56 @@
     }
   }
 
-  const eventTarget = (window.parent && window.parent !== window) ? window.parent : window;
-
-  eventTarget.addEventListener('sync:success', function(e) {
+  function updateSyncButtonState(pendingCount) {
       const icon = document.getElementById('syncIcon');
       const text = document.getElementById('syncText');
       const btn = document.getElementById('syncBtn');
-      const pendingCount = document.querySelector('.font-display-lg'); // Element showing pending count
+      const countEl = document.querySelector('.font-display-lg');
       
-      if (pendingCount) pendingCount.textContent = '0';
-      if (icon) icon.classList.remove('animate-spin');
-      if (text) text.textContent = 'Sinkronisasi Selesai (0 pending)';
-      if (btn) {
-          setTimeout(() => {
-              btn.disabled = false;
-              text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
-          }, 2500);
+      if (countEl) countEl.textContent = pendingCount;
+      if (!icon || !text || !btn) return;
+      
+      icon.classList.remove('animate-spin');
+      
+      text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';
+      btn.disabled = false;
+      btn.classList.remove('opacity-70', 'cursor-not-allowed');
+  }
+
+  // Setup RxDB Subscriber for reactive UI
+  async function setupRxDBSubscriber() {
+      try {
+          const posDb = window.parent && window.parent.POS_DB ? window.parent.POS_DB : window.POS_DB;
+          if (posDb && typeof posDb.getDatabase === 'function') {
+              const db = await posDb.getDatabase();
+              db.transactions.find({ selector: { sync_status: 'PENDING' } }).$.subscribe(pendingDocs => {
+                  updateSyncButtonState(pendingDocs.length);
+              });
+          }
+      } catch (err) {
+          console.error("Gagal setup RxDB subscriber:", err);
+      }
+  }
+  
+  // Call setup immediately
+  setupRxDBSubscriber();
+
+  const eventTarget = (window.parent && window.parent !== window) ? window.parent : window;
+
+  eventTarget.addEventListener('sync:success', async function(e) {
+      // Fallback update if RxDB subscriber is not active or delayed
+      if (e.detail === 'NO_DATA') {
+          updateSyncButtonState(0);
+      } else {
+          // Re-fetch count directly to ensure UI reflects the latest state if subscriber is lagging
+          try {
+              const posDb = window.parent && window.parent.POS_DB ? window.parent.POS_DB : window.POS_DB;
+              if (posDb && typeof posDb.getDatabase === 'function') {
+                  const db = await posDb.getDatabase();
+                  const pendingDocs = await db.transactions.find({ selector: { sync_status: 'PENDING' } }).exec();
+                  updateSyncButtonState(pendingDocs.length);
+              }
+          } catch(err) {}
       }
       
       const feed = document.getElementById('logsFeed');

@@ -4,61 +4,35 @@ plan: 6
 wave: 1
 ---
 
-# Plan 1.6: Implementasi Metode forceSync di syncEngine
+# Plan 1.6: Sentralisasi State Rendering Tombol Sinkronisasi
 
 ## Objective
-Mengimplementasikan metode forceSync di syncEngine dan menghubungkannya ke tombol UI sesuai protokol GSD.
+Memperbaiki DOM race condition pada tombol Force Sync agar state UI sinkron dengan jumlah antrean sesuai protokol GSD.
 
 ## Context
-- `src/db/syncEngine.js`
-- `src/index.js`
-- `stitch_primkoppol_ngawi_pos_desktop_interface/status_sinkronisasi_sistem_offline_queue_dan_latensi/code.html`
+- `stitch_primkoppol_ngawi_pos_desktop_interface/status_sinkronisasi_sistem_health_mobile_pwa/code.html`
 
 ## Tasks
 
 <task type="auto">
-  <name>Task 1: Ekspor Metode forceSync di Engine Sinkronisasi</name>
-  <files>src/db/syncEngine.js, src/index.js</files>
+  <name>Task 1: Sentralisasi State Rendering Tombol Sinkronisasi</name>
+  <files>stitch_primkoppol_ngawi_pos_desktop_interface/status_sinkronisasi_sistem_health_mobile_pwa/code.html</files>
   <action>
-    1. Buka `src/db/syncEngine.js`.
-    2. Buat/perbarui fungsi ekspor `async function forceSync()`:
-       - Di dalam fungsi ini, panggil langsung logika pengiriman antrean (`pushPendingQueue` atau fungsi ekuivalennya) tanpa harus menunggu siklus interval `setInterval`.
-       - Pancarkan *custom event* `window.dispatchEvent(new CustomEvent('sync:success'))` jika berhasil, atau `sync:error` jika gagal.
-    3. Buka `src/index.js`, pastikan `forceSync` dipetakan ke objek global: `window.POS_DB.forceSync = forceSync;`.
-    4. Jalankan `npm run build` untuk mengompilasi ulang bundle Vite ke folder `dist`.
+    1. Buka berkas `code.html` pada modul Status Sinkronisasi PWA.
+    2. Cari blok *event listener* tombol "Paksa Sinkron". Hapus baris pembaruan teks statis (misalnya `text.textContent = 'Paksa Sinkronkan Ulang (Force Sync)';`) dari dalam blok `finally` agar tidak menimpa pembaruan otomatis dari mesin latar belakang.
+    3. Buat satu fungsi pengendali UI tunggal, misalnya `updateSyncButtonState(pendingCount)`:
+       - Jika `pendingCount === 0`:
+         * Set teks tombol: `Sinkronisasi Selesai (0 pending)`.
+         * Nonaktifkan tombol agar tidak diklik berulang: `btn.disabled = true;` serta berikan kelas visual pasif (misal: `opacity-70 cursor-not-allowed`).
+       - Jika `pendingCount > 0`:
+         * Set teks tombol: `Paksa Sinkronisasi (Force Sync)`.
+         * Aktifkan kembali tombol: `btn.disabled = false;` dan hapus kelas pasif.
+    4. Panggil fungsi `updateSyncButtonState(count)` ini HANYA di dalam *subscriber* RxDB (yang mendengarkan perubahan koleksi antrean) dan setelah event `sync:success` mengembalikan nilai antrean terbaru.
   </action>
-  <verify>Buka konsol browser (F12) dan ketik `typeof window.POS_DB.forceSync`. Pastikan hasilnya adalah "function".</verify>
-  <done>Metode sinkronisasi manual telah tertulis di engine dan terekspos ke lingkungan global.</done>
-</task>
-
-<task type="auto">
-  <name>Task 2: Sambungkan Tombol UI dan Hapus Alert Placeholder</name>
-  <files>stitch_primkoppol_ngawi_pos_desktop_interface/status_sinkronisasi_sistem_offline_queue_dan_latensi/code.html</files>
-  <action>
-    1. Buka `code.html` pada modul Status Sinkronisasi PWA.
-    2. Cari *event listener* `click` pada tombol "Paksa Sinkron" (Force Sync).
-    3. Hapus kode `alert('Fungsi sinkronisasi belum siap.');`.
-    4. Ganti dengan implementasi pemanggilan asinkron yang aman:
-       ```javascript
-       try {
-           // Opsional: Ubah teks tombol menjadi "Menyinkronkan..."
-           if (typeof window.POS_DB?.forceSync === 'function') {
-               await window.POS_DB.forceSync();
-               // Tampilkan notifikasi toast hijau sukses
-           } else {
-               throw new Error("Modul sinkronisasi belum dimuat oleh sistem.");
-           }
-       } catch (error) {
-           // Tampilkan notifikasi toast merah dengan pesan error.message
-       } finally {
-           // Kembalikan teks/ikon tombol ke keadaan semula
-       }
-       ```
-  </action>
-  <verify>Muat ulang halaman Status Sinkronisasi, klik tombol Paksa Sinkron, dan pastikan tidak ada lagi popup alert bawaan peramban yang muncul.</verify>
-  <done>Antarmuka pengguna terhubung mulus dengan mesin sinkronisasi RxDB di latar belakang.</done>
+  <verify>Muat ulang halaman Status Sinkronisasi. Saat antrean menunjukkan angka 0, pastikan tombol stabil bertuliskan "Sinkronisasi Selesai (0 pending)", dalam kondisi redup/disabled, dan sama sekali tidak berkedip.</verify>
+  <done>Race condition pada manipulasi DOM tombol telah dieliminasi dan UI merespons state antrean secara deterministik.</done>
 </task>
 
 ## Success Criteria
-- [ ] typeof window.POS_DB.forceSync is "function".
-- [ ] Tombol Paksa Sinkron memicu proses sinkronisasi tanpa menampikan alert.
+- [x] Tombol Force Sync stabil menunjukkan state yang benar tanpa berkedip.
+- [x] Tombol nonaktif jika tidak ada antrean (0 pending).
